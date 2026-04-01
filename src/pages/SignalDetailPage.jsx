@@ -42,8 +42,8 @@ const TODAY = "2026-04-01";
 
 const urgencyConfig = {
   high: { label: "HIGH URGENCY", icon: AlertTriangle, color: "text-red-600", bg: "bg-red-50", border: "border-red-200" },
-  medium: { label: "MEDIUM URGENCY", icon: Clock, color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" },
-  low: { label: "LOW URGENCY", icon: null, color: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200" },
+  medium: { label: "MEDIUM URGENCY", icon: Clock, color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-200" },
+  low: { label: "LOW URGENCY", icon: null, color: "text-gray-400", bg: "bg-gray-50", border: "border-gray-100" },
 };
 
 const typeLabels = {
@@ -180,9 +180,9 @@ export function SignalDetailPage() {
 
   // Trend data
   const trendColor = {
-    up: "text-emerald-600",
+    up: "text-gray-700",
     down: "text-red-600",
-    neutral: "text-slate-500",
+    neutral: "text-gray-400",
   };
   const trendLabel = {
     up: "INCREASING",
@@ -190,9 +190,9 @@ export function SignalDetailPage() {
     neutral: "STABLE",
   };
   const trendPillBg = {
-    up: "bg-emerald-50 border-emerald-200 text-emerald-700",
+    up: "bg-gray-100 border-gray-200 text-gray-700",
     down: "bg-red-50 border-red-200 text-red-700",
-    neutral: "bg-slate-50 border-slate-200 text-slate-600",
+    neutral: "bg-gray-50 border-gray-200 text-gray-600",
   };
 
   return (
@@ -200,7 +200,7 @@ export function SignalDetailPage() {
       {/* Back */}
       <button
         onClick={() => navigate(-1)}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-slate-900 mb-6"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-400 transition-colors hover:text-black mb-6"
       >
         <ArrowLeft size={16} />
         Back
@@ -219,42 +219,42 @@ export function SignalDetailPage() {
           </div>
 
           {/* 2. HUGE title */}
-          <h1 className="text-3xl font-bold text-slate-900 leading-tight tracking-tight">
+          <h1 className="text-3xl font-bold text-black leading-tight tracking-tight">
             {signal.headline}
           </h1>
 
           {/* 3. Investor header */}
-          <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-200 text-[10px] font-bold text-slate-600">
+          <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-[10px] font-bold text-gray-600">
               {investor?.name?.charAt(0) ?? "?"}
             </div>
-            <span className="text-sm font-semibold text-slate-900">
+            <span className="text-sm font-semibold text-black">
               {investor?.name ?? "Unknown"}
             </span>
-            <span className="text-sm text-slate-400">
+            <span className="text-sm text-gray-400">
               {investor?.type ?? "investor"} &middot; Tier {investor?.tier ?? "?"}
             </span>
           </div>
 
           {/* 4. Why this matters */}
           <div>
-            <p className="text-sm font-semibold italic text-slate-800 mb-3">Why this matters</p>
-            <div className="rounded-lg bg-slate-50 border border-slate-100 p-4">
-              <p className="text-sm text-slate-600 leading-relaxed">{whyItMatters}</p>
+            <p className="text-sm font-semibold italic text-gray-700 mb-3">Why this matters</p>
+            <div className="rounded-lg bg-gray-50 border border-gray-100 p-4">
+              <p className="text-sm text-gray-600 leading-relaxed">{whyItMatters}</p>
             </div>
           </div>
 
           {/* 5. Likely impact */}
           <div className={cn(
             "rounded-lg border p-5",
-            isHigh ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+            isHigh ? "border-red-200 bg-red-50/30" : "border-gray-200 bg-white"
           )}>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-3">
               LIKELY IMPACT
             </p>
             <p className={cn(
               "text-sm leading-relaxed",
-              isHigh ? "text-red-900 font-medium" : "text-slate-700"
+              isHigh ? "text-red-900 font-medium" : "text-gray-700"
             )}>
               {likelyImpact}
             </p>
@@ -262,7 +262,7 @@ export function SignalDetailPage() {
 
           {/* 6. Recommended Actions -- 3-col grid */}
           <section>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-4">
               RECOMMENDED ACTIONS
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -289,67 +289,64 @@ export function SignalDetailPage() {
 
           {/* 7. Evidence & Raw Data */}
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-4">
               EVIDENCE & RAW DATA
             </p>
 
             {/* Source & Detection */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div className="rounded-lg border border-slate-200 bg-white p-4">
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <SourceIcon size={16} className="text-slate-400" />
-                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">SOURCE</span>
+                  <SourceIcon size={16} className="text-gray-400" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">SOURCE</span>
                 </div>
-                <p className="text-sm font-semibold text-slate-900">{signal.source}</p>
-                <p className="text-xs text-slate-400 mt-1">Detected {formatDate(signal.detectedAt)}</p>
+                <p className="text-sm font-semibold text-black">{signal.source}</p>
+                <p className="text-xs text-gray-400 mt-1">Detected {formatDate(signal.detectedAt)}</p>
               </div>
-              <div className="rounded-lg border border-slate-200 bg-white p-4">
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <BarChart3 size={16} className="text-slate-400" />
-                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">CONFIDENCE</span>
+                  <BarChart3 size={16} className="text-gray-400" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">CONFIDENCE</span>
                 </div>
-                <p className="text-sm font-semibold text-slate-900 capitalize">{signal.confidence}</p>
-                <div className="mt-2 h-2 rounded-full bg-slate-100">
+                <p className="text-sm font-semibold text-black capitalize">{signal.confidence}</p>
+                <div className="mt-2 h-2 rounded-full bg-gray-200">
                   <div
-                    className={cn(
-                      "h-2 rounded-full transition-all",
-                      signal.confidence === "high" ? "bg-emerald-500" : signal.confidence === "medium" ? "bg-amber-400" : "bg-red-400"
-                    )}
+                    className="h-2 rounded-full transition-all bg-black"
                     style={{ width: signal.confidence === "high" ? "90%" : signal.confidence === "medium" ? "60%" : "30%" }}
                   />
                 </div>
               </div>
-              <div className="rounded-lg border border-slate-200 bg-white p-4">
+              <div className="rounded-lg border border-gray-200 bg-white p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Clock size={16} className="text-slate-400" />
-                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">SIGNAL AGE</span>
+                  <Clock size={16} className="text-gray-400" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">SIGNAL AGE</span>
                 </div>
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-sm font-semibold text-black">
                   {Math.floor((new Date("2026-04-01") - new Date(signal.detectedAt)) / (1000 * 60 * 60 * 24))} days
                 </p>
-                <p className="text-xs text-slate-400 mt-1">Since first detection</p>
+                <p className="text-xs text-gray-400 mt-1">Since first detection</p>
               </div>
             </div>
 
             {/* Parameters as detailed data cards */}
             {signal.parameters && signal.parameters.length > 0 && (
-              <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
-                <div className="px-4 py-3 bg-slate-50 border-b border-slate-200">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">RAW DATA POINTS</p>
+              <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+                <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-500">RAW DATA POINTS</p>
                 </div>
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-gray-100">
                   {signal.parameters.map((p, i) => (
                     <div key={i} className="px-4 py-3.5 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100">
-                          <BarChart3 size={14} className="text-slate-500" />
+                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gray-100">
+                          <BarChart3 size={14} className="text-gray-500" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-slate-800">{p.label}</p>
-                          <p className="text-[11px] text-slate-400 capitalize">{p.provenance} data</p>
+                          <p className="text-sm font-medium text-gray-700">{p.label}</p>
+                          <p className="text-[11px] text-gray-400 capitalize">{p.provenance} data</p>
                         </div>
                       </div>
-                      <span className="font-mono text-base font-bold text-slate-900 bg-slate-50 px-3 py-1.5 rounded-lg">
+                      <span className="font-mono text-base font-bold text-black bg-gray-50 px-3 py-1.5 rounded-lg">
                         {p.value}
                       </span>
                     </div>
@@ -360,12 +357,12 @@ export function SignalDetailPage() {
 
             {/* Holding trend chart for retention_risk signals */}
             {signal.type === "retention_risk" && investor?.holdingHistory && (
-              <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+              <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">HOLDING TREND</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-500">HOLDING TREND</p>
                   <span className={cn(
                     "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
-                    investor.holdingTrend === "down" ? "bg-red-50 text-red-700" : investor.holdingTrend === "up" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"
+                    investor.holdingTrend === "down" ? "bg-red-50 text-red-700" : investor.holdingTrend === "up" ? "bg-gray-100 text-gray-700" : "bg-gray-100 text-gray-600"
                   )}>
                     {investor.holdingTrend === "down" ? "DECLINING" : investor.holdingTrend === "up" ? "INCREASING" : "STABLE"}
                   </span>
@@ -379,17 +376,17 @@ export function SignalDetailPage() {
                     const isLast = i === investor.holdingHistory.length - 1;
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <span className={cn("text-[10px] font-mono", isLast ? "font-bold text-slate-900" : "text-slate-400")}>
+                        <span className={cn("text-[10px] font-mono", isLast ? "font-bold text-black" : "text-gray-400")}>
                           {val}%
                         </span>
                         <div
                           className={cn(
                             "w-full rounded-t transition-all",
-                            isLast ? "bg-red-500" : "bg-slate-200"
+                            isLast ? "bg-red-600" : "bg-gray-200"
                           )}
                           style={{ height: `${barHeight}px` }}
                         />
-                        <span className="text-[9px] text-slate-400">Q{i + 1}</span>
+                        <span className="text-[9px] text-gray-400">Q{i + 1}</span>
                       </div>
                     );
                   })}
@@ -399,10 +396,10 @@ export function SignalDetailPage() {
 
             {/* Influence opportunity - accumulation chart */}
             {signal.type === "influence_opportunity" && investor?.holdingHistory && (
-              <div className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+              <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">ACCUMULATION TREND</p>
-                  <span className="inline-flex items-center rounded-full bg-emerald-50 text-emerald-700 px-2 py-0.5 text-[10px] font-semibold uppercase">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-500">ACCUMULATION TREND</p>
+                  <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-700 px-2 py-0.5 text-[10px] font-semibold uppercase">
                     INCREASING
                   </span>
                 </div>
@@ -415,17 +412,17 @@ export function SignalDetailPage() {
                     const isLast = i === investor.holdingHistory.length - 1;
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <span className={cn("text-[10px] font-mono", isLast ? "font-bold text-slate-900" : "text-slate-400")}>
+                        <span className={cn("text-[10px] font-mono", isLast ? "font-bold text-black" : "text-gray-400")}>
                           {val}%
                         </span>
                         <div
                           className={cn(
                             "w-full rounded-t transition-all",
-                            isLast ? "bg-emerald-500" : "bg-emerald-200"
+                            isLast ? "bg-black" : "bg-gray-200"
                           )}
                           style={{ height: `${barHeight}px` }}
                         />
-                        <span className="text-[9px] text-slate-400">Q{i + 1}</span>
+                        <span className="text-[9px] text-gray-400">Q{i + 1}</span>
                       </div>
                     );
                   })}
@@ -441,23 +438,23 @@ export function SignalDetailPage() {
 
             {/* Evidence section */}
             <Card>
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-3">
                 EVIDENCE
               </p>
               <div className="space-y-2">
                 <div className="flex items-start gap-2.5">
-                  <SourceIcon size={14} className="text-slate-400 mt-0.5 flex-shrink-0" />
+                  <SourceIcon size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-xs font-semibold text-slate-700">{signal.source}</p>
-                    <p className="text-[11px] text-slate-400">{formatDate(signal.detectedAt)}</p>
+                    <p className="text-xs font-semibold text-gray-700">{signal.source}</p>
+                    <p className="text-[11px] text-gray-400">{formatDate(signal.detectedAt)}</p>
                   </div>
                 </div>
                 {signal.parameters?.map((p, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <BarChart3 size={14} className="text-slate-400 mt-0.5 flex-shrink-0" />
+                    <BarChart3 size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-xs font-semibold text-slate-700">{p.label}: {p.value}</p>
-                      <p className="text-[11px] text-slate-400 capitalize">{p.provenance}</p>
+                      <p className="text-xs font-semibold text-gray-700">{p.label}: {p.value}</p>
+                      <p className="text-[11px] text-gray-400 capitalize">{p.provenance}</p>
                     </div>
                   </div>
                 ))}
@@ -467,14 +464,14 @@ export function SignalDetailPage() {
             {/* Triage Action CTA */}
             <button
               onClick={() => navigate(`/actions/new?signal=${signal.id}`)}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-slate-800 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-slate-700 shadow-sm"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-black px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-gray-800 shadow-sm"
             >
               <Zap size={16} />
               Triage Action
             </button>
 
             {/* More button */}
-            <button className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50">
+            <button className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
               <MoreHorizontal size={16} />
               More
             </button>
@@ -482,12 +479,12 @@ export function SignalDetailPage() {
             {/* Investor snapshot card */}
             {investor && (
               <Card>
-                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-3">
                   INVESTOR SNAPSHOT
                 </p>
-                <p className="text-sm font-semibold text-slate-900">{investor.name}</p>
+                <p className="text-sm font-semibold text-black">{investor.name}</p>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <span className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-gray-500">
                     {investor.type}
                   </span>
                   <Badge variant={investor.tier} kind="tier" className="text-[9px] px-1.5 py-0" />
@@ -495,11 +492,11 @@ export function SignalDetailPage() {
 
                 <div className="mt-4 grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">HOLDING</p>
-                    <p className="mt-0.5 font-mono text-lg font-semibold text-slate-900">{investor.holdingPct}%</p>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">HOLDING</p>
+                    <p className="mt-0.5 font-mono text-lg font-semibold text-black">{investor.holdingPct}%</p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">TRAJECTORY</p>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">TRAJECTORY</p>
                     <p className="mt-1">
                       <span
                         className={cn(
@@ -512,23 +509,23 @@ export function SignalDetailPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">MOMENTUM</p>
-                    <p className="mt-0.5 text-sm capitalize text-slate-700">{investor.engagementMomentum}</p>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">MOMENTUM</p>
+                    <p className="mt-0.5 text-sm capitalize text-gray-700">{investor.engagementMomentum}</p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">OWNER</p>
-                    <p className="mt-0.5 text-sm text-slate-700">{investor.relationshipOwner}</p>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">OWNER</p>
+                    <p className="mt-0.5 text-sm text-gray-700">{investor.relationshipOwner}</p>
                   </div>
                 </div>
 
                 {investor.contacts && investor.contacts.length > 0 && (
-                  <div className="mt-4 pt-3 border-t border-slate-100">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">KEY CONTACTS</p>
+                  <div className="mt-4 pt-3 border-t border-gray-100">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-2">KEY CONTACTS</p>
                     <div className="space-y-1.5">
                       {investor.contacts.map((c) => (
-                        <div key={c.id} className="text-xs text-slate-600">
-                          <span className="font-medium text-slate-800">{c.name}</span>
-                          {c.role && <span className="text-slate-400"> / {c.role}</span>}
+                        <div key={c.id} className="text-xs text-gray-600">
+                          <span className="font-medium text-gray-700">{c.name}</span>
+                          {c.role && <span className="text-gray-400"> / {c.role}</span>}
                         </div>
                       ))}
                     </div>
@@ -540,7 +537,7 @@ export function SignalDetailPage() {
             {/* Related signals */}
             {relatedSignals.length > 0 && (
               <Card>
-                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-3">
                   RELATED SIGNALS
                 </p>
                 <div className="space-y-2">
@@ -550,13 +547,13 @@ export function SignalDetailPage() {
                       <button
                         key={s.id}
                         onClick={() => navigate(`/signals/${s.id}`)}
-                        className="block w-full rounded-lg border border-slate-100 p-2.5 text-left transition-colors hover:bg-slate-50"
+                        className="block w-full rounded-lg border border-gray-100 p-2.5 text-left transition-colors hover:bg-gray-50"
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <Badge variant={s.urgency} kind="urgency" className="text-[9px] px-1.5 py-0.5" />
-                          <span className="text-[10px] text-slate-400">{typeLabels[s.type]}</span>
+                          <span className="text-[10px] text-gray-400">{typeLabels[s.type]}</span>
                         </div>
-                        <p className="text-xs text-slate-700 line-clamp-2">{s.headline}</p>
+                        <p className="text-xs text-gray-700 line-clamp-2">{s.headline}</p>
                       </button>
                     );
                   })}

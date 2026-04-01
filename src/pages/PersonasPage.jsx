@@ -28,11 +28,11 @@ function deriveArchetype(investor) {
 }
 
 const archetypeColors = {
-  "Active accumulator": "bg-emerald-100 text-emerald-800 border-emerald-300",
+  "Active accumulator": "bg-gray-100 text-gray-800 border-gray-300",
   "Silent reducer": "bg-red-100 text-red-800 border-red-300",
-  "Passive tracker": "bg-sky-50 text-sky-700 border-sky-200",
-  "Governance steward": "bg-violet-100 text-violet-800 border-violet-300",
-  "Cautious trimmer": "bg-amber-100 text-amber-800 border-amber-300",
+  "Passive tracker": "bg-gray-50 text-gray-700 border-gray-200",
+  "Governance steward": "bg-gray-100 text-gray-800 border-gray-300",
+  "Cautious trimmer": "bg-gray-100 text-gray-700 border-gray-300",
 };
 
 const typeLabels = {
@@ -88,8 +88,8 @@ function getEngagementLabel(score) {
 }
 
 function getEngagementBarColor(score) {
-  if (score >= 70) return "bg-emerald-500";
-  if (score >= 40) return "bg-amber-500";
+  if (score >= 70) return "bg-black";
+  if (score >= 40) return "bg-gray-400";
   return "bg-red-500";
 }
 
@@ -202,7 +202,7 @@ export function PersonasPage() {
       .slice(0, 2);
 
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-5 flex flex-col">
+      <div className="rounded-lg border border-gray-200 bg-white p-5 flex flex-col">
         {/* Top row: avatar + identity */}
         <div className="flex items-start gap-4 mb-4">
           <div
@@ -211,8 +211,8 @@ export function PersonasPage() {
               isAtRisk
                 ? "bg-red-100 text-red-700"
                 : inv.archetype === "Active accumulator"
-                ? "bg-emerald-100 text-emerald-700"
-                : "bg-slate-200 text-slate-700"
+                ? "bg-gray-200 text-gray-700"
+                : "bg-gray-200 text-gray-700"
             )}
           >
             {initials}
@@ -220,7 +220,7 @@ export function PersonasPage() {
           <div className="flex-1 min-w-0">
             <Link
               to={`/investors/${inv.id}`}
-              className="text-sm font-bold text-slate-900 hover:underline"
+              className="text-sm font-bold text-black hover:underline"
             >
               {inv.name}
             </Link>
@@ -228,12 +228,12 @@ export function PersonasPage() {
               <span
                 className={cn(
                   "inline-flex items-center rounded-full border px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]",
-                  archetypeColors[inv.archetype] || "bg-slate-100 text-slate-700 border-slate-200"
+                  archetypeColors[inv.archetype] || "bg-gray-100 text-gray-700 border-gray-200"
                 )}
               >
                 {inv.archetype}
               </span>
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-gray-500">
                 {typeLabels[inv.type]} &middot; <span className="font-mono">{inv.holdingPct}%</span>
               </span>
             </div>
@@ -241,30 +241,30 @@ export function PersonasPage() {
         </div>
 
         {/* Description */}
-        <p className="text-xs text-slate-600 leading-relaxed mb-4">
+        <p className="text-xs text-gray-600 leading-relaxed mb-4">
           {inv.signalNote}
         </p>
 
         {/* Engagement Rate metric bar */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
               ENGAGEMENT RATE
             </span>
             <span
               className={cn(
                 "text-xs font-bold",
                 inv.scores.engagement >= 70
-                  ? "text-emerald-600"
+                  ? "text-black"
                   : inv.scores.engagement >= 40
-                  ? "text-amber-600"
+                  ? "text-gray-500"
                   : "text-red-600"
               )}
             >
               {getEngagementLabel(inv.scores.engagement)}
             </span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-slate-100">
+          <div className="h-1.5 w-full rounded-full bg-gray-100">
             <div
               className={cn("h-1.5 rounded-full transition-all", getEngagementBarColor(inv.scores.engagement))}
               style={{ width: `${inv.scores.engagement}%` }}
@@ -277,7 +277,7 @@ export function PersonasPage() {
           <div className="flex items-center justify-between mb-1.5">
             <span className={cn(
               "text-[11px] font-medium uppercase tracking-[0.1em]",
-              inv.scores.risk >= 60 ? "text-red-600 font-bold" : "text-slate-400"
+              inv.scores.risk >= 60 ? "text-red-600 font-bold" : "text-gray-400"
             )}>
               RISK SCORE
               {inv.scores.risk >= 60 && (
@@ -288,20 +288,20 @@ export function PersonasPage() {
             </span>
             <span className={cn(
               "font-mono text-xs font-bold",
-              inv.scores.risk >= 60 ? "text-red-600" : inv.scores.risk >= 35 ? "text-amber-600" : "text-emerald-600"
+              inv.scores.risk >= 60 ? "text-red-600" : inv.scores.risk >= 35 ? "text-gray-500" : "text-black"
             )}>
               {inv.scores.risk}%
             </span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-slate-100">
+          <div className="h-1.5 w-full rounded-full bg-gray-100">
             <div
               className={cn(
                 "h-1.5 rounded-full transition-all",
                 inv.scores.risk >= 60
                   ? "bg-red-500"
                   : inv.scores.risk >= 35
-                  ? "bg-amber-500"
-                  : "bg-emerald-500"
+                  ? "bg-gray-400"
+                  : "bg-black"
               )}
               style={{ width: `${inv.scores.risk}%` }}
             />
@@ -311,13 +311,13 @@ export function PersonasPage() {
         <div className="flex-1" />
 
         {/* Last call footer */}
-        <div className="mt-auto border-t border-slate-100 pt-3 flex items-center justify-between">
-          <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            LAST CALL: <span className="font-mono text-slate-600">{inv.lastContact || "N/A"}</span>
+        <div className="mt-auto border-t border-gray-100 pt-3 flex items-center justify-between">
+          <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+            LAST CALL: <span className="font-mono text-gray-600">{inv.lastContact || "N/A"}</span>
           </span>
           <Link
             to={`/investors/${inv.id}`}
-            className="text-slate-400 hover:text-slate-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition-colors"
           >
             <ExternalLink size={14} />
           </Link>
@@ -331,19 +331,19 @@ export function PersonasPage() {
     const riskLevel = getRiskLevel(inv.scores.risk);
 
     return (
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
+      <div className="rounded-lg border border-gray-200 bg-white p-5">
         <div className="flex items-start gap-3 mb-4">
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs font-bold text-slate-700">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 text-xs font-bold text-gray-700">
             {inv.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
           </div>
           <div>
             <Link
               to={`/investors/${inv.id}`}
-              className="text-sm font-bold text-slate-900 hover:underline"
+              className="text-sm font-bold text-black hover:underline"
             >
               {inv.name}
             </Link>
-            <p className="text-xs text-slate-500">{typeLabels[inv.type]}</p>
+            <p className="text-xs text-gray-500">{typeLabels[inv.type]}</p>
           </div>
         </div>
 
@@ -356,7 +356,7 @@ export function PersonasPage() {
         {/* Key Meeting Themes as pills */}
         {inv.meetingThemes.length > 0 && (
           <div className="mt-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-2">
               KEY MEETING THEMES
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -367,13 +367,7 @@ export function PersonasPage() {
                     "inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.05em]",
                     theme === "Retention" || theme === "Exit risk"
                       ? "bg-red-50 text-red-700 border border-red-200"
-                      : theme === "Governance"
-                      ? "bg-violet-50 text-violet-700 border border-violet-200"
-                      : theme === "ESG"
-                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                      : theme === "Growth thesis"
-                      ? "bg-teal-50 text-teal-700 border border-teal-200"
-                      : "bg-slate-100 text-slate-600 border border-slate-200"
+                      : "bg-gray-100 text-gray-600 border border-gray-200"
                   )}
                 >
                   {theme}
@@ -390,10 +384,10 @@ export function PersonasPage() {
     <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">
+        <h1 className="text-3xl font-bold text-black">
           Investor Personas
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-gray-500">
           How your investors behave, who is at risk, and how to engage each one
         </p>
       </div>
@@ -411,13 +405,13 @@ export function PersonasPage() {
           label="Avg Risk Score"
           value={`${avgRisk}%`}
           annotation="Across all personas"
-          annotationColor={avgRisk >= 50 ? "red" : avgRisk >= 35 ? "amber" : "emerald"}
+          annotationColor={avgRisk >= 50 ? "red" : "gray"}
         />
         <StatCard
           label="Growing"
           value={growingCount}
           annotation="Accumulating position"
-          annotationColor="emerald"
+          annotationColor="gray"
         />
         <StatCard
           label="Total Personas"
@@ -428,13 +422,13 @@ export function PersonasPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
           Filters
         </span>
         <select
           value={archetypeFilter}
           onChange={(e) => setArchetypeFilter(e.target.value)}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400"
+          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
         >
           <option value="">All Archetypes</option>
           {archetypes.map((a) => (
@@ -446,7 +440,7 @@ export function PersonasPage() {
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400"
+          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
         >
           <option value="">All Types</option>
           {Object.entries(typeLabels).map(([k, v]) => (
@@ -469,12 +463,12 @@ export function PersonasPage() {
           {strategicSpecialists.length > 0 && (
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-base font-bold text-slate-900">Strategic Specialists</h2>
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
+                <h2 className="text-base font-bold text-black">Strategic Specialists</h2>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1.5 font-mono text-[10px] font-bold text-white">
                   {strategicSpecialists.length}
                 </span>
               </div>
-              <hr className="border-slate-200 mb-5" />
+              <hr className="border-gray-200 mb-5" />
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                 {strategicSpecialists.map((inv) => (
                   <ContactCard key={inv.id} inv={inv} />
@@ -487,12 +481,12 @@ export function PersonasPage() {
           {portfolioManagers.length > 0 && (
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-base font-bold text-slate-900">Portfolio Managers</h2>
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
+                <h2 className="text-base font-bold text-black">Portfolio Managers</h2>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1.5 font-mono text-[10px] font-bold text-white">
                   {portfolioManagers.length}
                 </span>
               </div>
-              <hr className="border-slate-200 mb-5" />
+              <hr className="border-gray-200 mb-5" />
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                 {portfolioManagers.map((inv) => (
                   <ContactCard key={inv.id} inv={inv} />
@@ -515,39 +509,37 @@ export function PersonasPage() {
   );
 }
 
-function StatCard({ label, value, annotation, annotationColor = "slate", variant = "light" }) {
+function StatCard({ label, value, annotation, annotationColor = "gray", variant = "light" }) {
   const isDark = variant === "dark";
   const colorMap = {
-    emerald: "text-emerald-600",
+    gray: "text-gray-500",
     red: "text-red-600",
-    amber: "text-amber-600",
-    blue: "text-blue-600",
-    slate: "text-slate-500",
+    black: "text-black",
   };
 
   return (
     <div
       className={cn(
         "rounded-lg p-5 text-center",
-        isDark ? "bg-slate-900" : "border border-slate-200 bg-white"
+        isDark ? "bg-black" : "border border-gray-200 bg-white"
       )}
     >
       <p className={cn(
         "text-[11px] font-medium uppercase tracking-[0.1em]",
-        isDark ? "text-slate-400" : "text-slate-400"
+        isDark ? "text-gray-400" : "text-gray-400"
       )}>
         {label}
       </p>
       <p className={cn(
         "mt-1 font-mono text-4xl font-bold",
-        isDark ? "text-white" : "text-slate-900"
+        isDark ? "text-white" : "text-black"
       )}>
         {value}
       </p>
       {annotation && (
         <p className={cn(
           "mt-1 text-xs font-medium",
-          isDark ? "text-slate-400" : (colorMap[annotationColor] ?? colorMap.slate)
+          isDark ? "text-gray-400" : (colorMap[annotationColor] ?? colorMap.gray)
         )}>
           {annotation}
         </p>
