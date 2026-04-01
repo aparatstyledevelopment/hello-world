@@ -11,8 +11,12 @@ import { renderActionDetail } from './components/action-detail.js';
 import { renderInvestorProfile } from './components/investor-profile.js';
 import { renderInvestorsList } from './components/investors-list.js';
 import { renderMarketIntel } from './components/market-intel.js';
+import { renderPersonas } from './components/personas.js';
+import { renderReporting } from './components/reporting.js';
+import { renderPeerBenchmarking } from './components/peer-benchmarking.js';
+import { renderAGMIntelligence } from './components/agm-intelligence.js';
+import { renderCollaboration } from './components/collaboration.js';
 import { renderNav } from './components/nav.js';
-import { signals, actions } from './data/mock-data.js';
 
 const mainContent = document.getElementById('main-content');
 const navContainer = document.getElementById('nav-sidebar');
@@ -72,8 +76,24 @@ function route() {
       renderMarketIntel(mainContent);
       break;
 
+    case 'personas':
+      renderPersonas(mainContent);
+      break;
+
     case 'reports':
-      renderPlaceholder(mainContent, 'Reports', 'Investor engagement reports, ownership analysis, signal and action reports, and governance readiness reports. All generated from timeline, state, and action data.');
+      renderReporting(mainContent);
+      break;
+
+    case 'benchmarking':
+      renderPeerBenchmarking(mainContent);
+      break;
+
+    case 'agm':
+      renderAGMIntelligence(mainContent);
+      break;
+
+    case 'collaboration':
+      renderCollaboration(mainContent);
       break;
 
     case 'settings':

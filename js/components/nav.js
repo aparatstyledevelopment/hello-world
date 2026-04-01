@@ -21,7 +21,11 @@ const PRIMARY_NAV = [
 ];
 
 const SECONDARY_NAV = [
+  { icon: '\uD83C\uDFAD', label: 'Personas', href: '#/personas' },
   { icon: '\uD83D\uDCC8', label: 'Reports', href: '#/reports' },
+  { icon: '\uD83D\uDCCA', label: 'Peer Benchmarking', href: '#/benchmarking' },
+  { icon: '\uD83D\uDDF3\uFE0F', label: 'AGM Intelligence', href: '#/agm' },
+  { icon: '\uD83D\uDC65', label: 'Collaboration', href: '#/collaboration' },
   { icon: '\u2699\uFE0F', label: 'Settings', href: '#/settings' },
 ];
 
