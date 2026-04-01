@@ -1,6 +1,5 @@
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './components/layout/Layout'
-import { HomePage } from './pages/HomePage'
 import { SignalsPage } from './pages/SignalsPage'
 import { SignalDetailPage } from './pages/SignalDetailPage'
 import { ActionsPage } from './pages/ActionsPage'
@@ -21,7 +20,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/investors" replace />} />
           <Route path="/signals" element={<SignalsPage />} />
           <Route path="/signals/:id" element={<SignalDetailPage />} />
           <Route path="/actions" element={<ActionsPage />} />

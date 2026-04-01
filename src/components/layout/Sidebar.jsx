@@ -14,7 +14,6 @@ import {
 } from 'lucide-react'
 
 const mainEngineNav = [
-  { to: '/', label: 'Home', icon: Home, end: true },
   { to: '/investors', label: 'Investors', icon: Users },
   { to: '/signals', label: 'Signals', icon: Zap },
   { to: '/actions', label: 'Actions', icon: CheckSquare },
