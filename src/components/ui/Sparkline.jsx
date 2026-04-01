@@ -29,10 +29,10 @@ export function Sparkline({ data = [], width = 80, height = 24, color = "#3b82f6
 
   return (
     <svg
-      width={width}
-      height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className={cn("inline-block", className)}
+      className={cn("block w-full", className)}
+      style={{ height }}
+      preserveAspectRatio="none"
       fill="none"
     >
       <defs>
