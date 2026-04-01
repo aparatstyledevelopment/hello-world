@@ -13,6 +13,7 @@ import { ReportsPage } from './pages/ReportsPage'
 import { BenchmarkingPage } from './pages/BenchmarkingPage'
 import { AGMPage } from './pages/AGMPage'
 import { CollaborationPage } from './pages/CollaborationPage'
+import { SettingsPage } from './pages/SettingsPage'
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/benchmarking" element={<BenchmarkingPage />} />
           <Route path="/agm" element={<AGMPage />} />
           <Route path="/collaboration" element={<CollaborationPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </HashRouter>

@@ -66,6 +66,11 @@ html { scroll-behavior: smooth; }
   padding: 0.75rem;
 }
 
+/* Mobile responsive tables */
+@media (max-width: 768px) {
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
 /* Recommendation banners */
 .recommendation-banner {
   background-color: #1e293b; /* slate-800 */

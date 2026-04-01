@@ -1,12 +1,21 @@
+import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
-import { Search, Bell, Plus } from 'lucide-react'
+import { Search, Bell, Plus, Menu, X } from 'lucide-react'
 
-function HeaderBar() {
+function HeaderBar({ onMenuToggle, menuOpen }) {
   return (
-    <header className="flex h-[52px] items-center justify-between border-b border-slate-200 bg-white px-6">
+    <header className="flex h-[52px] items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6">
+      {/* Mobile menu button */}
+      <button
+        onClick={onMenuToggle}
+        className="mr-3 rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 md:hidden"
+      >
+        {menuOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
       {/* Search */}
-      <div className="relative w-80">
+      <div className="relative hidden w-80 sm:block">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
@@ -19,10 +28,18 @@ function HeaderBar() {
         </div>
       </div>
 
+      {/* Mobile search icon */}
+      <button className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-50 sm:hidden">
+        <Search size={18} />
+      </button>
+
+      {/* Spacer on mobile */}
+      <div className="flex-1 sm:hidden" />
+
       {/* Right section */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
         {/* Live Engine Status */}
-        <div className="flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5">
+        <div className="hidden items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 lg:flex">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -30,15 +47,21 @@ function HeaderBar() {
           <span className="text-[12px] font-semibold tracking-wide text-emerald-600">LIVE ENGINE</span>
         </div>
 
+        {/* Green dot only on smaller screens */}
+        <span className="relative flex h-2.5 w-2.5 lg:hidden">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+        </span>
+
         {/* Notification Bell */}
         <button className="relative rounded-lg p-2 text-slate-400 hover:bg-slate-50 hover:text-slate-600">
           <Bell size={18} strokeWidth={1.5} />
         </button>
 
         {/* Log Interaction CTA */}
-        <button className="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-[13px] font-medium text-white hover:bg-slate-800">
+        <button className="flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-[13px] font-medium text-white hover:bg-slate-800 md:px-4">
           <Plus size={15} strokeWidth={2} />
-          Log Interaction
+          <span className="hidden sm:inline">Log Interaction</span>
         </button>
       </div>
     </header>
@@ -46,11 +69,27 @@ function HeaderBar() {
 }
 
 export function Layout() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <div className="flex h-screen overflow-hidden bg-white">
-      <Sidebar />
+      {/* Sidebar - hidden on mobile, shown as overlay when menuOpen */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/30 transition-opacity md:hidden ${
+          menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-[240px] transform transition-transform md:static md:w-[200px] md:translate-x-0 ${
+          menuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <Sidebar onNavigate={() => setMenuOpen(false)} />
+      </div>
+
       <div className="flex flex-1 flex-col overflow-hidden">
-        <HeaderBar />
+        <HeaderBar onMenuToggle={() => setMenuOpen(!menuOpen)} menuOpen={menuOpen} />
         <main className="flex-1 overflow-y-auto bg-white">
           <div className="min-h-full">
             <Outlet />

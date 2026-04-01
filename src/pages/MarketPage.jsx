@@ -198,7 +198,7 @@ export function MarketPage() {
   }, []);
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Market Intelligence</h1>
@@ -409,7 +409,7 @@ export function MarketPage() {
 
       {/* ── Key Engagement Metrics ────────────────────────── */}
       <Card variant="section" accentColor="emerald" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-2 md:grid-cols-4">
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">HIGH RELEVANCE ITEMS</p>
             <p className="mt-2 font-mono text-4xl font-bold text-red-600">{stats.high}</p>

@@ -334,7 +334,7 @@ export function SignalsPage() {
     .sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
 
   return (
-    <div className="p-6 max-w-5xl">
+    <div className="p-4 md:p-6 ">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>

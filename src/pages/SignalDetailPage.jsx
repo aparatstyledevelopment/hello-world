@@ -82,7 +82,7 @@ export function SignalDetailPage() {
 
   if (!signal) {
     return (
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         <Card>
           <EmptyState
             icon={Radio}
@@ -196,7 +196,7 @@ export function SignalDetailPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       {/* Back */}
       <button
         onClick={() => navigate(-1)}
@@ -314,8 +314,8 @@ export function SignalDetailPage() {
           </div>
         </div>
 
-        {/* ── SIDEBAR (w-80) ───────────────────────────────────── */}
-        <aside className="hidden w-80 flex-shrink-0 lg:block">
+        {/* ── SIDEBAR (w-full lg:w-80) ───────────────────────────────────── */}
+        <aside className="hidden w-full lg:w-80 flex-shrink-0 lg:block">
           <div className="sticky top-6 space-y-4">
 
             {/* Evidence section */}

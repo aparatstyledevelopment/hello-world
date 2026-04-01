@@ -224,7 +224,7 @@ export function ReportsPage() {
     : 0;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Reports</h1>
@@ -234,7 +234,7 @@ export function ReportsPage() {
       </div>
 
       {/* ── HERO METRICS (dark StatCards) ─────────────────── */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           variant="dark"
           label="Signal Conversion Rate"
@@ -267,7 +267,7 @@ export function ReportsPage() {
         subtitle="Interaction analytics and coverage analysis"
         defaultOpen={true}
       >
-        <div className="grid grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
           {[
             { label: "Total Interactions", value: engagement.totalInteractions },
             { label: "By Type Categories", value: Object.keys(engagement.byType).length },
@@ -326,7 +326,7 @@ export function ReportsPage() {
         title="Ownership Report"
         subtitle="Shareholder structure and concentration analysis"
       >
-        <div className="grid grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
           {[
             { label: "Total Tracked", value: `${ownership.totalHolding.toFixed(1)}%` },
             { label: "Top-5 Concentration", value: `${ownership.concentration.toFixed(1)}%` },
@@ -389,7 +389,7 @@ export function ReportsPage() {
         title="Effectiveness Report"
         subtitle="Signal conversion, action outcomes, and team workload"
       >
-        <div className="grid grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
           {[
             { label: "Total Signals", value: effectiveness.totalSignals },
             { label: "Open Signals", value: effectiveness.openSignals },

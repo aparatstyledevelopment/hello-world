@@ -387,7 +387,7 @@ export function PersonasPage() {
   }
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">
@@ -399,7 +399,7 @@ export function PersonasPage() {
       </div>
 
       {/* Hero persona summary */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           label="At Risk"
           value={atRiskCount}

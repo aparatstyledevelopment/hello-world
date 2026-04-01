@@ -38,11 +38,12 @@ function SectionLabel({ children }) {
   )
 }
 
-function SidebarLink({ to, label, icon: Icon, badge, end }) {
+function SidebarLink({ to, label, icon: Icon, badge, end, onClick }) {
   return (
     <NavLink
       to={to}
       end={end}
+      onClick={onClick}
       className={({ isActive }) =>
         `flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition-colors ${
           isActive
@@ -62,9 +63,9 @@ function SidebarLink({ to, label, icon: Icon, badge, end }) {
   )
 }
 
-export function Sidebar() {
+export function Sidebar({ onNavigate }) {
   return (
-    <aside className="flex w-[200px] flex-col border-r border-slate-200 bg-white">
+    <aside className="flex h-full w-full flex-col border-r border-slate-200 bg-white md:w-[200px]">
       {/* Brand */}
       <div className="flex items-center gap-2.5 px-4 py-4">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary-600 text-[11px] font-bold text-white">
@@ -81,7 +82,7 @@ export function Sidebar() {
           <SectionLabel>Main Engine</SectionLabel>
           <div className="space-y-0.5">
             {mainEngineNav.map((item) => (
-              <SidebarLink key={item.to} {...item} />
+              <SidebarLink key={item.to} {...item} onClick={onNavigate} />
             ))}
           </div>
         </div>
@@ -90,7 +91,7 @@ export function Sidebar() {
           <SectionLabel>Resources</SectionLabel>
           <div className="space-y-0.5">
             {resourcesNav.map((item) => (
-              <SidebarLink key={item.to} {...item} />
+              <SidebarLink key={item.to} {...item} onClick={onNavigate} />
             ))}
           </div>
         </div>

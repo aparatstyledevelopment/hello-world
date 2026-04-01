@@ -123,7 +123,7 @@ export function HomePage() {
   const heroInvestor = heroSignal ? getInvestor(heroSignal.investorId) : null;
 
   return (
-    <div className="space-y-8 p-6 max-w-5xl">
+    <div className="space-y-8 p-4 md:p-6 ">
       {/* Page header */}
       <div>
         <h1 className="text-xl font-bold text-slate-900 tracking-tight">
@@ -186,7 +186,7 @@ export function HomePage() {
       )}
 
       {/* -- KEY METRICS ROW -------------------------------------------- */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-2 md:grid-cols-4">
         <StatCard
           label="NEW SIGNALS"
           value={newSignalCount}

@@ -237,7 +237,7 @@ export function AGMPage() {
   const classBVotes = 18;
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">AGM Intelligence</h1>
@@ -257,7 +257,7 @@ export function AGMPage() {
             {AGM_DATE} &middot; Annual General Meeting
           </span>
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-4">
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-500">GOVERNANCE INVESTORS</p>
             <p className="font-mono text-xl font-bold text-white mt-1">{govInvestors.length}</p>

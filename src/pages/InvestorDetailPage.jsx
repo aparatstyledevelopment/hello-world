@@ -161,7 +161,7 @@ function OverviewTab({ investor, signals }) {
     <div className="space-y-8">
       {/* STRUCTURAL SNAPSHOT */}
       <Card variant="section" accentColor="blue" title="Structural Snapshot">
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard
             label="TOTAL STAKE"
             value={`${investor.holdingPct}%`}
@@ -590,7 +590,7 @@ function PersonaTab({ investor }) {
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
           INVESTOR PERSONA
         </h3>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {["observed", "inferred", "team_assessed"].map((prov) => {
             const params = investor.stateParameters.filter((p) => p.provenance === prov);
             const labels = {
@@ -690,7 +690,7 @@ function EngagementTab({ investorId, investor }) {
     .filter((v, i, a) => a.indexOf(v) === i);
 
   return (
-    <div className="grid grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Main Timeline */}
       <div className="col-span-2">
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
@@ -848,7 +848,7 @@ export function InvestorDetailPage() {
 
   if (!investor) {
     return (
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         <EmptyState
           icon={User}
           title="Investor not found"
@@ -875,7 +875,7 @@ export function InvestorDetailPage() {
     : "Engagement has gone stale. Re-engage to maintain relationship health.";
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Back link */}
       <Link
         to="/investors"
