@@ -145,17 +145,17 @@ const categoryIcons = {
 };
 
 const categoryBadgeColors = {
-  Ownership: "bg-blue-50 text-blue-700 border border-blue-200",
-  Peer: "bg-violet-50 text-violet-700 border border-violet-200",
-  "Fund flows": "bg-teal-50 text-teal-700 border border-teal-200",
-  Regulatory: "bg-amber-50 text-amber-700 border border-amber-200",
-  Media: "bg-slate-100 text-slate-600 border border-slate-200",
+  Ownership: "bg-gray-100 text-gray-700 border border-gray-200",
+  Peer: "bg-gray-100 text-gray-700 border border-gray-200",
+  "Fund flows": "bg-gray-100 text-gray-700 border border-gray-200",
+  Regulatory: "bg-gray-100 text-gray-700 border border-gray-200",
+  Media: "bg-gray-100 text-gray-600 border border-gray-200",
 };
 
 const priorityColors = {
   high: "bg-red-50 text-red-700 border border-red-200",
-  medium: "bg-amber-50 text-amber-700 border border-amber-200",
-  low: "bg-slate-100 text-slate-500 border border-slate-200",
+  medium: "bg-gray-100 text-gray-700 border border-gray-200",
+  low: "bg-gray-100 text-gray-500 border border-gray-200",
 };
 
 // ── Top buyers / sellers for Q4 ────────────────────────
@@ -201,8 +201,8 @@ export function MarketPage() {
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Market Intelligence</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-black">Market Intelligence</h1>
+        <p className="mt-1 text-sm text-gray-500">
           Ownership shifts, peer activity, and market signals that matter to your investors
         </p>
       </div>
@@ -210,49 +210,49 @@ export function MarketPage() {
       {/* ── Concentration + Shareholder Base Row ─────────── */}
       <div className="flex flex-col md:flex-row gap-4">
         {/* Dark Concentration Index Card */}
-        <div className="rounded-lg bg-slate-900 p-5 md:w-80 md:flex-shrink-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+        <div className="rounded-lg bg-black p-5 md:w-80 md:flex-shrink-0">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
             CONCENTRATION INDEX
           </p>
           <div className="mt-3 flex items-baseline gap-4">
             <span className="font-mono text-5xl font-bold text-white">42.8%</span>
-            <span className="text-sm font-medium text-emerald-400">Top-5 holder share</span>
+            <span className="text-sm font-medium text-gray-400">Top-5 holder share</span>
           </div>
-          <div className="mt-4 h-2.5 w-full rounded-full bg-slate-700">
+          <div className="mt-4 h-2.5 w-full rounded-full bg-gray-700">
             <div
-              className="h-2.5 rounded-full bg-emerald-500 transition-all"
+              className="h-2.5 rounded-full bg-white transition-all"
               style={{ width: "42.8%" }}
             />
           </div>
-          <p className="mt-2 text-xs text-slate-400">
-            Shifted <span className="font-mono font-semibold text-emerald-400">+1.2%</span> vs. prior quarter
+          <p className="mt-2 text-xs text-gray-400">
+            Shifted <span className="font-mono font-semibold text-white">+1.2%</span> vs. prior quarter
             — concentration tightening among top institutional holders
           </p>
         </div>
 
         {/* Shareholder Base Highlights */}
         <div className="flex-1 min-w-0">
-        <Card variant="section" accentColor="blue" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
+        <Card variant="section" accentColor="gray" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* Top 5 Buyers */}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
               TOP 5 BUYERS (Q4)
             </p>
             <div className="space-y-2">
               {topBuyers.map((b) => (
-                <div key={b.name} className="flex items-center justify-between rounded-lg bg-emerald-50/50 px-3 py-2">
+                <div key={b.name} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
                   <div className="flex items-center gap-2">
-                    <TrendingUp size={14} className="text-emerald-500" />
+                    <TrendingUp size={14} className="text-gray-500" />
                     {b.id ? (
-                      <Link to={`/investors/${b.id}`} className="text-sm font-medium text-slate-800 hover:underline">
+                      <Link to={`/investors/${b.id}`} className="text-sm font-medium text-gray-800 hover:underline">
                         {b.name}
                       </Link>
                     ) : (
-                      <span className="text-sm font-medium text-slate-800">{b.name}</span>
+                      <span className="text-sm font-medium text-gray-800">{b.name}</span>
                     )}
                   </div>
-                  <span className="font-mono text-sm font-bold text-emerald-600">{b.change}</span>
+                  <span className="font-mono text-sm font-bold text-black">{b.change}</span>
                 </div>
               ))}
             </div>
@@ -260,7 +260,7 @@ export function MarketPage() {
 
           {/* Top 5 Sellers */}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
               TOP 5 SELLERS (Q4)
             </p>
             <div className="space-y-2">
@@ -269,11 +269,11 @@ export function MarketPage() {
                   <div className="flex items-center gap-2">
                     <TrendingDown size={14} className="text-red-500" />
                     {s.id ? (
-                      <Link to={`/investors/${s.id}`} className="text-sm font-medium text-slate-800 hover:underline">
+                      <Link to={`/investors/${s.id}`} className="text-sm font-medium text-gray-800 hover:underline">
                         {s.name}
                       </Link>
                     ) : (
-                      <span className="text-sm font-medium text-slate-800">{s.name}</span>
+                      <span className="text-sm font-medium text-gray-800">{s.name}</span>
                     )}
                   </div>
                   <span className="font-mono text-sm font-bold text-red-600">{s.change}</span>
@@ -290,8 +290,8 @@ export function MarketPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-base font-bold text-slate-900">Intelligence Feed</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Market events relevant to your shareholder base</p>
+            <h2 className="text-base font-bold text-black">Intelligence Feed</h2>
+            <p className="text-xs text-gray-500 mt-0.5">Market events relevant to your shareholder base</p>
           </div>
         </div>
 
@@ -304,8 +304,8 @@ export function MarketPage() {
               className={cn(
                 "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
                 activeCategory === cat
-                  ? "border-slate-900 bg-slate-900 text-white"
-                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  ? "border-black bg-black text-white"
+                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
               )}
             >
               {cat}
@@ -323,7 +323,7 @@ export function MarketPage() {
               return (
                 <div
                   key={item.id}
-                  className="rounded-lg border border-slate-200 bg-white p-5"
+                  className="rounded-lg border border-gray-200 bg-white p-5"
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon circle */}
@@ -332,9 +332,7 @@ export function MarketPage() {
                         "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
                         item.relevance === "high"
                           ? "bg-red-100"
-                          : item.relevance === "medium"
-                          ? "bg-amber-50"
-                          : "bg-slate-100"
+                          : "bg-gray-100"
                       )}
                     >
                       <CatIcon
@@ -342,9 +340,7 @@ export function MarketPage() {
                         className={cn(
                           item.relevance === "high"
                             ? "text-red-600"
-                            : item.relevance === "medium"
-                            ? "text-amber-600"
-                            : "text-slate-500"
+                            : "text-gray-500"
                         )}
                       />
                     </div>
@@ -352,13 +348,13 @@ export function MarketPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <h3 className="text-sm font-semibold text-slate-900">{item.title}</h3>
+                        <h3 className="text-sm font-semibold text-black">{item.title}</h3>
                         <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]", priorityColors[item.relevance])}>
                           {item.relevance}
                         </span>
                       </div>
 
-                      <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                      <p className="text-sm text-gray-600 leading-relaxed mb-3">
                         {item.description}
                       </p>
 
@@ -369,10 +365,10 @@ export function MarketPage() {
 
                         {hasAffected && (
                           <div className="flex items-center gap-1.5">
-                            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
+                            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1.5 font-mono text-[10px] font-bold text-white">
                               {item.affectedInvestorIds.length}
                             </span>
-                            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
                               YOUR INVESTORS
                             </span>
                             {item.affectedInvestorIds.map((id) => {
@@ -381,7 +377,7 @@ export function MarketPage() {
                                 <Link
                                   key={id}
                                   to={`/investors/${id}`}
-                                  className="text-xs font-semibold text-slate-700 hover:text-slate-900 hover:underline"
+                                  className="text-xs font-semibold text-gray-700 hover:text-black hover:underline"
                                 >
                                   {inv.name}
                                 </Link>
@@ -390,10 +386,10 @@ export function MarketPage() {
                           </div>
                         )}
 
-                        <div className="flex items-center gap-1 text-xs text-slate-400 ml-auto">
+                        <div className="flex items-center gap-1 text-xs text-gray-400 ml-auto">
                           <ExternalLink size={11} />
                           <span>{item.source}</span>
-                          <span className="text-slate-300 mx-1">&middot;</span>
+                          <span className="text-gray-300 mx-1">&middot;</span>
                           <span className="font-mono">{item.date}</span>
                         </div>
                       </div>
@@ -413,27 +409,27 @@ export function MarketPage() {
       </div>
 
       {/* ── Key Engagement Metrics ────────────────────────── */}
-      <Card variant="section" accentColor="emerald" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
+      <Card variant="section" accentColor="gray" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">HIGH RELEVANCE ITEMS</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">HIGH RELEVANCE ITEMS</p>
             <p className="mt-1.5 font-mono text-3xl font-bold text-red-600">{stats.high}</p>
-            <p className="mt-0.5 text-xs text-slate-500">Require attention</p>
+            <p className="mt-0.5 text-xs text-gray-500">Require attention</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">INVESTORS AFFECTED</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-slate-900">{stats.uniqueInvestors}</p>
-            <p className="mt-0.5 text-xs text-slate-500">Across all items</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">INVESTORS AFFECTED</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-black">{stats.uniqueInvestors}</p>
+            <p className="mt-0.5 text-xs text-gray-500">Across all items</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">THIS WEEK</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-slate-900">{stats.thisWeek}</p>
-            <p className="mt-0.5 text-xs text-slate-500">New items</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">THIS WEEK</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-black">{stats.thisWeek}</p>
+            <p className="mt-0.5 text-xs text-gray-500">New items</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">AFFECTING YOUR BASE</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-slate-900">{stats.withInvestors}</p>
-            <p className="mt-0.5 text-xs text-slate-500">of {stats.total} total</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">AFFECTING YOUR BASE</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-black">{stats.withInvestors}</p>
+            <p className="mt-0.5 text-xs text-gray-500">of {stats.total} total</p>
           </div>
         </div>
       </Card>

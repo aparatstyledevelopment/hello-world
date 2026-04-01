@@ -51,19 +51,19 @@ const typeLabels = {
 };
 
 const phaseColors = {
-  planned: "border-blue-400 bg-blue-50/30",
-  preparing: "border-amber-400 bg-amber-50/30",
-  in_progress: "border-emerald-400 bg-emerald-50/30",
-  awaiting_logging: "border-purple-400 bg-purple-50/30",
-  completed: "border-slate-300 bg-slate-50/30",
+  planned: "border-gray-300 bg-gray-50/30",
+  preparing: "border-gray-300 bg-gray-50/30",
+  in_progress: "border-gray-400 bg-gray-50/30",
+  awaiting_logging: "border-gray-300 bg-gray-50/30",
+  completed: "border-gray-200 bg-gray-50/30",
 };
 
 const phaseHeaderColors = {
-  planned: "text-blue-700",
-  preparing: "text-amber-700",
-  in_progress: "text-emerald-700",
-  awaiting_logging: "text-purple-700",
-  completed: "text-slate-500",
+  planned: "text-gray-700",
+  preparing: "text-gray-700",
+  in_progress: "text-black",
+  awaiting_logging: "text-gray-700",
+  completed: "text-gray-400",
 };
 
 function truncate(str, len = 50) {
@@ -97,12 +97,12 @@ function FilterBar({ filters, setFilters }) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Filter size={14} className="text-slate-400" />
+      <Filter size={14} className="text-gray-400" />
 
       <select
         value={filters.state}
         onChange={(e) => setFilters((f) => ({ ...f, state: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
+        className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
       >
         <option value="">All States</option>
         {actionStates.map((s) => (
@@ -115,7 +115,7 @@ function FilterBar({ filters, setFilters }) {
       <select
         value={filters.type}
         onChange={(e) => setFilters((f) => ({ ...f, type: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
+        className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
       >
         <option value="">All Types</option>
         {typeOptions.map((t) => (
@@ -128,7 +128,7 @@ function FilterBar({ filters, setFilters }) {
       <select
         value={filters.investor}
         onChange={(e) => setFilters((f) => ({ ...f, investor: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
+        className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
       >
         <option value="">All Investors</option>
         {investorOptions.map((i) => (
@@ -141,7 +141,7 @@ function FilterBar({ filters, setFilters }) {
       <select
         value={filters.owner}
         onChange={(e) => setFilters((f) => ({ ...f, owner: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
+        className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
       >
         <option value="">All Owners</option>
         {owners.map((o) => (
@@ -181,7 +181,7 @@ function ListView({ filteredActions, navigate }) {
       case "investor": {
         const inv = getInvestor(row.investorId);
         return (
-          <span className="font-semibold text-slate-900">
+          <span className="font-semibold text-black">
             {inv?.name ?? "Unknown"}
           </span>
         );
@@ -189,17 +189,17 @@ function ListView({ filteredActions, navigate }) {
       case "contact": {
         const con = getContact(row.contactId);
         return (
-          <span className="text-slate-500 text-xs">{con?.name ?? "-"}</span>
+          <span className="text-gray-400 text-xs">{con?.name ?? "-"}</span>
         );
       }
       case "objective":
         return (
-          <span className="text-sm text-slate-600" title={row.objective}>
+          <span className="text-sm text-gray-700" title={row.objective}>
             {truncate(row.objective)}
           </span>
         );
       case "owner":
-        return <span className="text-xs text-slate-600">{row.owner}</span>;
+        return <span className="text-xs text-gray-700">{row.owner}</span>;
       case "dueDate":
         return (
           <span
@@ -207,19 +207,19 @@ function ListView({ filteredActions, navigate }) {
               "font-mono text-xs",
               isOverdue(row.dueDate) && row.state !== "completed"
                 ? "font-semibold text-red-600"
-                : "text-slate-600"
+                : "text-gray-700"
             )}
           >
             {row.dueDate}
           </span>
         );
       case "channel":
-        return <span className="text-xs text-slate-500">{row.channel}</span>;
+        return <span className="text-xs text-gray-400">{row.channel}</span>;
       case "signal":
         return row.signalId ? (
-          <LinkIcon size={14} className="mx-auto text-slate-500" />
+          <LinkIcon size={14} className="mx-auto text-gray-400" />
         ) : (
-          <span className="text-slate-300">-</span>
+          <span className="text-gray-300">-</span>
         );
       default:
         return row[col.key];
@@ -274,21 +274,21 @@ function BoardView({ filteredActions, navigate }) {
                 >
                   PHASE {String(colIdx + 1).padStart(2, "0")}
                 </span>
-                <span className="text-[11px] font-semibold text-slate-700 uppercase">
+                <span className="text-[11px] font-semibold text-gray-700 uppercase">
                   {col.label}
                 </span>
               </div>
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white/80 px-1.5 text-[11px] font-semibold text-slate-600 shadow-sm">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white/80 px-1.5 text-[11px] font-semibold text-gray-700 shadow-sm">
                 {col.items.length}
               </span>
             </div>
           </div>
 
           {/* Cards container */}
-          <div className="flex flex-col gap-2 rounded-b-lg border border-t-0 border-slate-200 bg-slate-50/50 p-2 min-h-[200px]">
+          <div className="flex flex-col gap-2 rounded-b-lg border border-t-0 border-gray-200 bg-gray-100/50 p-2 min-h-[200px]">
             {col.items.length === 0 ? (
               <div className="flex items-center justify-center py-8">
-                <p className="text-xs text-slate-400">No actions</p>
+                <p className="text-xs text-gray-400">No actions</p>
               </div>
             ) : (
               col.items.map((action) => {
@@ -352,21 +352,21 @@ export function ActionsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Actions</h1>
-          <p className="mt-0.5 text-sm text-slate-500">
+          <h1 className="text-xl font-bold text-black">Actions</h1>
+          <p className="mt-0.5 text-sm text-gray-400">
             Engagement actions and outreach management
           </p>
         </div>
         <div className="flex items-center gap-3">
           {/* View toggle */}
-          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5">
+          <div className="inline-flex rounded-lg border border-gray-200 bg-white p-0.5">
             <button
               onClick={() => setViewMode("list")}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                 viewMode === "list"
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-400 hover:text-slate-600"
+                  ? "bg-black text-white"
+                  : "text-gray-400 hover:text-gray-700"
               )}
             >
               <List size={14} />
@@ -377,8 +377,8 @@ export function ActionsPage() {
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                 viewMode === "board"
-                  ? "bg-slate-900 text-white"
-                  : "text-slate-400 hover:text-slate-600"
+                  ? "bg-black text-white"
+                  : "text-gray-400 hover:text-gray-700"
               )}
             >
               <LayoutGrid size={14} />
@@ -388,7 +388,7 @@ export function ActionsPage() {
 
           <button
             onClick={() => navigate("/actions/new")}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-black px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-gray-800"
           >
             <Plus size={14} />
             New Action
@@ -398,11 +398,11 @@ export function ActionsPage() {
 
       {/* Stats overview cards */}
       <div className="grid grid-cols-4 gap-3">
-        <div className="rounded-lg bg-slate-900 p-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">TOTAL ACTIONS</p>
+        <div className="rounded-lg bg-black p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">TOTAL ACTIONS</p>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="font-mono text-2xl font-bold text-white">{filteredActions.length}</span>
-            <span className="text-[11px] text-slate-500">across all phases</span>
+            <span className="text-[11px] text-gray-400">across all phases</span>
           </div>
           <div className="mt-3 flex gap-1">
             {actionStates.map((s) => {
@@ -413,11 +413,7 @@ export function ActionsPage() {
                   key={s.key}
                   className={cn(
                     "h-1.5 rounded-full transition-all",
-                    s.key === "planned" ? "bg-blue-500" :
-                    s.key === "preparing" ? "bg-amber-400" :
-                    s.key === "in_progress" ? "bg-emerald-500" :
-                    s.key === "awaiting_logging" ? "bg-purple-500" :
-                    "bg-slate-500"
+                    s.key === "completed" ? "bg-gray-400" : "bg-white"
                   )}
                   style={{ width: `${Math.max(pct, 4)}%` }}
                 />
@@ -425,30 +421,30 @@ export function ActionsPage() {
             })}
           </div>
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">IN PROGRESS</p>
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">IN PROGRESS</p>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-mono text-2xl font-bold text-emerald-600">{inProgressCount}</span>
+            <span className="font-mono text-2xl font-bold text-black">{inProgressCount}</span>
           </div>
-          <p className="mt-1 text-xs text-slate-400">Active engagements</p>
+          <p className="mt-1 text-xs text-gray-400">Active engagements</p>
         </div>
-        <div className={cn("rounded-lg border p-4", overdueCount > 0 ? "border-red-200 bg-red-50/50" : "border-slate-200 bg-white")}>
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">OVERDUE</p>
+        <div className={cn("rounded-lg border p-4", overdueCount > 0 ? "border-red-200 bg-red-50/50" : "border-gray-200 bg-white")}>
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">OVERDUE</p>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className={cn("font-mono text-2xl font-bold", overdueCount > 0 ? "text-red-600" : "text-slate-900")}>{overdueCount}</span>
+            <span className={cn("font-mono text-2xl font-bold", overdueCount > 0 ? "text-red-600" : "text-black")}>{overdueCount}</span>
           </div>
-          <p className="mt-1 text-xs text-slate-400">{overdueCount > 0 ? "Require attention" : "All on track"}</p>
+          <p className="mt-1 text-xs text-gray-400">{overdueCount > 0 ? "Require attention" : "All on track"}</p>
         </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">COMPLETION RATE</p>
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">COMPLETION RATE</p>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="font-mono text-2xl font-bold text-slate-900">
+            <span className="font-mono text-2xl font-bold text-black">
               {actions.length ? Math.round((actions.filter((a) => a.state === "completed").length / actions.length) * 100) : 0}%
             </span>
           </div>
-          <div className="mt-2 h-1.5 rounded-full bg-slate-100">
+          <div className="mt-2 h-1.5 rounded-full bg-gray-200">
             <div
-              className="h-1.5 rounded-full bg-emerald-500 transition-all"
+              className="h-1.5 rounded-full bg-black transition-all"
               style={{ width: `${actions.length ? (actions.filter((a) => a.state === "completed").length / actions.length) * 100 : 0}%` }}
             />
           </div>

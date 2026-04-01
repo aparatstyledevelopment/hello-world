@@ -4,12 +4,10 @@ import { AlertTriangle } from "lucide-react";
 const basePill =
   "inline-flex items-center text-[11px] tracking-[0.05em] uppercase font-semibold rounded-md px-2.5 py-1";
 
-// --- Variant style maps ---
-
 const urgencyStyles = {
   high: "bg-red-50 text-red-700 border border-red-200",
-  medium: "bg-amber-50 text-amber-700 border border-amber-200",
-  low: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  medium: "bg-gray-100 text-gray-700 border border-gray-300",
+  low: "bg-gray-50 text-gray-500 border border-gray-200",
 };
 
 const urgencyLabels = {
@@ -19,12 +17,12 @@ const urgencyLabels = {
 };
 
 const stateStyles = {
-  new: "bg-blue-50 text-blue-700",
-  reviewing: "bg-amber-50 text-amber-700",
-  confirmed: "bg-emerald-50 text-emerald-700",
-  action_created: "bg-purple-50 text-purple-700",
-  resolved: "bg-slate-100 text-slate-500",
-  dismissed: "bg-slate-50 text-slate-400",
+  new: "bg-black text-white",
+  reviewing: "bg-gray-200 text-gray-700",
+  confirmed: "bg-gray-800 text-white",
+  action_created: "bg-gray-600 text-white",
+  resolved: "bg-gray-100 text-gray-500",
+  dismissed: "bg-gray-50 text-gray-400",
 };
 
 const stateLabels = {
@@ -38,10 +36,10 @@ const stateLabels = {
 
 const typeStyles = {
   retention_risk: "bg-red-50 text-red-800 border border-red-200",
-  influence_opportunity: "bg-teal-50 text-teal-800 border border-teal-200",
-  governance_management: "bg-slate-100 text-slate-800 border border-slate-200",
-  information_gap: "bg-amber-50 text-amber-800 border border-amber-200",
-  relationship_maintenance: "bg-blue-50 text-blue-800 border border-blue-200",
+  influence_opportunity: "bg-gray-100 text-gray-800 border border-gray-300",
+  governance_management: "bg-gray-100 text-gray-800 border border-gray-200",
+  information_gap: "bg-gray-100 text-gray-700 border border-gray-300",
+  relationship_maintenance: "bg-gray-50 text-gray-700 border border-gray-200",
 };
 
 const typeLabels = {
@@ -53,14 +51,14 @@ const typeLabels = {
 };
 
 const tierStyles = {
-  T1: "bg-slate-800 text-white",
-  T2: "bg-slate-200 text-slate-700",
-  T3: "bg-slate-100 text-slate-500",
+  T1: "bg-black text-white",
+  T2: "bg-gray-300 text-gray-700",
+  T3: "bg-gray-100 text-gray-500",
 };
 
 const trajectoryStyles = {
-  stable: "bg-slate-100 text-slate-700",
-  increasing: "bg-emerald-50 text-emerald-700",
+  stable: "bg-gray-100 text-gray-700",
+  increasing: "bg-gray-800 text-white",
   declining: "bg-red-50 text-red-700",
 };
 
@@ -71,11 +69,11 @@ const trajectoryLabels = {
 };
 
 const sensitivityStyles = {
-  governance: "border border-slate-300 text-slate-700",
-  esg: "border border-emerald-300 text-emerald-700",
-  "esg/proxy": "border border-emerald-300 text-emerald-700",
-  esg_proxy: "border border-emerald-300 text-emerald-700",
-  liquidity: "border border-blue-300 text-blue-700",
+  governance: "border border-gray-400 text-gray-700",
+  esg: "border border-gray-400 text-gray-700",
+  "esg/proxy": "border border-gray-400 text-gray-700",
+  esg_proxy: "border border-gray-400 text-gray-700",
+  liquidity: "border border-gray-400 text-gray-700",
   strategic_change: "bg-red-50 text-red-700 border border-red-200",
 };
 
@@ -89,13 +87,13 @@ const sensitivityLabels = {
 };
 
 const roleStyles = {
-  esg_specialist: "bg-emerald-50 text-emerald-800 border border-emerald-200",
-  "buy-side_analyst": "bg-blue-50 text-blue-800",
-  buyside_analyst: "bg-blue-50 text-blue-800",
-  "proxy/stewardship": "bg-slate-100 text-slate-800",
-  proxy_stewardship: "bg-slate-100 text-slate-800",
-  portfolio_manager: "bg-indigo-50 text-indigo-800 border border-indigo-200",
-  sell_side_analyst: "bg-cyan-50 text-cyan-800 border border-cyan-200",
+  esg_specialist: "bg-gray-100 text-gray-800 border border-gray-300",
+  "buy-side_analyst": "bg-gray-100 text-gray-800",
+  buyside_analyst: "bg-gray-100 text-gray-800",
+  "proxy/stewardship": "bg-gray-100 text-gray-800",
+  proxy_stewardship: "bg-gray-100 text-gray-800",
+  portfolio_manager: "bg-gray-200 text-gray-800 border border-gray-300",
+  sell_side_analyst: "bg-gray-100 text-gray-800 border border-gray-300",
 };
 
 const roleLabels = {
@@ -111,12 +109,11 @@ const roleLabels = {
 function resolveVariant(variant, kind) {
   if (!variant)
     return {
-      style: "bg-slate-100 text-slate-700 border border-slate-200",
+      style: "bg-gray-100 text-gray-700 border border-gray-200",
       label: null,
       resolvedKind: "default",
     };
 
-  // Explicit kind resolution
   if (kind === "urgency" && urgencyStyles[variant])
     return { style: urgencyStyles[variant], label: urgencyLabels[variant], resolvedKind: "urgency" };
   if (kind === "state" && stateStyles[variant])
@@ -132,7 +129,6 @@ function resolveVariant(variant, kind) {
   if (kind === "role" && roleStyles[variant])
     return { style: roleStyles[variant], label: roleLabels[variant], resolvedKind: "role" };
 
-  // Auto-detect by variant value
   if (urgencyStyles[variant])
     return { style: urgencyStyles[variant], label: urgencyLabels[variant], resolvedKind: "urgency" };
   if (stateStyles[variant])
@@ -148,13 +144,12 @@ function resolveVariant(variant, kind) {
   if (roleStyles[variant])
     return { style: roleStyles[variant], label: roleLabels[variant], resolvedKind: "role" };
 
-  // Numeric tier fallback (1, 2, 3)
   const tierKey = `T${variant}`;
   if (tierStyles[tierKey])
     return { style: tierStyles[tierKey], label: tierKey, resolvedKind: "tier" };
 
   return {
-    style: "bg-slate-100 text-slate-700 border border-slate-200",
+    style: "bg-gray-100 text-gray-700 border border-gray-200",
     label: null,
     resolvedKind: "default",
   };

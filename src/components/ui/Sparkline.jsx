@@ -1,6 +1,6 @@
 import { cn } from "../../lib/utils";
 
-export function Sparkline({ data = [], width = 80, height = 24, color = "#3b82f6", className }) {
+export function Sparkline({ data = [], width = 80, height = 24, color = "#000000", className }) {
   if (!data.length) return null;
 
   const min = Math.min(...data);
@@ -15,7 +15,6 @@ export function Sparkline({ data = [], width = 80, height = 24, color = "#3b82f6
 
   const polyline = points.join(" ");
 
-  // Build area fill path
   const areaPath = [
     `M0,${height}`,
     ...data.map((v, i) => {
