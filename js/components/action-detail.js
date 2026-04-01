@@ -14,7 +14,7 @@ import {
   teamMembers,
   signals,
   timelineEvents,
-  investorState,
+  investorStates as investorState,
 } from '../data/mock-data.js';
 
 import {

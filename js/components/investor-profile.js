@@ -8,7 +8,7 @@
 import {
   investors,
   contacts,
-  investorState,
+  investorStates as investorState,
   timelineEvents,
   signals,
   actions,

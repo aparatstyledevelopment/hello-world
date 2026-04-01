@@ -10,7 +10,7 @@ import {
   investors,
   contacts,
   teamMembers,
-  investorState,
+  investorStates as investorState,
   timelineEvents,
   actions,
 } from '../data/mock-data.js';
