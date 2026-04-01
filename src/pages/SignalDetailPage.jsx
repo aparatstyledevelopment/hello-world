@@ -370,11 +370,12 @@ export function SignalDetailPage() {
                     {investor.holdingTrend === "down" ? "DECLINING" : investor.holdingTrend === "up" ? "INCREASING" : "STABLE"}
                   </span>
                 </div>
-                <div className="flex items-end gap-2 h-24">
+                <div className="flex items-end gap-2">
                   {investor.holdingHistory.map((val, i) => {
                     const max = Math.max(...investor.holdingHistory);
                     const min = Math.min(...investor.holdingHistory) * 0.9;
                     const pct = ((val - min) / (max - min)) * 100;
+                    const barHeight = Math.max(pct, 10) * 0.64;
                     const isLast = i === investor.holdingHistory.length - 1;
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
@@ -386,7 +387,7 @@ export function SignalDetailPage() {
                             "w-full rounded-t transition-all",
                             isLast ? "bg-red-500" : "bg-slate-200"
                           )}
-                          style={{ height: `${Math.max(pct, 10)}%` }}
+                          style={{ height: `${barHeight}px` }}
                         />
                         <span className="text-[9px] text-slate-400">Q{i + 1}</span>
                       </div>
@@ -405,11 +406,12 @@ export function SignalDetailPage() {
                     INCREASING
                   </span>
                 </div>
-                <div className="flex items-end gap-2 h-24">
+                <div className="flex items-end gap-2">
                   {investor.holdingHistory.map((val, i) => {
                     const max = Math.max(...investor.holdingHistory) * 1.1;
                     const min = Math.min(...investor.holdingHistory) * 0.9;
                     const pct = ((val - min) / (max - min)) * 100;
+                    const barHeight = Math.max(pct, 10) * 0.64;
                     const isLast = i === investor.holdingHistory.length - 1;
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
@@ -421,7 +423,7 @@ export function SignalDetailPage() {
                             "w-full rounded-t transition-all",
                             isLast ? "bg-emerald-500" : "bg-emerald-200"
                           )}
-                          style={{ height: `${Math.max(pct, 10)}%` }}
+                          style={{ height: `${barHeight}px` }}
                         />
                         <span className="text-[9px] text-slate-400">Q{i + 1}</span>
                       </div>

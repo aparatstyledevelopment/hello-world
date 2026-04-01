@@ -27,19 +27,17 @@ export function TimelineEntry({
 
       {/* Right: content area */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-slate-900">{title}</span>
-            {type && (
-              <span className="bg-emerald-500 text-white text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded">
-                {type}
-              </span>
-            )}
-          </div>
-          {date && (
-            <span className="text-sm text-slate-400 flex-shrink-0">{date}</span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="font-semibold text-slate-900">{title}</span>
+          {type && (
+            <span className="bg-emerald-500 text-white text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded">
+              {type}
+            </span>
           )}
         </div>
+        {date && (
+          <span className="text-sm text-slate-400 mt-1 block">{date}</span>
+        )}
         {description && (
           <p className="text-sm text-slate-500 mt-1">{description}</p>
         )}
