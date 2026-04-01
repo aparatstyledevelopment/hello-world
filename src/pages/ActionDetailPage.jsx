@@ -12,6 +12,9 @@ import {
   FileText,
   Target,
   MessageSquare,
+  Mail,
+  Phone,
+  Video,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
@@ -230,15 +233,31 @@ function DetailSidebar({ action, signal, investor }) {
       {/* Recent Timeline */}
       {investor && timeline.length > 0 && (
         <Card title="Recent Timeline">
-          {timeline.map((evt, idx) => (
-            <TimelineEntry
-              key={evt.id}
-              icon={Clock}
-              title={evt.description}
-              date={evt.date}
-              isLast={idx === timeline.length - 1}
-            />
-          ))}
+          <div className="relative pl-5">
+            <div className="absolute left-[4px] top-1.5 bottom-1.5 w-0.5 bg-slate-200" />
+            <div className="space-y-2">
+              {timeline.map((evt) => {
+                const typeIcons = { meeting: Video, email: Mail, call: Phone, filing: FileText, signal: Bell };
+                const dotColors = { meeting: "bg-emerald-500", call: "bg-blue-500", email: "bg-slate-400", signal: "bg-amber-500", filing: "bg-violet-500" };
+                const badgeStyles = { meeting: "bg-emerald-50 text-emerald-700", call: "bg-blue-50 text-blue-700", email: "bg-slate-100 text-slate-600", signal: "bg-amber-50 text-amber-700", filing: "bg-violet-50 text-violet-700" };
+                const Icon = typeIcons[evt.type] || Clock;
+                return (
+                  <div key={evt.id} className="relative">
+                    <div className={cn("absolute -left-5 top-3.5 h-2.5 w-2.5 rounded-full ring-2 ring-white", dotColors[evt.type] || "bg-slate-400")} />
+                    <div className="rounded-lg border border-slate-100 bg-white p-3 hover:border-slate-200 transition-colors">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className={cn("inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide", badgeStyles[evt.type] || "bg-slate-100 text-slate-600")}>
+                          {evt.type}
+                        </span>
+                        <span className="text-[10px] text-slate-400">{evt.date}</span>
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed">{evt.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </Card>
       )}
 

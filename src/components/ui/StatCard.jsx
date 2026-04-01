@@ -38,7 +38,7 @@ export function StatCard({
         </p>
       )}
 
-      <div className="mt-3 flex items-baseline gap-3">
+      <div className="mt-1.5 flex items-baseline gap-3">
         <span
           className={cn(
             "font-mono text-3xl font-bold",

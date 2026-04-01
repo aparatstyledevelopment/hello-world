@@ -7,6 +7,7 @@ import { ActionsPage } from './pages/ActionsPage'
 import { ActionDetailPage } from './pages/ActionDetailPage'
 import { InvestorsPage } from './pages/InvestorsPage'
 import { InvestorDetailPage } from './pages/InvestorDetailPage'
+import { InvestorTimelinePage } from './pages/InvestorTimelinePage'
 import { MarketPage } from './pages/MarketPage'
 import { PersonasPage } from './pages/PersonasPage'
 import { ReportsPage } from './pages/ReportsPage'
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/actions/:id" element={<ActionDetailPage />} />
           <Route path="/investors" element={<InvestorsPage />} />
           <Route path="/investors/:id" element={<InvestorDetailPage />} />
+          <Route path="/investors/:id/timeline" element={<InvestorTimelinePage />} />
           <Route path="/market" element={<MarketPage />} />
           <Route path="/personas" element={<PersonasPage />} />
           <Route path="/reports" element={<ReportsPage />} />

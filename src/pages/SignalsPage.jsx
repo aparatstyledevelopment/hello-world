@@ -90,13 +90,32 @@ function SignalPressureSummary({ filteredSignals }) {
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-6 py-4 mb-6">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-4 mb-3">
         <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
           SIGNAL PRESSURE
         </p>
-        <p className="text-[11px] text-slate-400">
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1.5 text-xs">
+            <span className="h-2 w-2 rounded-full bg-red-500" />
+            <span className={cn("font-mono font-bold", highCount > 0 ? "text-red-600" : "text-slate-400")}>
+              {highCount}
+            </span>
+            <span className="text-slate-400">High</span>
+          </span>
+          <span className="flex items-center gap-1.5 text-xs">
+            <span className="h-2 w-2 rounded-full bg-amber-400" />
+            <span className="font-mono font-bold text-slate-600">{mediumCount}</span>
+            <span className="text-slate-400">Medium</span>
+          </span>
+          <span className="flex items-center gap-1.5 text-xs">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span className="font-mono font-bold text-slate-600">{lowCount}</span>
+            <span className="text-slate-400">Low</span>
+          </span>
+        </div>
+        <span className="text-[11px] font-mono font-semibold text-slate-400 ml-auto">
           {filteredSignals.length} TOTAL
-        </p>
+        </span>
       </div>
 
       {/* Stacked bar */}
@@ -119,27 +138,6 @@ function SignalPressureSummary({ filteredSignals }) {
             style={{ width: `${(lowCount / total) * 100}%` }}
           />
         )}
-      </div>
-
-      {/* Counts */}
-      <div className="flex items-center gap-4 mt-2.5">
-        <span className="flex items-center gap-1.5 text-xs">
-          <span className="h-2 w-2 rounded-full bg-red-500" />
-          <span className={cn("font-mono font-bold", highCount > 0 ? "text-red-600" : "text-slate-400")}>
-            {highCount}
-          </span>
-          <span className="text-slate-400">High</span>
-        </span>
-        <span className="flex items-center gap-1.5 text-xs">
-          <span className="h-2 w-2 rounded-full bg-amber-400" />
-          <span className="font-mono font-bold text-slate-600">{mediumCount}</span>
-          <span className="text-slate-400">Medium</span>
-        </span>
-        <span className="flex items-center gap-1.5 text-xs">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          <span className="font-mono font-bold text-slate-600">{lowCount}</span>
-          <span className="text-slate-400">Low</span>
-        </span>
       </div>
     </div>
   );

@@ -123,7 +123,7 @@ export function HomePage() {
   const heroInvestor = heroSignal ? getInvestor(heroSignal.investorId) : null;
 
   return (
-    <div className="space-y-5 p-4 md:p-6 ">
+    <div className="space-y-4 p-4 md:p-6">
       {/* Page header */}
       <div>
         <h1 className="text-xl font-bold text-slate-900 tracking-tight">
@@ -142,9 +142,9 @@ export function HomePage() {
           )}
           onClick={() => navigate(`/signals/${heroSignal.id}`)}
         >
-          <div className="px-5 py-5">
+          <div className="px-5 py-4">
             {/* Top row: icon + badges + confidence */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-50">
                   <AlertTriangle size={20} className="text-red-600" />
@@ -163,12 +163,12 @@ export function HomePage() {
             </h2>
 
             {/* Description */}
-            <p className="mt-3 text-base text-slate-600 leading-relaxed max-w-2xl">
+            <p className="mt-2 text-sm text-slate-600 leading-relaxed max-w-2xl">
               {heroSignal.description}
             </p>
 
             {/* Investor + timestamp */}
-            <div className="mt-6 flex items-center gap-4">
+            <div className="mt-3 flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-slate-400">Influenced:</span>
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-200 text-[10px] font-bold text-slate-600">
@@ -359,38 +359,31 @@ export function HomePage() {
       )}
 
       {/* -- OWNERSHIP OVERVIEW ----------------------------------------- */}
-      <div className="flex flex-col md:flex-row gap-4">
-      <div className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white p-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-4">
-          OWNERSHIP OVERVIEW
-        </p>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Total tracked investors</span>
-            <span className="font-mono text-sm font-bold text-slate-900">{investors.length}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Aggregate ownership</span>
-            <span className="font-mono text-sm font-bold text-slate-900">{totalOwnership.toFixed(1)}%</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Tier 1 holders</span>
-            <span className="font-mono text-sm font-bold text-slate-900">{investors.filter(i => i.tier === 1).length}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Active signals</span>
-            <span className="font-mono text-sm font-bold text-amber-600">{newSignalCount}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Positive momentum</span>
-            <span className="font-mono text-sm font-bold text-emerald-600">{investors.filter(i => i.engagementMomentum === "positive").length}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">Negative momentum</span>
-            <span className="font-mono text-sm font-bold text-red-600">{investors.filter(i => i.engagementMomentum === "negative").length}</span>
-          </div>
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Tracked</p>
+          <p className="mt-1 font-mono text-lg font-bold text-slate-900">{investors.length}</p>
         </div>
-      </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Ownership</p>
+          <p className="mt-1 font-mono text-lg font-bold text-slate-900">{totalOwnership.toFixed(1)}%</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Tier 1</p>
+          <p className="mt-1 font-mono text-lg font-bold text-slate-900">{investors.filter(i => i.tier === 1).length}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Signals</p>
+          <p className="mt-1 font-mono text-lg font-bold text-amber-600">{newSignalCount}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Positive</p>
+          <p className="mt-1 font-mono text-lg font-bold text-emerald-600">{investors.filter(i => i.engagementMomentum === "positive").length}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Negative</p>
+          <p className="mt-1 font-mono text-lg font-bold text-red-600">{investors.filter(i => i.engagementMomentum === "negative").length}</p>
+        </div>
       </div>
     </div>
   );

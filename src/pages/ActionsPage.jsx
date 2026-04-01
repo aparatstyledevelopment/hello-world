@@ -356,33 +356,6 @@ export function ActionsPage() {
           <p className="mt-0.5 text-sm text-slate-500">
             Engagement actions and outreach management
           </p>
-          <div className="mt-3 flex items-center gap-6">
-            <StatCard
-              label="TOTAL ACTIONS"
-              value={filteredActions.length}
-              className="border-0 p-0 bg-transparent"
-            />
-            <div className="h-8 w-px bg-slate-200" />
-            <StatCard
-              label="IN PROGRESS"
-              value={inProgressCount}
-              className="border-0 p-0 bg-transparent"
-            />
-            <div className="h-8 w-px bg-slate-200" />
-            <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                OVERDUE
-              </span>
-              <p
-                className={cn(
-                  "font-mono text-lg font-bold",
-                  overdueCount > 0 ? "text-red-600" : "text-slate-900"
-                )}
-              >
-                {overdueCount}
-              </p>
-            </div>
-          </div>
         </div>
         <div className="flex items-center gap-3">
           {/* View toggle */}
@@ -420,6 +393,65 @@ export function ActionsPage() {
             <Plus size={14} />
             New Action
           </button>
+        </div>
+      </div>
+
+      {/* Stats overview cards */}
+      <div className="grid grid-cols-4 gap-3">
+        <div className="rounded-lg bg-slate-900 p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">TOTAL ACTIONS</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-mono text-2xl font-bold text-white">{filteredActions.length}</span>
+            <span className="text-[11px] text-slate-500">across all phases</span>
+          </div>
+          <div className="mt-3 flex gap-1">
+            {actionStates.map((s) => {
+              const count = filteredActions.filter((a) => a.state === s.key).length;
+              const pct = filteredActions.length ? (count / filteredActions.length) * 100 : 0;
+              return (
+                <div
+                  key={s.key}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all",
+                    s.key === "planned" ? "bg-blue-500" :
+                    s.key === "preparing" ? "bg-amber-400" :
+                    s.key === "in_progress" ? "bg-emerald-500" :
+                    s.key === "awaiting_logging" ? "bg-purple-500" :
+                    "bg-slate-500"
+                  )}
+                  style={{ width: `${Math.max(pct, 4)}%` }}
+                />
+              );
+            })}
+          </div>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">IN PROGRESS</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-mono text-2xl font-bold text-emerald-600">{inProgressCount}</span>
+          </div>
+          <p className="mt-1 text-xs text-slate-400">Active engagements</p>
+        </div>
+        <div className={cn("rounded-lg border p-4", overdueCount > 0 ? "border-red-200 bg-red-50/50" : "border-slate-200 bg-white")}>
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">OVERDUE</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className={cn("font-mono text-2xl font-bold", overdueCount > 0 ? "text-red-600" : "text-slate-900")}>{overdueCount}</span>
+          </div>
+          <p className="mt-1 text-xs text-slate-400">{overdueCount > 0 ? "Require attention" : "All on track"}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">COMPLETION RATE</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="font-mono text-2xl font-bold text-slate-900">
+              {actions.length ? Math.round((actions.filter((a) => a.state === "completed").length / actions.length) * 100) : 0}%
+            </span>
+          </div>
+          <div className="mt-2 h-1.5 rounded-full bg-slate-100">
+            <div
+              className="h-1.5 rounded-full bg-emerald-500 transition-all"
+              style={{ width: `${actions.length ? (actions.filter((a) => a.state === "completed").length / actions.length) * 100 : 0}%` }}
+            />
+          </div>
         </div>
       </div>
 

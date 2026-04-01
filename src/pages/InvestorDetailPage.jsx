@@ -232,7 +232,7 @@ function OverviewTab({ investor, signals }) {
       </Card>
 
       {/* STATE & SENTIMENT - right column */}
-      <div className="w-full md:w-80 flex-shrink-0">
+      <div className="w-full md:w-[420px] flex-shrink-0">
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
           STATE & SENTIMENT
         </h3>
@@ -445,9 +445,17 @@ function OverviewTab({ investor, signals }) {
         const timeline = getTimelineForInvestor(investor.id);
         return timeline.length > 0 ? (
           <div>
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
-              ENGAGEMENT TIMELINE
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                ENGAGEMENT TIMELINE
+              </h3>
+              <Link
+                to={`/investors/${investor.id}/timeline`}
+                className="text-xs font-semibold uppercase tracking-wider text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                VIEW FULL TIMELINE &rarr;
+              </Link>
+            </div>
             <div className="relative pl-6">
               {/* Vertical line */}
               <div className="absolute left-[5px] top-1.5 bottom-1.5 w-0.5 bg-slate-200" />
@@ -648,57 +656,50 @@ function PersonaTab({ investor }) {
         </div>
       </Card>
 
-      {/* State Parameters by Provenance */}
+      {/* Investor Persona - consolidated table */}
       <div>
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
           INVESTOR PERSONA
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {["observed", "inferred", "team_assessed"].map((prov) => {
-            const params = investor.stateParameters.filter((p) => p.provenance === prov);
-            const labels = {
-              observed: "Observed",
-              inferred: "Inferred",
-              team_assessed: "Team Assessed",
-            };
-            return (
-              <div key={prov}>
-                <h4 className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+        <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
+          {/* Provenance summary bar */}
+          <div className="flex items-center gap-4 px-4 py-3 bg-slate-50 border-b border-slate-200">
+            {["observed", "inferred", "team_assessed"].map((prov) => {
+              const count = investor.stateParameters.filter((p) => p.provenance === prov).length;
+              const colors = { observed: "bg-blue-500", inferred: "bg-amber-400", team_assessed: "bg-emerald-500" };
+              const labels = { observed: "Observed", inferred: "Inferred", team_assessed: "Team Assessed" };
+              return (
+                <span key={prov} className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <span className={cn("h-2 w-2 rounded-full", colors[prov])} />
                   {labels[prov]}
-                </h4>
-                <div className="space-y-2">
-                  {params.length === 0 ? (
-                    <p className="text-xs text-slate-400">No parameters</p>
-                  ) : (
-                    params.map((param, idx) => (
-                      <div
-                        key={idx}
-                        className="rounded-lg border border-slate-200 bg-white p-3"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-medium text-slate-500">
-                            {param.label}
-                          </span>
-                          <span
-                            className={cn(
-                              "h-2 w-2 rounded-full",
-                              param.freshness === "fresh"
-                                ? "bg-emerald-500"
-                                : "bg-amber-500"
-                            )}
-                            title={param.freshness}
-                          />
-                        </div>
-                        <p className="mt-1 text-sm font-medium text-slate-800">
-                          {param.value}
-                        </p>
-                      </div>
-                    ))
-                  )}
+                  <span className="font-mono font-bold text-slate-700">{count}</span>
+                </span>
+              );
+            })}
+          </div>
+
+          {/* All parameters in a single table */}
+          <div className="divide-y divide-slate-100">
+            {investor.stateParameters.map((param, idx) => {
+              const provColors = { observed: "bg-blue-500", inferred: "bg-amber-400", team_assessed: "bg-emerald-500" };
+              const provLabels = { observed: "Observed", inferred: "Inferred", team_assessed: "Team" };
+              return (
+                <div key={idx} className="flex items-center gap-4 px-4 py-3">
+                  <span className={cn("h-2 w-2 rounded-full flex-shrink-0", provColors[param.provenance])} title={param.provenance} />
+                  <span className="text-sm text-slate-500 w-40 flex-shrink-0">{param.label}</span>
+                  <span className="text-sm font-medium text-slate-900 flex-1">{param.value}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-400">{provLabels[param.provenance]}</span>
+                  <span
+                    className={cn(
+                      "h-2 w-2 rounded-full flex-shrink-0",
+                      param.freshness === "fresh" ? "bg-emerald-500" : "bg-amber-500"
+                    )}
+                    title={param.freshness}
+                  />
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

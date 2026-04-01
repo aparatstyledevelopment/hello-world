@@ -1,0 +1,18 @@
+{
+  "name": "IR Intelligence",
+  "short_name": "IR Intel",
+  "description": "Investor Relations Intelligence Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
