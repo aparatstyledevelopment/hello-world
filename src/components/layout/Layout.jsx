@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Search, Bell, Plus, Menu, X } from 'lucide-react'
+import { LogInteractionModal } from '../LogInteractionModal'
 
-function HeaderBar({ onMenuToggle, menuOpen }) {
+function HeaderBar({ onMenuToggle, menuOpen, onLogInteraction }) {
   return (
     <header className="flex h-[52px] items-center justify-between border-b border-slate-200 bg-white px-4 md:px-6">
       {/* Mobile menu button */}
@@ -59,7 +60,10 @@ function HeaderBar({ onMenuToggle, menuOpen }) {
         </button>
 
         {/* Log Interaction CTA */}
-        <button className="flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-[13px] font-medium text-white hover:bg-slate-800 md:px-4">
+        <button
+          onClick={onLogInteraction}
+          className="flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-[13px] font-medium text-white hover:bg-slate-800 md:px-4"
+        >
           <Plus size={15} strokeWidth={2} />
           <span className="hidden sm:inline">Log Interaction</span>
         </button>
@@ -70,6 +74,7 @@ function HeaderBar({ onMenuToggle, menuOpen }) {
 
 export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [logModalOpen, setLogModalOpen] = useState(false)
 
   return (
     <div className="flex h-screen overflow-hidden bg-white">
@@ -89,13 +94,14 @@ export function Layout() {
       </div>
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <HeaderBar onMenuToggle={() => setMenuOpen(!menuOpen)} menuOpen={menuOpen} />
+        <HeaderBar onMenuToggle={() => setMenuOpen(!menuOpen)} menuOpen={menuOpen} onLogInteraction={() => setLogModalOpen(true)} />
         <main className="flex-1 overflow-y-auto bg-white">
           <div className="min-h-full">
             <Outlet />
           </div>
         </main>
       </div>
+      <LogInteractionModal open={logModalOpen} onClose={() => setLogModalOpen(false)} />
     </div>
   )
 }

@@ -207,29 +207,32 @@ export function MarketPage() {
         </p>
       </div>
 
-      {/* ── Dark Concentration Index Card ──────────────────── */}
-      <div className="rounded-lg bg-slate-900 p-6">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-          CONCENTRATION INDEX
-        </p>
-        <div className="mt-3 flex items-baseline gap-4">
-          <span className="font-mono text-5xl font-bold text-white">42.8%</span>
-          <span className="text-sm font-medium text-emerald-400">Top-5 holder share</span>
+      {/* ── Concentration + Shareholder Base Row ─────────── */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Dark Concentration Index Card */}
+        <div className="rounded-lg bg-slate-900 p-6 md:w-80 md:flex-shrink-0">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            CONCENTRATION INDEX
+          </p>
+          <div className="mt-3 flex items-baseline gap-4">
+            <span className="font-mono text-5xl font-bold text-white">42.8%</span>
+            <span className="text-sm font-medium text-emerald-400">Top-5 holder share</span>
+          </div>
+          <div className="mt-4 h-2.5 w-full rounded-full bg-slate-700">
+            <div
+              className="h-2.5 rounded-full bg-emerald-500 transition-all"
+              style={{ width: "42.8%" }}
+            />
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            Shifted <span className="font-mono font-semibold text-emerald-400">+1.2%</span> vs. prior quarter
+            — concentration tightening among top institutional holders
+          </p>
         </div>
-        <div className="mt-4 h-2.5 w-full rounded-full bg-slate-700">
-          <div
-            className="h-2.5 rounded-full bg-emerald-500 transition-all"
-            style={{ width: "42.8%" }}
-          />
-        </div>
-        <p className="mt-2 text-xs text-slate-400">
-          Shifted <span className="font-mono font-semibold text-emerald-400">+1.2%</span> vs. prior quarter
-          — concentration tightening among top institutional holders
-        </p>
-      </div>
 
-      {/* ── Shareholder Base Highlights ────────────────────── */}
-      <Card variant="section" accentColor="blue" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
+        {/* Shareholder Base Highlights */}
+        <div className="flex-1 min-w-0">
+        <Card variant="section" accentColor="blue" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Top 5 Buyers */}
           <div>
@@ -280,6 +283,8 @@ export function MarketPage() {
           </div>
         </div>
       </Card>
+        </div>
+      </div>
 
       {/* ── Intelligence Feed ─────────────────────────────── */}
       <div>

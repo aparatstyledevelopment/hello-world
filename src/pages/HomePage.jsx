@@ -306,7 +306,8 @@ export function HomePage() {
       )}
 
       {/* -- TOP HOLDER STATUS (Dark accent card) ----------------------- */}
-      <Card variant="dark" title="TOP HOLDER STATUS">
+      <div className="flex flex-col md:flex-row gap-6">
+      <Card variant="dark" title="TOP HOLDER STATUS" className="md:max-w-sm md:flex-shrink-0">
         <div className="flex items-baseline gap-3 mb-6">
           <span className="font-mono text-4xl font-bold text-white">
             {totalOwnership.toFixed(1)}%
@@ -355,6 +356,40 @@ export function HomePage() {
           })}
         </div>
       </Card>
+
+      {/* Quick Summary */}
+      <div className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white p-6">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-4">
+          OWNERSHIP OVERVIEW
+        </p>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500">Total tracked investors</span>
+            <span className="font-mono text-sm font-bold text-slate-900">{investors.length}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500">Aggregate ownership</span>
+            <span className="font-mono text-sm font-bold text-slate-900">{totalOwnership.toFixed(1)}%</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500">Tier 1 holders</span>
+            <span className="font-mono text-sm font-bold text-slate-900">{investors.filter(i => i.tier === 1).length}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500">Active signals</span>
+            <span className="font-mono text-sm font-bold text-amber-600">{newSignalCount}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500">Positive momentum</span>
+            <span className="font-mono text-sm font-bold text-emerald-600">{investors.filter(i => i.engagementMomentum === "positive").length}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-500">Negative momentum</span>
+            <span className="font-mono text-sm font-bold text-red-600">{investors.filter(i => i.engagementMomentum === "negative").length}</span>
+          </div>
+        </div>
+      </div>
+      </div>
     </div>
   );
 }

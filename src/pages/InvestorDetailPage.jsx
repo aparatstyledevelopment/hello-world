@@ -136,6 +136,22 @@ const tabConfig = [
 ];
 
 // ── Overview Tab ─────────────────────────────────────────
+const timelineDotColors = {
+  meeting: "bg-emerald-500",
+  call: "bg-blue-500",
+  email: "bg-slate-400",
+  signal: "bg-amber-500",
+  filing: "bg-violet-500",
+};
+
+const timelineBadgeStyles = {
+  meeting: "bg-emerald-50 text-emerald-700",
+  call: "bg-blue-50 text-blue-700",
+  email: "bg-slate-100 text-slate-600",
+  signal: "bg-amber-50 text-amber-700",
+  filing: "bg-violet-50 text-violet-700",
+};
+
 function OverviewTab({ investor, signals }) {
   const conviction = deriveConviction(investor);
   const sentiment = deriveSentiment(investor);
@@ -421,6 +437,51 @@ function OverviewTab({ investor, signals }) {
           </div>
         )}
       </div>
+
+      {/* ENGAGEMENT TIMELINE */}
+      {(() => {
+        const timeline = getTimelineForInvestor(investor.id);
+        return timeline.length > 0 ? (
+          <div>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+              ENGAGEMENT TIMELINE
+            </h3>
+            <div className="relative pl-6">
+              {/* Vertical line */}
+              <div className="absolute left-[5px] top-1.5 bottom-1.5 w-0.5 bg-slate-200" />
+
+              <div className="space-y-4">
+                {timeline.map((evt) => (
+                  <div key={evt.id} className="relative">
+                    {/* Dot */}
+                    <div
+                      className={cn(
+                        "absolute -left-6 top-4 h-3 w-3 rounded-full ring-2 ring-white",
+                        timelineDotColors[evt.type] || "bg-slate-400"
+                      )}
+                    />
+                    {/* Content card */}
+                    <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-slate-300 transition-colors">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                            timelineBadgeStyles[evt.type] || "bg-slate-100 text-slate-600"
+                          )}
+                        >
+                          {evt.type}
+                        </span>
+                        <span className="text-xs text-slate-400">{evt.date}</span>
+                      </div>
+                      <p className="text-sm text-slate-700">{evt.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : null;
+      })()}
 
       {/* INTELLIGENCE ENGINE */}
       <div>
