@@ -18,8 +18,7 @@ function ReportSection({ title, subtitle, defaultOpen = false, children }) {
 
   return (
     <div className={cn(
-      "rounded-lg border border-slate-200 bg-white overflow-hidden",
-      "border-l-4 border-l-blue-500"
+      "rounded-lg border border-slate-200 bg-white overflow-hidden"
     )}>
       <button
         onClick={() => setOpen(!open)}

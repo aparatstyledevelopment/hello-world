@@ -239,7 +239,7 @@ export function SignalDetailPage() {
           {/* 4. Why this matters */}
           <div>
             <p className="text-sm font-semibold italic text-slate-800 mb-3">Why this matters</p>
-            <div className="border-l-4 border-slate-200 pl-4">
+            <div className="rounded-lg bg-slate-50 border border-slate-100 p-4">
               <p className="text-sm text-slate-600 leading-relaxed">{whyItMatters}</p>
             </div>
           </div>
