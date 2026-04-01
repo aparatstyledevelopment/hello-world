@@ -18,6 +18,22 @@
   --color-sidebar-active: #1f2937;
 
   --color-surface: #ffffff;
+
+  /* Bloomberg Terminal Palette */
+  --color-terminal-bg: #0a0a0a;
+  --color-terminal-surface: #111111;
+  --color-terminal-surface-alt: #161616;
+  --color-terminal-border: #1e1e1e;
+  --color-terminal-border-bright: #2a2a2a;
+  --color-terminal-amber: #FF9500;
+  --color-terminal-amber-dim: #CC7700;
+  --color-terminal-cyan: #00D4FF;
+  --color-terminal-green: #00E676;
+  --color-terminal-red: #FF3B30;
+  --color-terminal-red-dim: #991B1B;
+  --color-terminal-text: #E0E0E0;
+  --color-terminal-text-dim: #6B6B6B;
+  --color-terminal-text-muted: #3D3D3D;
 }
 
 /* Smooth scrolling */
@@ -29,9 +45,18 @@ html { scroll-behavior: smooth; }
 ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
+/* Terminal scrollbar */
+.terminal-page ::-webkit-scrollbar-thumb { background: #2a2a2a; }
+.terminal-page ::-webkit-scrollbar-thumb:hover { background: #3d3d3d; }
+
 /* Focus visible for accessibility */
 :focus-visible {
   outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.terminal-page :focus-visible {
+  outline: 2px solid #FF9500;
   outline-offset: 2px;
 }
 
@@ -70,4 +95,95 @@ html { scroll-behavior: smooth; }
   color: #ffffff;
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
+}
+
+/* ── Bloomberg Terminal Styles ──────────────────────────── */
+
+.terminal-page {
+  background: var(--color-terminal-bg);
+  min-height: 100vh;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+.terminal-card {
+  background: var(--color-terminal-surface);
+  border: 1px solid var(--color-terminal-border);
+  border-radius: 4px;
+  position: relative;
+}
+
+.terminal-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-terminal-border-bright), transparent);
+}
+
+.terminal-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-terminal-text-dim);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+.terminal-value {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.terminal-divider {
+  border-color: var(--color-terminal-border);
+  border-style: solid;
+  border-width: 0;
+  border-top-width: 1px;
+}
+
+/* Subtle amber glow for high-urgency elements */
+.terminal-glow-amber {
+  box-shadow: 0 0 12px rgba(255, 149, 0, 0.08), inset 0 1px 0 rgba(255, 149, 0, 0.06);
+}
+
+/* Subtle red glow for critical elements */
+.terminal-glow-red {
+  box-shadow: 0 0 12px rgba(255, 59, 48, 0.1), inset 0 1px 0 rgba(255, 59, 48, 0.06);
+}
+
+/* Pulsing dot animation */
+@keyframes terminal-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.terminal-pulse {
+  animation: terminal-pulse 2s ease-in-out infinite;
+}
+
+/* Scanline overlay (very subtle) */
+.terminal-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.008) 2px,
+    rgba(255, 255, 255, 0.008) 4px
+  );
+  pointer-events: none;
+}
+
+/* Bar chart glow */
+.terminal-bar {
+  transition: height 0.4s ease;
+}
+
+.terminal-bar-active {
+  box-shadow: 0 0 8px rgba(255, 149, 0, 0.3);
+}
+
+.terminal-bar-danger {
+  box-shadow: 0 0 8px rgba(255, 59, 48, 0.3);
 }
