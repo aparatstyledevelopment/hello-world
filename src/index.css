@@ -1,28 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-  --color-primary-950: #172554;
+  --color-primary-50: #f9fafb;
+  --color-primary-100: #f3f4f6;
+  --color-primary-200: #e5e7eb;
+  --color-primary-300: #d1d5db;
+  --color-primary-400: #9ca3af;
+  --color-primary-500: #6b7280;
+  --color-primary-600: #000000;
+  --color-primary-700: #000000;
+  --color-primary-800: #000000;
+  --color-primary-900: #000000;
+  --color-primary-950: #000000;
 
-  --color-sidebar: #0f172a;
-  --color-sidebar-hover: #1e293b;
-  --color-sidebar-active: #1e293b;
-
-  --color-fact: #eff6ff;
-  --color-fact-border: #3b82f6;
-  --color-inference: #fffbeb;
-  --color-inference-border: #d97706;
-  --color-recommendation: #f0fdf4;
-  --color-recommendation-border: #16a34a;
+  --color-sidebar: #000000;
+  --color-sidebar-hover: #1f2937;
+  --color-sidebar-active: #1f2937;
 
   --color-surface: #ffffff;
 }
@@ -33,12 +26,12 @@ html { scroll-behavior: smooth; }
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid #000000;
   outline-offset: 2px;
 }
 
@@ -48,7 +41,7 @@ html { scroll-behavior: smooth; }
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #94a3b8; /* slate-400 */
+  color: #9ca3af;
 }
 
 /* Mono data values */
@@ -58,8 +51,8 @@ html { scroll-behavior: smooth; }
 
 /* Evidence/raw data blocks */
 .evidence-block {
-  background-color: #f8fafc; /* slate-50 */
-  border: 1px solid #e2e8f0; /* slate-200 */
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.75rem;
@@ -73,7 +66,7 @@ html { scroll-behavior: smooth; }
 
 /* Recommendation banners */
 .recommendation-banner {
-  background-color: #1e293b; /* slate-800 */
+  background-color: #000000;
   color: #ffffff;
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;

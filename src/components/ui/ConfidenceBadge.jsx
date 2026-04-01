@@ -2,21 +2,11 @@ import { cn } from "../../lib/utils";
 import { CheckCircle } from "lucide-react";
 
 const levelColors = {
-  high: { text: "text-emerald-700", icon: "text-emerald-500", bg: "bg-emerald-50" },
-  medium: { text: "text-amber-700", icon: "text-amber-500", bg: "bg-amber-50" },
+  high: { text: "text-black", icon: "text-black", bg: "bg-gray-100" },
+  medium: { text: "text-gray-600", icon: "text-gray-500", bg: "bg-gray-100" },
   low: { text: "text-red-700", icon: "text-red-500", bg: "bg-red-50" },
 };
 
-/**
- * ConfidenceBadge supports two display modes:
- *
- * 1. `mode="percentage"` (default): Shows "92% Confidence" with a green checkmark icon.
- *    Use `value` prop for the percentage number.
- *
- * 2. `mode="label"`: Shows "CONFIDENCE: High" in uppercase label style
- *    with the level word in font-semibold.
- *    Use `level` prop ("high" | "medium" | "low").
- */
 export function ConfidenceBadge({
   mode = "percentage",
   value,
@@ -43,11 +33,10 @@ export function ConfidenceBadge({
     );
   }
 
-  // mode === "label"
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-[11px] tracking-[0.1em] uppercase text-slate-400 font-medium",
+        "inline-flex items-center gap-1 text-[11px] tracking-[0.1em] uppercase text-gray-400 font-medium",
         className
       )}
     >

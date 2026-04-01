@@ -1,10 +1,10 @@
 import { cn } from "../../lib/utils";
 
 const colorMap = {
-  strong: "bg-slate-700",
-  moderate: "bg-amber-400",
-  weak: "bg-red-400",
-  unknown: "bg-slate-200",
+  strong: "bg-black",
+  moderate: "bg-gray-400",
+  weak: "bg-red-500",
+  unknown: "bg-gray-200",
 };
 
 export function HealthDots({ values = [] }) {

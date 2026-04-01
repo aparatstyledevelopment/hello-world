@@ -27,8 +27,8 @@ const urgencyOrder = { high: 0, medium: 1, low: 2 };
 
 const urgencyChipStyle = {
   high: "bg-red-50 text-red-700 border border-red-200",
-  medium: "bg-amber-50 text-amber-700 border border-amber-200",
-  low: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  medium: "bg-gray-100 text-gray-600 border border-gray-200",
+  low: "bg-gray-50 text-gray-400 border border-gray-100",
 };
 
 const typeLabels = {
@@ -71,8 +71,8 @@ function FilterPill({ label, active, onClick }) {
       className={cn(
         "rounded-full border px-3 py-1 text-[11px] font-medium tracking-wide transition-colors",
         active
-          ? "border-slate-900 bg-slate-900 text-white"
-          : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700"
+          ? "border-black bg-black text-white"
+          : "border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-700"
       )}
     >
       {label}
@@ -89,52 +89,52 @@ function SignalPressureSummary({ filteredSignals }) {
   const total = filteredSignals.length || 1;
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-6 py-4 mb-6">
+    <div className="rounded-xl border border-gray-200 bg-white px-6 py-4 mb-6">
       <div className="flex items-center gap-4 mb-3">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400">
           SIGNAL PRESSURE
         </p>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-xs">
-            <span className="h-2 w-2 rounded-full bg-red-500" />
-            <span className={cn("font-mono font-bold", highCount > 0 ? "text-red-600" : "text-slate-400")}>
+            <span className="h-2 w-2 rounded-full bg-red-600" />
+            <span className={cn("font-mono font-bold", highCount > 0 ? "text-red-600" : "text-gray-400")}>
               {highCount}
             </span>
-            <span className="text-slate-400">High</span>
+            <span className="text-gray-400">High</span>
           </span>
           <span className="flex items-center gap-1.5 text-xs">
-            <span className="h-2 w-2 rounded-full bg-amber-400" />
-            <span className="font-mono font-bold text-slate-600">{mediumCount}</span>
-            <span className="text-slate-400">Medium</span>
+            <span className="h-2 w-2 rounded-full bg-gray-600" />
+            <span className="font-mono font-bold text-gray-600">{mediumCount}</span>
+            <span className="text-gray-400">Medium</span>
           </span>
           <span className="flex items-center gap-1.5 text-xs">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            <span className="font-mono font-bold text-slate-600">{lowCount}</span>
-            <span className="text-slate-400">Low</span>
+            <span className="h-2 w-2 rounded-full bg-gray-400" />
+            <span className="font-mono font-bold text-gray-600">{lowCount}</span>
+            <span className="text-gray-400">Low</span>
           </span>
         </div>
-        <span className="text-[11px] font-mono font-semibold text-slate-400 ml-auto">
+        <span className="text-[11px] font-mono font-semibold text-gray-400 ml-auto">
           {filteredSignals.length} TOTAL
         </span>
       </div>
 
       {/* Stacked bar */}
-      <div className="flex h-3 w-full rounded-full overflow-hidden bg-slate-100">
+      <div className="flex h-3 w-full rounded-full overflow-hidden bg-gray-100">
         {highCount > 0 && (
           <div
-            className="bg-red-500 transition-all"
+            className="bg-red-600 transition-all"
             style={{ width: `${(highCount / total) * 100}%` }}
           />
         )}
         {mediumCount > 0 && (
           <div
-            className="bg-amber-400 transition-all"
+            className="bg-gray-600 transition-all"
             style={{ width: `${(mediumCount / total) * 100}%` }}
           />
         )}
         {lowCount > 0 && (
           <div
-            className="bg-emerald-400 transition-all"
+            className="bg-gray-400 transition-all"
             style={{ width: `${(lowCount / total) * 100}%` }}
           />
         )}
@@ -166,21 +166,21 @@ function SignalCard({ signal, navigate }) {
 
   return (
     <div
-      className="rounded-lg border border-slate-200 transition-all overflow-hidden bg-white hover:border-slate-300"
+      className="rounded-lg border border-gray-200 transition-all overflow-hidden bg-white hover:border-gray-300"
     >
       {/* Card header */}
       <button
         onClick={() => setExpanded(!expanded)}
         className={cn(
           "flex w-full items-start gap-4 text-left transition-colors",
-          "px-5 py-4 hover:bg-slate-50/60"
+          "px-5 py-4 hover:bg-gray-50/60"
         )}
       >
         {/* Icon circle */}
         <div
           className={cn(
             "flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0 mt-0.5",
-            isHigh ? "bg-red-100" : signal.urgency === "medium" ? "bg-amber-50" : "bg-slate-100"
+            isHigh ? "bg-red-100" : "bg-gray-100"
           )}
         >
           {isHigh ? (
@@ -188,9 +188,7 @@ function SignalCard({ signal, navigate }) {
           ) : (
             <TypeIcon
               size={16}
-              className={cn(
-                signal.urgency === "medium" ? "text-amber-600" : "text-slate-500"
-              )}
+              className="text-gray-600"
             />
           )}
         </div>
@@ -203,17 +201,17 @@ function SignalCard({ signal, navigate }) {
               {signal.urgency === "high" ? "HIGH URGENCY" : signal.urgency === "medium" ? "MEDIUM" : "LOW"}
             </span>
             <Badge variant={signal.type} kind="type" className="text-[9px] px-1.5 py-0.5" />
-            <span className="text-[11px] text-slate-400">{relativeAge(signal.detectedAt)}</span>
+            <span className="text-[11px] text-gray-400">{relativeAge(signal.detectedAt)}</span>
             <div className="flex-1" />
             <ConfidenceBadge mode="percentage" level={signal.confidence} className="text-[10px] px-2 py-0.5" />
-            <span className="text-slate-300">
+            <span className="text-gray-300">
               {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
             </span>
           </div>
 
           {/* Headline */}
           <h3 className={cn(
-            "text-slate-900 leading-snug",
+            "text-black leading-snug",
             isHigh ? "text-base font-bold" : "text-sm font-semibold"
           )}>
             {signal.headline}
@@ -222,7 +220,7 @@ function SignalCard({ signal, navigate }) {
           {/* Description preview */}
           <p className={cn(
             "mt-1 leading-relaxed",
-            isHigh ? "text-sm text-slate-600" : "text-xs text-slate-500"
+            isHigh ? "text-sm text-gray-600" : "text-xs text-gray-500"
           )}>
             {truncate(signal.description, isHigh ? 180 : 120)}
           </p>
@@ -230,10 +228,10 @@ function SignalCard({ signal, navigate }) {
           {/* Investor + timestamp */}
           <div className="flex items-center gap-3 mt-2">
             <div className="flex items-center gap-1.5">
-              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-[8px] font-bold text-slate-600">
+              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-gray-200 text-[8px] font-bold text-gray-600">
                 {inv?.name?.charAt(0) ?? "?"}
               </div>
-              <span className="text-xs font-medium text-slate-700">{inv?.name ?? "Unknown"}</span>
+              <span className="text-xs font-medium text-gray-700">{inv?.name ?? "Unknown"}</span>
             </div>
           </div>
         </div>
@@ -243,20 +241,20 @@ function SignalCard({ signal, navigate }) {
       {expanded && (
         <div className={cn(
           "border-t px-6 py-5 space-y-5",
-          isHigh ? "border-red-100 bg-white" : "border-slate-100 bg-white"
+          isHigh ? "border-red-100 bg-white" : "border-gray-100 bg-white"
         )}>
           {/* Why this matters */}
-          <div className="rounded-lg bg-slate-50 border border-slate-100 p-4">
-            <p className="text-sm font-semibold italic text-slate-700 mb-2">Why this matters</p>
-            <p className="text-sm text-slate-600 leading-relaxed">{whyItMatters}</p>
+          <div className="rounded-lg bg-gray-50 border border-gray-100 p-4">
+            <p className="text-sm font-semibold italic text-gray-700 mb-2">Why this matters</p>
+            <p className="text-sm text-gray-600 leading-relaxed">{whyItMatters}</p>
           </div>
 
           {/* Recommended action */}
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">
               RECOMMENDED ACTION
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">{recommendedAction}</p>
+            <p className="text-sm text-gray-700 leading-relaxed">{recommendedAction}</p>
           </div>
 
           {/* Evidence pills */}
@@ -265,10 +263,10 @@ function SignalCard({ signal, navigate }) {
               {signal.parameters.map((p, i) => (
                 <span
                   key={i}
-                  className="inline-flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs"
+                  className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs"
                 >
-                  <span className="text-slate-400">{p.label}</span>
-                  <span className="font-mono font-medium text-slate-700">{p.value}</span>
+                  <span className="text-gray-400">{p.label}</span>
+                  <span className="font-mono font-medium text-gray-700">{p.value}</span>
                 </span>
               ))}
             </div>
@@ -280,7 +278,7 @@ function SignalCard({ signal, navigate }) {
               e.stopPropagation();
               navigate(`/signals/${signal.id}`);
             }}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-slate-800"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-black px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-gray-800"
           >
             View Full Signal <ArrowRight size={12} />
           </button>
@@ -335,12 +333,12 @@ export function SignalsPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Signals</h1>
-          <p className="mt-0.5 text-sm text-slate-400">
+          <h1 className="text-xl font-bold text-black tracking-tight">Signals</h1>
+          <p className="mt-0.5 text-sm text-gray-400">
             Real-time intelligence desk. Ranked interpretation over raw data.
           </p>
         </div>
-        <span className="inline-flex items-center bg-blue-50 text-blue-700 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider">
+        <span className="inline-flex items-center bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider">
           {activeSignals.length} ACTIVE SIGNAL{activeSignals.length !== 1 ? "S" : ""}
         </span>
       </div>
@@ -355,7 +353,7 @@ export function SignalsPage() {
             onClick={() => setCategoryFilter(opt.value)}
           />
         ))}
-        <div className="w-px h-5 bg-slate-200 mx-1" />
+        <div className="w-px h-5 bg-gray-200 mx-1" />
         {priorityOptions.map((opt) => (
           <FilterPill
             key={opt.value}
@@ -371,10 +369,10 @@ export function SignalsPage() {
 
       {/* Signal feed */}
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400">
           RANKED INTELLIGENCE FEED
         </p>
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[11px] text-gray-400">
           SHOWING {filtered.length} PRIORITIZED SIGNAL{filtered.length !== 1 ? "S" : ""}
         </p>
       </div>
