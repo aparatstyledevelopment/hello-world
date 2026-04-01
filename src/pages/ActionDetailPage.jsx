@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { useParams, useSearchParams, useNavigate, Link } from "react-router-dom";
 import {
   Save,
-  ChevronRight,
   X,
   ArrowRight,
   Bell,
@@ -13,7 +12,6 @@ import {
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
-import { Card } from "../components/ui/Card";
 import {
   actions,
   investors,
@@ -74,7 +72,7 @@ function LifecycleStepper({ currentState }) {
                   isCompleted
                     ? "border-emerald-500 bg-emerald-500 text-white"
                     : isCurrent
-                    ? "border-primary-500 bg-primary-50 text-primary-600"
+                    ? "border-slate-900 bg-slate-50 text-slate-900"
                     : "border-slate-200 bg-white text-slate-400"
                 )}
               >
@@ -88,11 +86,11 @@ function LifecycleStepper({ currentState }) {
               </div>
               <span
                 className={cn(
-                  "mt-1.5 text-[11px] font-medium whitespace-nowrap",
+                  "mt-1.5 text-[11px] font-medium uppercase tracking-[0.05em] whitespace-nowrap",
                   isCompleted
                     ? "text-emerald-600"
                     : isCurrent
-                    ? "text-primary-600"
+                    ? "text-slate-900"
                     : "text-slate-400"
                 )}
               >
@@ -127,30 +125,38 @@ function DetailSidebar({ action, signal, investor }) {
     <div className="space-y-4">
       {/* Linked Signal */}
       {signal && (
-        <Card title="Linked Signal">
-          <Link
-            to={`/signals/${signal.id}`}
-            className="group block"
-          >
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+            LINKED SIGNAL
+          </h3>
+          <Link to={`/signals/${signal.id}`} className="group block">
             <div className="flex items-start gap-2">
               <Bell size={14} className="mt-0.5 text-amber-500 shrink-0" />
               <div>
-                <p className="text-sm font-medium text-slate-800 group-hover:text-primary-600">
+                <p className="text-sm font-medium text-slate-800 group-hover:text-slate-600">
                   {signal.headline}
                 </p>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <Badge variant={signal.urgency}>{signal.urgency}</Badge>
-                  <Badge variant={signal.type} />
+                  <span className={cn(
+                    "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium",
+                    signal.urgency === "high" ? "bg-red-50 text-red-700" : signal.urgency === "medium" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-600"
+                  )}>
+                    {signal.urgency.toUpperCase()}
+                  </span>
                 </div>
               </div>
             </div>
           </Link>
-        </Card>
+        </div>
       )}
 
       {/* Open Actions for Investor */}
       {investor && (
-        <Card title="Open Actions" subtitle={`${openActions.length} for ${investor.name}`}>
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            OPEN ACTIONS
+          </h3>
+          <p className="text-xs text-slate-500 mb-3">{openActions.length} for {investor.name}</p>
           {openActions.length === 0 ? (
             <p className="text-xs text-slate-400">No other open actions</p>
           ) : (
@@ -159,42 +165,48 @@ function DetailSidebar({ action, signal, investor }) {
                 <li key={a.id}>
                   <Link
                     to={`/actions/${a.id}`}
-                    className="block rounded-lg border border-slate-100 p-2 text-xs text-slate-600 hover:bg-slate-50"
+                    className="block rounded-lg border border-slate-100 p-2.5 text-xs text-slate-600 hover:bg-slate-50 transition-colors"
                   >
-                    <span className="font-medium">{a.objective.slice(0, 60)}...</span>
-                    <div className="mt-1 flex items-center gap-2">
+                    <span className="font-medium text-slate-800">{a.objective.slice(0, 60)}...</span>
+                    <div className="mt-1.5 flex items-center gap-2">
                       <Badge variant={a.type} className="text-[10px]" />
-                      <span className="text-slate-400">{a.dueDate}</span>
+                      <span className="font-mono text-slate-400">{a.dueDate}</span>
                     </div>
                   </Link>
                 </li>
               ))}
             </ul>
           )}
-        </Card>
+        </div>
       )}
 
       {/* Recent Timeline */}
       {investor && timeline.length > 0 && (
-        <Card title="Recent Timeline">
-          <ul className="space-y-2">
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+            RECENT TIMELINE
+          </h3>
+          <ul className="space-y-2.5">
             {timeline.map((evt) => (
               <li key={evt.id} className="flex items-start gap-2 text-xs">
                 <Clock size={12} className="mt-0.5 shrink-0 text-slate-400" />
                 <div>
-                  <span className="text-slate-400">{evt.date}</span>
-                  <p className="text-slate-600">{evt.description}</p>
+                  <span className="font-mono text-slate-400">{evt.date}</span>
+                  <p className="text-slate-600 mt-0.5">{evt.description}</p>
                 </div>
               </li>
             ))}
           </ul>
-        </Card>
+        </div>
       )}
 
       {/* Investor State Metrics */}
       {investor && (
-        <Card title="Investor State">
-          <div className="space-y-2">
+        <div className="rounded-lg border border-slate-200 bg-white p-4">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+            INVESTOR STATE
+          </h3>
+          <div className="space-y-2.5">
             {investor.stateParameters.slice(0, 4).map((param, idx) => (
               <div key={idx} className="flex items-center justify-between text-xs">
                 <span className="text-slate-500">{param.label}</span>
@@ -210,7 +222,7 @@ function DetailSidebar({ action, signal, investor }) {
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );
@@ -300,18 +312,18 @@ export function ActionDetailPage() {
     }
   };
 
+  const inputClasses = "mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400";
+
   return (
     <div className="p-6 space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 text-sm text-slate-400">
-        <Link to="/actions" className="hover:text-slate-600">
-          Actions
-        </Link>
-        <ChevronRight size={14} />
-        <span className="text-slate-700">
-          {isNew ? "New Action" : existingAction?.objective?.slice(0, 40) + "..."}
-        </span>
-      </div>
+      {/* Back link */}
+      <Link
+        to="/actions"
+        className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-slate-400 hover:text-slate-600 transition-colors"
+      >
+        <span>&larr;</span>
+        <span>BACK TO ACTIONS</span>
+      </Link>
 
       {/* Title */}
       <div className="flex items-center justify-between">
@@ -326,24 +338,24 @@ export function ActionDetailPage() {
       </div>
 
       {/* Lifecycle Stepper */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
+      <div className="rounded-lg border border-slate-200 bg-white p-5">
         <LifecycleStepper currentState={form.state} />
       </div>
 
       {/* Two-column layout */}
       <div className="grid grid-cols-3 gap-6">
-        {/* Form — 2/3 */}
+        {/* Form -- 2/3 */}
         <div className="col-span-2 space-y-5">
-          <Card>
+          <div className="rounded-lg border border-slate-200 bg-white p-5">
             <div className="grid grid-cols-2 gap-4">
               {/* Investor */}
               <label className="block">
-                <span className="text-xs font-medium text-slate-600">Investor</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Investor</span>
                 <select
                   value={form.investorId}
                   onChange={handleChange("investorId")}
                   className={cn(
-                    "mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500",
+                    inputClasses,
                     isPreFilled("investorId") && "bg-amber-50 border-amber-300"
                   )}
                 >
@@ -358,16 +370,16 @@ export function ActionDetailPage() {
 
               {/* Contact */}
               <label className="block">
-                <span className="text-xs font-medium text-slate-600">Contact</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Contact</span>
                 <select
                   value={form.contactId}
                   onChange={handleChange("contactId")}
-                  className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className={inputClasses}
                 >
                   <option value="">Select contact...</option>
                   {contacts.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.name} — {c.role}
+                      {c.name} -- {c.role}
                     </option>
                   ))}
                 </select>
@@ -375,12 +387,12 @@ export function ActionDetailPage() {
 
               {/* Type */}
               <label className="block">
-                <span className="text-xs font-medium text-slate-600">Type</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Type</span>
                 <select
                   value={form.type}
                   onChange={handleChange("type")}
                   className={cn(
-                    "mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500",
+                    inputClasses,
                     isPreFilled("type") && "bg-amber-50 border-amber-300"
                   )}
                 >
@@ -395,11 +407,11 @@ export function ActionDetailPage() {
 
               {/* Owner */}
               <label className="block">
-                <span className="text-xs font-medium text-slate-600">Owner</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Owner</span>
                 <select
                   value={form.owner}
                   onChange={handleChange("owner")}
-                  className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className={inputClasses}
                 >
                   <option value="">Select owner...</option>
                   {owners.map((o) => (
@@ -412,22 +424,22 @@ export function ActionDetailPage() {
 
               {/* Due Date */}
               <label className="block">
-                <span className="text-xs font-medium text-slate-600">Due Date</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Due Date</span>
                 <input
                   type="date"
                   value={form.dueDate}
                   onChange={handleChange("dueDate")}
-                  className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className={inputClasses}
                 />
               </label>
 
               {/* Channel */}
               <label className="block">
-                <span className="text-xs font-medium text-slate-600">Channel</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Channel</span>
                 <select
                   value={form.channel}
                   onChange={handleChange("channel")}
-                  className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className={inputClasses}
                 >
                   <option value="">Select channel...</option>
                   {channels.map((c) => (
@@ -441,61 +453,61 @@ export function ActionDetailPage() {
 
             {/* Objective */}
             <label className="mt-4 block">
-              <span className="text-xs font-medium text-slate-600">Objective</span>
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Objective</span>
               <input
                 type="text"
                 value={form.objective}
                 onChange={handleChange("objective")}
                 placeholder="What is this action meant to achieve?"
-                className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={inputClasses}
               />
             </label>
 
             {/* Talking Points */}
             <label className="mt-4 block">
-              <span className="text-xs font-medium text-slate-600">
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 Talking Points
               </span>
               <textarea
                 value={form.talkingPoints}
                 onChange={handleChange("talkingPoints")}
                 rows={4}
-                className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={inputClasses}
               />
             </label>
 
             {/* Message Angle */}
             <label className="mt-4 block">
-              <span className="text-xs font-medium text-slate-600">
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 Message Angle
               </span>
               <textarea
                 value={form.messageAngle}
                 onChange={handleChange("messageAngle")}
                 rows={2}
-                className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={inputClasses}
               />
             </label>
 
             {/* Success Criteria */}
             <label className="mt-4 block">
-              <span className="text-xs font-medium text-slate-600">
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 Success Criteria
               </span>
               <textarea
                 value={form.successCriteria}
                 onChange={handleChange("successCriteria")}
                 rows={2}
-                className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className={inputClasses}
               />
             </label>
 
-            {/* Outcome — only for awaiting_logging / completed */}
+            {/* Outcome -- only for awaiting_logging / completed */}
             {showOutcome && (
               <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
                 <div className="mb-2 flex items-center gap-2">
                   <AlertTriangle size={14} className="text-amber-600" />
-                  <span className="text-xs font-semibold text-amber-700">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-amber-700">
                     Outcome
                   </span>
                 </div>
@@ -504,17 +516,17 @@ export function ActionDetailPage() {
                   onChange={handleChange("outcome")}
                   rows={3}
                   placeholder="Record the outcome of this action..."
-                  className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400"
                 />
               </div>
             )}
-          </Card>
+          </div>
 
           {/* Action buttons */}
           <div className="flex items-center gap-3">
             <button
               onClick={handleSave}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-slate-800"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800"
             >
               <Save size={14} />
               Save
@@ -523,7 +535,7 @@ export function ActionDetailPage() {
             {nextState && (
               <button
                 onClick={handleStateTransition}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
               >
                 <ArrowRight size={14} />
                 Move to {nextState.label}
@@ -532,7 +544,7 @@ export function ActionDetailPage() {
 
             <button
               onClick={handleCancel}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-4 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
             >
               <X size={14} />
               Cancel Action
@@ -540,7 +552,7 @@ export function ActionDetailPage() {
           </div>
         </div>
 
-        {/* Sidebar — 1/3 */}
+        {/* Sidebar -- 1/3 */}
         <div className="col-span-1">
           <DetailSidebar action={existingAction} signal={signal} investor={investor} />
         </div>

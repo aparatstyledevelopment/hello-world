@@ -1,14 +1,11 @@
 import { useState, useMemo } from "react";
-import { BarChart3, ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "../lib/utils";
-import { Card } from "../components/ui/Card";
-import { Badge } from "../components/ui/Badge";
 import {
   investors,
   signals,
   actions,
   timelineEvents,
-  owners,
 } from "../data/mock-data";
 
 // ── Collapsible Report Section ──────────────────────────
@@ -16,10 +13,10 @@ function ReportCard({ title, subtitle, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <Card className="overflow-hidden">
+    <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between text-left"
+        className="flex w-full items-center justify-between text-left p-5"
       >
         <div>
           <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
@@ -33,8 +30,68 @@ function ReportCard({ title, subtitle, defaultOpen = false, children }) {
           <ChevronRight size={18} className="text-slate-400" />
         )}
       </button>
-      {open && <div className="mt-4 space-y-4">{children}</div>}
-    </Card>
+      {open && <div className="border-t border-slate-100 p-5 space-y-4">{children}</div>}
+    </div>
+  );
+}
+
+function StatGrid({ items }) {
+  return (
+    <div className={cn("grid gap-px bg-slate-100 rounded-lg overflow-hidden border border-slate-200", items.length <= 4 ? `grid-cols-${items.length}` : "grid-cols-4")}>
+      {items.map((item) => (
+        <div key={item.label} className="bg-white px-4 py-3 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            {item.label}
+          </p>
+          <p className={cn("mt-1 text-lg font-bold text-slate-900", item.mono !== false && "font-mono")}>
+            {item.value}
+          </p>
+          {item.highlight && (
+            <p className="text-[11px] text-emerald-600 font-medium">{item.highlight}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SectionHeading({ children }) {
+  return (
+    <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 pt-2">
+      {children}
+    </h3>
+  );
+}
+
+function MiniTable({ columns, rows }) {
+  return (
+    <div className="overflow-x-auto rounded-lg border border-slate-200">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-slate-200 bg-slate-50">
+            {columns.map((col) => (
+              <th
+                key={col}
+                className="px-3 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400"
+              >
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {rows.map((row, i) => (
+            <tr key={i}>
+              {row.map((cell, j) => (
+                <td key={j} className={cn("px-3 py-2 text-slate-700", j > 0 && typeof cell === "string" && (cell.includes("%") || !isNaN(cell)) && "font-mono")}>
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -44,52 +101,12 @@ function MetricRow({ label, value, highlight }) {
       <span className="text-sm text-slate-600">{label}</span>
       <span
         className={cn(
-          "text-sm font-semibold",
-          highlight ? "text-primary-600" : "text-slate-900"
+          "text-sm font-semibold font-mono",
+          highlight ? "text-slate-900" : "text-slate-900"
         )}
       >
         {value}
       </span>
-    </div>
-  );
-}
-
-function SectionHeading({ children }) {
-  return (
-    <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 pt-2">
-      {children}
-    </h3>
-  );
-}
-
-function MiniTable({ columns, rows }) {
-  return (
-    <div className="overflow-x-auto rounded-lg border border-slate-100">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-slate-100 bg-slate-50">
-            {columns.map((col) => (
-              <th
-                key={col}
-                className="px-3 py-2 text-left text-xs font-medium text-slate-400"
-              >
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-50">
-          {rows.map((row, i) => (
-            <tr key={i}>
-              {row.map((cell, j) => (
-                <td key={j} className="px-3 py-2 text-slate-700">
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
@@ -237,8 +254,8 @@ export function ReportsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Reports</h1>
-        <p className="mt-0.5 text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-slate-900">Reports</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Comprehensive analytics across engagement, ownership, effectiveness,
           and governance
         </p>
@@ -250,20 +267,32 @@ export function ReportsPage() {
         subtitle="Interaction analytics and coverage analysis"
         defaultOpen={true}
       >
-        <MetricRow
-          label="Total interactions (timeline events)"
-          value={engagement.totalInteractions}
+        <StatGrid
+          items={[
+            { label: "Total Interactions", value: engagement.totalInteractions },
+            { label: "By Type Categories", value: Object.keys(engagement.byType).length },
+            { label: "Team Members", value: Object.keys(engagement.byTeam).length },
+            { label: "Coverage Gaps", value: engagement.coverageGaps.length },
+          ]}
         />
 
-        <SectionHeading>By Type</SectionHeading>
-        {Object.entries(engagement.byType).map(([type, count]) => (
-          <MetricRow key={type} label={type} value={count} />
-        ))}
+        <SectionHeading>Interactions by Type</SectionHeading>
+        <MiniTable
+          columns={["Type", "Count"]}
+          rows={Object.entries(engagement.byType).map(([type, count]) => [
+            type,
+            String(count),
+          ])}
+        />
 
-        <SectionHeading>By Team Member</SectionHeading>
-        {Object.entries(engagement.byTeam).map(([name, count]) => (
-          <MetricRow key={name} label={name} value={count} />
-        ))}
+        <SectionHeading>Interactions by Team Member</SectionHeading>
+        <MiniTable
+          columns={["Team Member", "Interactions"]}
+          rows={Object.entries(engagement.byTeam).map(([name, count]) => [
+            name,
+            String(count),
+          ])}
+        />
 
         <SectionHeading>Coverage Gaps</SectionHeading>
         {engagement.coverageGaps.length > 0 ? (
@@ -288,9 +317,13 @@ export function ReportsPage() {
         title="Ownership Report"
         subtitle="Shareholder structure and concentration analysis"
       >
-        <MetricRow
-          label="Total tracked ownership"
-          value={`${ownership.totalHolding.toFixed(1)}%`}
+        <StatGrid
+          items={[
+            { label: "Total Tracked", value: `${ownership.totalHolding.toFixed(1)}%` },
+            { label: "Top-5 Concentration", value: `${ownership.concentration.toFixed(1)}%` },
+            { label: "Investor Types", value: Object.keys(ownership.byType).length },
+            { label: "Notable Changes", value: ownership.changes.length },
+          ]}
         />
 
         <SectionHeading>Ownership Structure</SectionHeading>
@@ -311,25 +344,23 @@ export function ReportsPage() {
         />
 
         <SectionHeading>By Type</SectionHeading>
-        {Object.entries(ownership.byType).map(([type, pct]) => (
-          <MetricRow key={type} label={type} value={`${pct.toFixed(1)}%`} />
-        ))}
-
-        <MetricRow
-          label="Top-5 concentration"
-          value={`${ownership.concentration.toFixed(1)}%`}
-          highlight
+        <MiniTable
+          columns={["Investor Type", "Holding %"]}
+          rows={Object.entries(ownership.byType).map(([type, pct]) => [
+            type,
+            `${pct.toFixed(1)}%`,
+          ])}
         />
 
         <SectionHeading>Notable Changes (6-month)</SectionHeading>
         {ownership.changes.length > 0 ? (
-          ownership.changes.map((c) => (
-            <MetricRow
-              key={c.name}
-              label={c.name}
-              value={`${c.change > 0 ? "+" : ""}${c.change.toFixed(1)}%`}
-            />
-          ))
+          <MiniTable
+            columns={["Investor", "Change"]}
+            rows={ownership.changes.map((c) => [
+              c.name,
+              `${c.change > 0 ? "+" : ""}${c.change.toFixed(1)}%`,
+            ])}
+          />
         ) : (
           <p className="text-sm text-slate-500">No significant changes.</p>
         )}
@@ -340,44 +371,55 @@ export function ReportsPage() {
         title="Effectiveness Report"
         subtitle="Signal conversion, action outcomes, and team workload"
       >
-        <MetricRow label="Total signals" value={effectiveness.totalSignals} />
-        <MetricRow label="Open signals" value={effectiveness.openSignals} />
-        <MetricRow
-          label="Actioned signals"
-          value={effectiveness.actioned}
-        />
-        <MetricRow
-          label="Signal conversion rate"
-          value={`${effectiveness.conversionRate}%`}
-          highlight
+        <StatGrid
+          items={[
+            { label: "Total Signals", value: effectiveness.totalSignals },
+            { label: "Open Signals", value: effectiveness.openSignals },
+            { label: "Actioned", value: effectiveness.actioned },
+            { label: "Conversion Rate", value: `${effectiveness.conversionRate}%`, highlight: "Signal to action" },
+          ]}
         />
 
         <SectionHeading>Action Outcomes</SectionHeading>
-        <MetricRow
-          label="Completed actions"
-          value={`${effectiveness.completedActions} / ${effectiveness.totalActions}`}
-        />
-
-        <SectionHeading>Team Workload (Open Actions)</SectionHeading>
-        {Object.entries(effectiveness.workload).map(([name, count]) => (
-          <div key={name} className="flex items-center gap-3 py-1.5">
-            <span className="text-sm text-slate-600 w-28">{name}</span>
-            <div className="flex-1 h-2 rounded-full bg-slate-100">
-              <div
-                className={cn(
-                  "h-2 rounded-full",
-                  count >= 4 ? "bg-red-500" : count >= 2 ? "bg-amber-500" : "bg-emerald-500"
-                )}
-                style={{
-                  width: `${Math.min(100, (count / 5) * 100)}%`,
-                }}
-              />
-            </div>
-            <span className="text-sm font-semibold text-slate-700 w-6 text-right">
-              {count}
+        <div className="rounded-lg border border-slate-200 bg-white px-4 py-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-slate-600">Completed actions</span>
+            <span className="font-mono text-sm font-semibold text-slate-900">
+              {effectiveness.completedActions} / {effectiveness.totalActions}
             </span>
           </div>
-        ))}
+          <div className="mt-2 h-1.5 w-full rounded-full bg-slate-100">
+            <div
+              className="h-1.5 rounded-full bg-emerald-500 transition-all"
+              style={{
+                width: `${effectiveness.totalActions > 0 ? (effectiveness.completedActions / effectiveness.totalActions) * 100 : 0}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        <SectionHeading>Team Workload (Open Actions)</SectionHeading>
+        <div className="space-y-3">
+          {Object.entries(effectiveness.workload).map(([name, count]) => (
+            <div key={name} className="flex items-center gap-3">
+              <span className="text-sm text-slate-600 w-32 truncate">{name}</span>
+              <div className="flex-1 h-1.5 rounded-full bg-slate-100">
+                <div
+                  className={cn(
+                    "h-1.5 rounded-full transition-all",
+                    count >= 4 ? "bg-red-500" : count >= 2 ? "bg-amber-500" : "bg-emerald-500"
+                  )}
+                  style={{
+                    width: `${Math.min(100, (count / 5) * 100)}%`,
+                  }}
+                />
+              </div>
+              <span className="font-mono text-xs font-semibold text-slate-700 w-6 text-right">
+                {count}
+              </span>
+            </div>
+          ))}
+        </div>
       </ReportCard>
 
       {/* ── Governance Report ──────────────────────────── */}
@@ -397,37 +439,46 @@ export function ReportsPage() {
         />
 
         <SectionHeading>Governance Topics</SectionHeading>
-        {Object.entries(governance.topics).map(([topic, count]) => (
-          <MetricRow key={topic} label={topic} value={`${count} signal${count !== 1 ? "s" : ""}`} />
-        ))}
+        <MiniTable
+          columns={["Topic", "Signals"]}
+          rows={Object.entries(governance.topics).map(([topic, count]) => [
+            topic,
+            `${count}`,
+          ])}
+        />
 
         <SectionHeading>Engagement Status</SectionHeading>
-        <div className="flex gap-4">
-          <div className="flex-1 rounded-lg bg-emerald-50 px-3 py-2 text-center">
-            <p className="text-lg font-semibold text-emerald-700">
+        <div className="flex gap-3">
+          <div className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-3 text-center">
+            <p className="font-mono text-xl font-bold text-emerald-600">
               {governance.engagementStatus.engaged}
             </p>
-            <p className="text-[11px] text-emerald-600">Engaged</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">Engaged</p>
           </div>
-          <div className="flex-1 rounded-lg bg-slate-100 px-3 py-2 text-center">
-            <p className="text-lg font-semibold text-slate-700">
+          <div className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-3 text-center">
+            <p className="font-mono text-xl font-bold text-slate-600">
               {governance.engagementStatus.neutral}
             </p>
-            <p className="text-[11px] text-slate-500">Neutral</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">Neutral</p>
           </div>
-          <div className="flex-1 rounded-lg bg-red-50 px-3 py-2 text-center">
-            <p className="text-lg font-semibold text-red-700">
+          <div className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-3 text-center">
+            <p className="font-mono text-xl font-bold text-red-600">
               {governance.engagementStatus.atRisk}
             </p>
-            <p className="text-[11px] text-red-600">At Risk</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">At Risk</p>
           </div>
         </div>
 
-        <MetricRow
-          label="Signals with voting risk"
-          value={governance.votingRiskCount}
-          highlight
-        />
+        {/* Voting risk recommendation */}
+        <div className="rounded-lg bg-slate-800 text-white p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            VOTING RISK ASSESSMENT
+          </p>
+          <p className="text-sm leading-relaxed">
+            <span className="font-mono font-semibold">{governance.votingRiskCount}</span> governance signals
+            with elevated voting risk identified. Prioritize pre-AGM engagement with at-risk investors.
+          </p>
+        </div>
       </ReportCard>
     </div>
   );

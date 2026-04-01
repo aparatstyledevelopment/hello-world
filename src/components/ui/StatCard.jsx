@@ -1,9 +1,9 @@
 import { cn } from "../../lib/utils";
 
 const trendConfig = {
-  up: { icon: "\u2191", color: "text-emerald-600" },
-  down: { icon: "\u2193", color: "text-red-600" },
-  neutral: { icon: "\u2192", color: "text-slate-400" },
+  up: { icon: "↑", color: "text-emerald-600" },
+  down: { icon: "↓", color: "text-red-600" },
+  neutral: { icon: "→", color: "text-slate-400" },
 };
 
 export function StatCard({ value, label, trend, className }) {
@@ -12,12 +12,15 @@ export function StatCard({ value, label, trend, className }) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-slate-200 bg-white shadow-sm px-5 py-4",
+        "rounded-lg border border-slate-200 bg-white px-5 py-4",
         className
       )}
     >
-      <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-semibold tracking-tight text-slate-900">
+      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+        {label}
+      </p>
+      <div className="mt-2 flex items-baseline gap-2">
+        <span className="font-mono text-2xl font-bold text-slate-900">
           {value}
         </span>
         {t && (
@@ -26,7 +29,6 @@ export function StatCard({ value, label, trend, className }) {
           </span>
         )}
       </div>
-      <p className="mt-1 text-xs font-medium text-slate-500">{label}</p>
     </div>
   );
 }

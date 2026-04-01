@@ -12,7 +12,7 @@ import {
   Users2,
 } from 'lucide-react'
 
-const primaryNav = [
+const mainEngineNav = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/signals', label: 'Signals', icon: Bell, badge: 5 },
   { to: '/actions', label: 'Actions', icon: CheckSquare, badge: 12 },
@@ -20,13 +20,21 @@ const primaryNav = [
   { to: '/market', label: 'Market', icon: TrendingUp },
 ]
 
-const secondaryNav = [
+const resourcesNav = [
   { to: '/personas', label: 'Personas', icon: UserCircle },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
   { to: '/benchmarking', label: 'Benchmarking', icon: GitCompare },
   { to: '/agm', label: 'AGM', icon: Vote },
   { to: '/collaboration', label: 'Collaboration', icon: Users2 },
 ]
+
+function SectionLabel({ children }) {
+  return (
+    <p className="mb-2 px-3 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-500">
+      {children}
+    </p>
+  )
+}
 
 function SidebarLink({ to, label, icon: Icon, badge }) {
   return (
@@ -36,7 +44,7 @@ function SidebarLink({ to, label, icon: Icon, badge }) {
       className={({ isActive }) =>
         `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
           isActive
-            ? 'text-white bg-primary-600/20 font-medium'
+            ? 'text-white bg-slate-800 font-medium'
             : 'text-slate-400 hover:text-white hover:bg-slate-800'
         }`
       }
@@ -44,7 +52,7 @@ function SidebarLink({ to, label, icon: Icon, badge }) {
       <Icon size={18} />
       <span className="flex-1">{label}</span>
       {badge != null && (
-        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-500 px-1.5 text-xs font-semibold text-white">
+        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-700 px-1.5 text-[10px] font-semibold text-slate-200">
           {badge}
         </span>
       )}
@@ -54,10 +62,10 @@ function SidebarLink({ to, label, icon: Icon, badge }) {
 
 export function Sidebar() {
   return (
-    <aside className="flex w-60 flex-col bg-slate-900 text-white">
+    <aside className="flex w-[200px] flex-col bg-slate-900 text-white">
       {/* Brand */}
-      <div className="flex items-center gap-2 px-5 py-5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500 text-sm font-bold">
+      <div className="flex items-center gap-2 px-4 py-5">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-700 text-[10px] font-bold text-white">
           IC
         </div>
         <span className="text-sm font-bold tracking-wide text-white">
@@ -66,27 +74,30 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3">
-        {/* Primary */}
-        <div className="space-y-0.5">
-          {primaryNav.map((item) => (
-            <SidebarLink key={item.to} {...item} />
-          ))}
+      <nav className="flex-1 space-y-5 overflow-y-auto px-2 pt-2">
+        {/* Main Engine */}
+        <div>
+          <SectionLabel>Main Engine</SectionLabel>
+          <div className="space-y-0.5">
+            {mainEngineNav.map((item) => (
+              <SidebarLink key={item.to} {...item} />
+            ))}
+          </div>
         </div>
 
-        {/* Divider */}
-        <div className="my-3 border-t border-slate-700/50" />
-
-        {/* Secondary */}
-        <div className="space-y-0.5">
-          {secondaryNav.map((item) => (
-            <SidebarLink key={item.to} {...item} />
-          ))}
+        {/* Resources */}
+        <div>
+          <SectionLabel>Resources</SectionLabel>
+          <div className="space-y-0.5">
+            {resourcesNav.map((item) => (
+              <SidebarLink key={item.to} {...item} />
+            ))}
+          </div>
         </div>
       </nav>
 
       {/* User */}
-      <div className="border-t border-slate-700/50 px-4 py-4">
+      <div className="border-t border-slate-700/50 px-3 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-700 text-xs font-semibold text-slate-200">
             JD

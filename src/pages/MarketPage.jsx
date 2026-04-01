@@ -2,16 +2,9 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp, ExternalLink } from "lucide-react";
 import { cn } from "../lib/utils";
-import { Badge } from "../components/ui/Badge";
-import { Card } from "../components/ui/Card";
 import { StatCard } from "../components/ui/StatCard";
 import { EmptyState } from "../components/ui/EmptyState";
-import {
-  investors,
-  signals,
-  timelineEvents,
-  getInvestor,
-} from "../data/mock-data";
+import { getInvestor } from "../data/mock-data";
 
 // ── Market intelligence feed (inline mock) ──────────────
 const marketIntelligence = [
@@ -127,17 +120,30 @@ const marketIntelligence = [
   },
 ];
 
-const categories = ["All", "Ownership", "Peer", "Fund flows", "Regulatory", "Media"];
+const categories = [
+  "All",
+  "Ownership",
+  "Peer",
+  "Fund flows",
+  "Regulatory",
+  "Media",
+];
 
-const categoryColors = {
-  Ownership: "bg-blue-50 text-blue-700 ring-blue-600/20",
-  Peer: "bg-violet-50 text-violet-700 ring-violet-600/20",
-  "Fund flows": "bg-teal-50 text-teal-700 ring-teal-600/20",
-  Regulatory: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  Media: "bg-slate-100 text-slate-700 ring-slate-500/20",
+const categoryBadgeColors = {
+  Ownership: "bg-blue-50 text-blue-700",
+  Peer: "bg-violet-50 text-violet-700",
+  "Fund flows": "bg-teal-50 text-teal-700",
+  Regulatory: "bg-amber-50 text-amber-700",
+  Media: "bg-slate-100 text-slate-600",
 };
 
-const relevanceColors = {
+const relevanceDot = {
+  high: "bg-red-500",
+  medium: "bg-amber-500",
+  low: "bg-slate-400",
+};
+
+const relevanceLabel = {
   high: "text-red-600",
   medium: "text-amber-600",
   low: "text-slate-500",
@@ -152,7 +158,9 @@ export function MarketPage() {
   }, [activeCategory]);
 
   const stats = useMemo(() => {
-    const high = marketIntelligence.filter((m) => m.relevance === "high").length;
+    const high = marketIntelligence.filter(
+      (m) => m.relevance === "high"
+    ).length;
     const thisWeek = marketIntelligence.filter(
       (m) => new Date(m.date) >= new Date("2026-03-22")
     ).length;
@@ -166,8 +174,10 @@ export function MarketPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Market Intelligence</h1>
-        <p className="mt-0.5 text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-slate-900">
+          Market Intelligence
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
           Curated market events affecting your investor base
         </p>
       </div>
@@ -180,17 +190,17 @@ export function MarketPage() {
         <StatCard value={stats.uniqueInvestors} label="Investors affected" />
       </div>
 
-      {/* Filter Chips */}
+      {/* Filter Pills */}
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
             className={cn(
-              "rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
+              "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
               activeCategory === cat
-                ? "bg-slate-900 text-white"
-                : "bg-white text-slate-600 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+                ? "border-slate-900 bg-slate-900 text-white"
+                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
             )}
           >
             {cat}
@@ -198,20 +208,36 @@ export function MarketPage() {
         ))}
       </div>
 
+      {/* Recommendation box */}
+      <div className="rounded-lg bg-slate-800 text-white p-4">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+          INTELLIGENCE SUMMARY
+        </p>
+        <p className="text-sm leading-relaxed">
+          {stats.high} high-relevance items detected this period affecting {stats.uniqueInvestors} investors.
+          Ownership changes and peer activity dominate the feed. Prioritize engagement with affected holders.
+        </p>
+      </div>
+
       {/* Intelligence Cards */}
       {filtered.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filtered.map((item) => (
-            <Card key={item.id}>
+            <div
+              key={item.id}
+              className="rounded-lg border border-slate-200 bg-white p-5"
+            >
               <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 space-y-2">
-                  {/* Date & Category */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400">{item.date}</span>
+                <div className="flex-1 space-y-3">
+                  {/* Date + Category Badge */}
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-mono text-xs text-slate-400">
+                      {item.date}
+                    </span>
                     <span
                       className={cn(
-                        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset",
-                        categoryColors[item.category]
+                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium",
+                        categoryBadgeColors[item.category]
                       )}
                     >
                       {item.category}
@@ -228,51 +254,63 @@ export function MarketPage() {
                     {item.description}
                   </p>
 
-                  {/* Metadata Row */}
-                  <div className="flex flex-wrap items-center gap-4 pt-1">
+                  {/* Relevance + Affected Investors + Source */}
+                  <div className="flex flex-wrap items-center gap-5 pt-3 border-t border-slate-100">
                     {/* Relevance */}
-                    <span className="flex items-center gap-1.5 text-xs">
-                      <span className="text-slate-400">Relevance:</span>
-                      <span
-                        className={cn(
-                          "font-semibold capitalize",
-                          relevanceColors[item.relevance]
-                        )}
-                      >
-                        {item.relevance}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                        Relevance
                       </span>
-                    </span>
+                      <span className="flex items-center gap-1">
+                        <span
+                          className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            relevanceDot[item.relevance]
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "text-xs font-semibold capitalize",
+                            relevanceLabel[item.relevance]
+                          )}
+                        >
+                          {item.relevance}
+                        </span>
+                      </span>
+                    </div>
 
                     {/* Affected Investors */}
                     {item.affectedInvestorIds.length > 0 && (
-                      <span className="flex items-center gap-1.5 text-xs">
-                        <span className="text-slate-400">Affects:</span>
-                        <span className="flex flex-wrap gap-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                          Affects
+                        </span>
+                        <span className="flex flex-wrap gap-1.5">
                           {item.affectedInvestorIds.map((id) => {
                             const inv = getInvestor(id);
                             return inv ? (
                               <Link
                                 key={id}
                                 to={`/investors/${id}`}
-                                className="font-medium text-primary-600 hover:underline"
+                                className="text-xs font-medium text-slate-700 hover:text-slate-900 hover:underline"
                               >
                                 {inv.name}
                               </Link>
                             ) : null;
                           })}
                         </span>
-                      </span>
+                      </div>
                     )}
 
                     {/* Source */}
-                    <span className="flex items-center gap-1 text-xs text-slate-400">
-                      <ExternalLink size={12} />
-                      {item.source}
-                    </span>
+                    <div className="flex items-center gap-1 text-xs text-slate-400 ml-auto">
+                      <ExternalLink size={11} />
+                      <span>{item.source}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       ) : (

@@ -11,7 +11,7 @@ export function Card({ variant = "default", className, children, title, subtitle
   return (
     <div
       className={cn(
-        "rounded-xl border shadow-sm p-5",
+        "rounded-lg border p-5",
         variantStyles[variant] ?? variantStyles.default,
         className
       )}
@@ -19,7 +19,7 @@ export function Card({ variant = "default", className, children, title, subtitle
       {(title || subtitle) && (
         <div className="mb-4">
           {title && (
-            <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">{title}</h3>
           )}
           {subtitle && (
             <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>

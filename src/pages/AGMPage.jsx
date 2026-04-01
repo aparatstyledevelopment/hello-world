@@ -1,23 +1,14 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
-  Vote,
-  Calendar,
-  Users,
-  MessageSquare,
   AlertTriangle,
-  ChevronDown,
-  ChevronRight,
   CheckCircle2,
   Clock,
+  Calendar,
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import { Card } from "../components/ui/Card";
-import { Badge } from "../components/ui/Badge";
 import { StatCard } from "../components/ui/StatCard";
 import { investors, signals, actions, getSignalsForInvestor } from "../data/mock-data";
-
-const TODAY = new Date("2026-04-01");
 
 // ── AGM config ──────────────────────────────────────────
 const AGM_DATE = "2026-05-03";
@@ -39,9 +30,7 @@ function predictVoting(investor) {
     (s) => s.type === "governance_management"
   );
   const hasGovConcern = govSignals.length > 0;
-  const momentum = investor.engagementMomentum;
 
-  // ISS alignment heuristic
   const issAligned =
     investor.type === "passive"
       ? "Generally aligned"
@@ -49,13 +38,11 @@ function predictVoting(investor) {
       ? "Policy-driven"
       : "Case-by-case";
 
-  // Board vote prediction
   let boardVote = "For";
   if (hasGovConcern && govSignals.some((s) => s.headline.includes("diversity") || s.headline.includes("board"))) {
     boardVote = "At risk";
   }
 
-  // Compensation vote prediction
   let compVote = "For";
   if (hasGovConcern && govSignals.some((s) => s.headline.includes("proxy") || s.headline.includes("compensation"))) {
     compVote = "Against";
@@ -63,7 +50,6 @@ function predictVoting(investor) {
     compVote = "Scrutinize";
   }
 
-  // Engagement status
   const relatedActions = actions.filter(
     (a) => a.investorId === investor.id && a.type === "governance_management"
   );
@@ -146,10 +132,16 @@ const historicalVoting = [
   },
 ];
 
-const riskColors = {
-  high: "bg-red-50 text-red-700 ring-red-600/20",
-  medium: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  low: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+const sensitivityPillColors = {
+  high: "bg-red-50 text-red-700 border-red-200",
+  medium: "bg-amber-50 text-amber-700 border-amber-200",
+  low: "bg-emerald-50 text-emerald-700 border-emerald-200",
+};
+
+const riskDotColors = {
+  high: "bg-red-500",
+  medium: "bg-amber-500",
+  low: "bg-emerald-500",
 };
 
 const statusIcons = {
@@ -196,8 +188,8 @@ export function AGMPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-900">AGM Intelligence</h1>
-        <p className="mt-0.5 text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-slate-900">AGM Intelligence</h1>
+        <p className="mt-1 text-sm text-slate-500">
           Proxy season preparation and governance risk management
         </p>
       </div>
@@ -215,38 +207,43 @@ export function AGMPage() {
       </div>
 
       {/* Predicted Voting Table */}
-      <Card
-        title="Predicted Voting Outcomes"
-        subtitle={`Projected voting behavior for ${AGM_DATE} AGM`}
-      >
-        <div className="overflow-x-auto rounded-lg border border-slate-100">
+      <div className="rounded-lg border border-slate-200 bg-white p-5">
+        <div className="mb-4">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            Predicted Voting Outcomes
+          </h3>
+          <p className="mt-0.5 text-xs text-slate-500">
+            Projected voting behavior for {AGM_DATE} AGM
+          </p>
+        </div>
+        <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+              <tr className="border-b border-slate-200 bg-slate-50">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Investor
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Holding
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Sensitivity
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   ISS Alignment
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Board Vote
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
-                  Compensation Vote
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Comp Vote
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Engagement
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-slate-100">
               {votingPredictions.map((inv) => {
                 const StatusIcon =
                   statusIcons[inv.engagementStatus] || AlertTriangle;
@@ -255,48 +252,77 @@ export function AGMPage() {
                     <td className="px-4 py-2.5">
                       <Link
                         to={`/investors/${inv.id}`}
-                        className="font-medium text-slate-900 hover:text-primary-600 hover:underline"
+                        className="font-medium text-slate-900 hover:text-slate-600 hover:underline"
                       >
                         {inv.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-2.5 text-slate-700">
+                    <td className="px-4 py-2.5 font-mono text-slate-700">
                       {inv.holdingPct}%
                     </td>
                     <td className="px-4 py-2.5">
-                      <Badge variant={inv.sensitivity}>
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium uppercase",
+                          sensitivityPillColors[inv.sensitivity]
+                        )}
+                      >
                         {inv.sensitivity}
-                      </Badge>
+                      </span>
                     </td>
-                    <td className="px-4 py-2.5 text-slate-600">
+                    <td className="px-4 py-2.5 text-slate-600 text-xs">
                       {inv.issAligned}
                     </td>
                     <td className="px-4 py-2.5">
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          inv.boardVote === "For"
-                            ? "text-emerald-600"
-                            : inv.boardVote === "At risk"
-                            ? "text-amber-600"
-                            : "text-red-600"
-                        )}
-                      >
-                        {inv.boardVote}
+                      <span className="flex items-center gap-1.5">
+                        <span
+                          className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            inv.boardVote === "For"
+                              ? "bg-emerald-500"
+                              : inv.boardVote === "At risk"
+                              ? "bg-amber-500"
+                              : "bg-red-500"
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "text-xs font-medium",
+                            inv.boardVote === "For"
+                              ? "text-emerald-600"
+                              : inv.boardVote === "At risk"
+                              ? "text-amber-600"
+                              : "text-red-600"
+                          )}
+                        >
+                          {inv.boardVote}
+                        </span>
                       </span>
                     </td>
                     <td className="px-4 py-2.5">
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          inv.compVote === "For"
-                            ? "text-emerald-600"
-                            : inv.compVote === "Against"
-                            ? "text-red-600"
-                            : "text-amber-600"
-                        )}
-                      >
-                        {inv.compVote}
+                      <span className="flex items-center gap-1.5">
+                        <span
+                          className={cn(
+                            "h-1.5 w-1.5 rounded-full",
+                            inv.compVote === "For"
+                              ? "bg-emerald-500"
+                              : inv.compVote === "Against"
+                              ? "bg-red-500"
+                              : "bg-amber-500"
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "text-xs font-medium",
+                            inv.compVote === "For"
+                              ? "text-emerald-600"
+                              : inv.compVote === "Against"
+                              ? "text-red-600"
+                              : "text-amber-600"
+                          )}
+                        >
+                          {inv.compVote}
+                        </span>
                       </span>
                     </td>
                     <td className="px-4 py-2.5">
@@ -306,7 +332,7 @@ export function AGMPage() {
                           statusColors[inv.engagementStatus]
                         )}
                       >
-                        <StatusIcon size={14} />
+                        <StatusIcon size={13} />
                         {inv.engagementStatus}
                       </span>
                     </td>
@@ -316,48 +342,63 @@ export function AGMPage() {
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
       {/* Governance Issue Tracker */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-900 mb-3">
+        <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
           Governance Issue Tracker
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {governanceIssues.map((issue) => (
-            <Card key={issue.id}>
+            <div
+              key={issue.id}
+              className="rounded-lg border border-slate-200 bg-white p-5"
+            >
               <div className="flex items-start justify-between gap-2 mb-3">
                 <h3 className="text-sm font-semibold text-slate-900">
                   {issue.topic}
                 </h3>
-                <span
-                  className={cn(
-                    "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset capitalize whitespace-nowrap",
-                    riskColors[issue.risk]
-                  )}
-                >
-                  {issue.risk} risk
+                <span className="flex items-center gap-1.5 whitespace-nowrap">
+                  <span
+                    className={cn(
+                      "h-1.5 w-1.5 rounded-full",
+                      riskDotColors[issue.risk]
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "text-xs font-medium capitalize",
+                      issue.risk === "high"
+                        ? "text-red-600"
+                        : issue.risk === "medium"
+                        ? "text-amber-600"
+                        : "text-emerald-600"
+                    )}
+                  >
+                    {issue.risk} risk
+                  </span>
                 </span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed mb-3">
                 {issue.description}
               </p>
-              <div className="border-t border-slate-100 pt-2">
-                <span className="text-xs text-slate-500">
-                  Status:{" "}
-                  <span className="font-medium text-slate-700">
-                    {issue.status}
-                  </span>
+              <div className="border-t border-slate-100 pt-3">
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Status
                 </span>
+                <p className="text-xs font-medium text-slate-700 mt-0.5">
+                  {issue.status}
+                </p>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
 
       {/* Pre-AGM Engagement Plan */}
       <div>
-        <h2 className="text-sm font-semibold text-slate-900 mb-3">
+        <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
           Pre-AGM Engagement Plan
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -373,9 +414,12 @@ export function AGMPage() {
             );
 
             return (
-              <Card key={inv.id}>
+              <div
+                key={inv.id}
+                className="rounded-lg border border-slate-200 bg-white p-5"
+              >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700">
                     {inv.name
                       .split(" ")
                       .map((w) => w[0])
@@ -385,32 +429,30 @@ export function AGMPage() {
                   <div>
                     <Link
                       to={`/investors/${inv.id}`}
-                      className="text-sm font-semibold text-slate-900 hover:text-primary-600 hover:underline"
+                      className="text-sm font-semibold text-slate-900 hover:text-slate-600 hover:underline"
                     >
                       {inv.name}
                     </Link>
                     <p className="text-xs text-slate-500">
-                      {inv.type} &middot; {inv.holdingPct}%
+                      {inv.type} &middot;{" "}
+                      <span className="font-mono">{inv.holdingPct}%</span>
                     </p>
                   </div>
                 </div>
 
                 {/* Key concerns */}
                 {govSignals.length > 0 && (
-                  <div className="mb-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                  <div className="mb-3">
+                    <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                       Key Topics
                     </span>
-                    <ul className="mt-1 space-y-1">
+                    <ul className="mt-1.5 space-y-1.5">
                       {govSignals.map((s) => (
                         <li
                           key={s.id}
                           className="flex items-start gap-1.5 text-xs text-slate-600"
                         >
-                          <AlertTriangle
-                            size={12}
-                            className="mt-0.5 flex-shrink-0 text-amber-500"
-                          />
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-500 flex-shrink-0" />
                           {s.headline}
                         </li>
                       ))}
@@ -449,85 +491,102 @@ export function AGMPage() {
                     No specific governance concerns identified
                   </p>
                 )}
-              </Card>
+              </div>
             );
           })}
         </div>
       </div>
 
       {/* Historical Voting */}
-      <Card
-        title="Historical Voting Results"
-        subtitle="AGM voting outcomes 2023-2025"
-      >
-        <div className="overflow-x-auto rounded-lg border border-slate-100">
+      <div className="rounded-lg border border-slate-200 bg-white p-5">
+        <div className="mb-4">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            Historical Voting Results
+          </h3>
+          <p className="mt-0.5 text-xs text-slate-500">
+            AGM voting outcomes 2023-2025
+          </p>
+        </div>
+        <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50">
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+              <tr className="border-b border-slate-200 bg-slate-50">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Year
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Board Election
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Compensation
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Auditor Ratification
                 </th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-slate-400">
+                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Shareholder Proposal
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-slate-100">
               {historicalVoting.map((row) => (
                 <tr key={row.year}>
-                  <td className="px-4 py-2.5 font-semibold text-slate-900">
+                  <td className="px-4 py-2.5 font-semibold text-slate-900 font-mono">
                     {row.year}
                   </td>
                   <td className="px-4 py-2.5">
-                    <span
-                      className={cn(
-                        "font-medium",
-                        row.boardElection >= 90
-                          ? "text-emerald-600"
-                          : "text-amber-600"
-                      )}
-                    >
-                      {row.boardElection}%
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          row.boardElection >= 90
+                            ? "bg-emerald-500"
+                            : "bg-amber-500"
+                        )}
+                      />
+                      <span className="font-mono font-medium text-slate-700">
+                        {row.boardElection}%
+                      </span>
                     </span>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span
-                      className={cn(
-                        "font-medium",
-                        row.compensation >= 75
-                          ? "text-emerald-600"
-                          : row.compensation >= 60
-                          ? "text-amber-600"
-                          : "text-red-600"
-                      )}
-                    >
-                      {row.compensation}%
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          row.compensation >= 75
+                            ? "bg-emerald-500"
+                            : row.compensation >= 60
+                            ? "bg-amber-500"
+                            : "bg-red-500"
+                        )}
+                      />
+                      <span className="font-mono font-medium text-slate-700">
+                        {row.compensation}%
+                      </span>
                     </span>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span className="font-medium text-emerald-600">
-                      {row.auditorRatification}%
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      <span className="font-mono font-medium text-slate-700">
+                        {row.auditorRatification}%
+                      </span>
                     </span>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span
-                      className={cn(
-                        "font-medium",
-                        row.shareholderProposal >= 50
-                          ? "text-red-600"
-                          : "text-slate-600"
-                      )}
-                    >
-                      {row.shareholderProposal}%
+                    <span className="flex items-center gap-1.5">
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          row.shareholderProposal >= 50
+                            ? "bg-red-500"
+                            : "bg-slate-400"
+                        )}
+                      />
+                      <span className="font-mono font-medium text-slate-700">
+                        {row.shareholderProposal}%
+                      </span>
                     </span>
                   </td>
                 </tr>
@@ -536,16 +595,23 @@ export function AGMPage() {
           </table>
         </div>
 
-        {/* Trend note */}
-        <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2">
-          <p className="text-xs text-amber-800">
-            <span className="font-semibold">Trend alert:</span> Compensation
-            approval has declined from 78.5% to 68.9% over 3 years.
-            Shareholder proposal support is trending upward (32.1% to 41.2%),
-            approaching the 50% threshold.
+        {/* Trend alert recommendation */}
+        <div className="mt-4 rounded-lg bg-slate-800 text-white p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            TREND ALERT
+          </p>
+          <p className="text-sm leading-relaxed">
+            Compensation approval has declined from{" "}
+            <span className="font-mono font-semibold">78.5%</span> to{" "}
+            <span className="font-mono font-semibold">68.9%</span> over 3 years.
+            Shareholder proposal support is trending upward (
+            <span className="font-mono font-semibold">32.1%</span> to{" "}
+            <span className="font-mono font-semibold">41.2%</span>),
+            approaching the 50% threshold. Proactive engagement on compensation
+            structure recommended.
           </p>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   Plus,
   Link as LinkIcon,
   AlertCircle,
+  Search,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
@@ -78,12 +79,12 @@ function FilterBar({ filters, setFilters }) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Filter size={16} className="text-slate-400" />
+      <Filter size={14} className="text-slate-400" />
 
       <select
         value={filters.state}
         onChange={(e) => setFilters((f) => ({ ...f, state: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
       >
         <option value="">All States</option>
         {actionStates.map((s) => (
@@ -96,7 +97,7 @@ function FilterBar({ filters, setFilters }) {
       <select
         value={filters.type}
         onChange={(e) => setFilters((f) => ({ ...f, type: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
       >
         <option value="">All Types</option>
         {typeOptions.map((t) => (
@@ -109,7 +110,7 @@ function FilterBar({ filters, setFilters }) {
       <select
         value={filters.investor}
         onChange={(e) => setFilters((f) => ({ ...f, investor: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
       >
         <option value="">All Investors</option>
         {investorOptions.map((i) => (
@@ -122,7 +123,7 @@ function FilterBar({ filters, setFilters }) {
       <select
         value={filters.owner}
         onChange={(e) => setFilters((f) => ({ ...f, owner: e.target.value }))}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+        className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400"
       >
         <option value="">All Owners</option>
         {owners.map((o) => (
@@ -161,25 +162,25 @@ function ListView({ filteredActions, navigate }) {
         return <Badge variant={row.type}>{typeLabels[row.type]}</Badge>;
       case "investor": {
         const inv = getInvestor(row.investorId);
-        return <span className="font-medium">{inv?.name ?? "Unknown"}</span>;
+        return <span className="font-semibold text-slate-900">{inv?.name ?? "Unknown"}</span>;
       }
       case "contact": {
         const con = getContact(row.contactId);
-        return <span className="text-slate-500">{con?.name ?? "-"}</span>;
+        return <span className="text-slate-500 text-xs">{con?.name ?? "-"}</span>;
       }
       case "objective":
         return (
-          <span className="text-slate-600" title={row.objective}>
+          <span className="text-sm text-slate-600" title={row.objective}>
             {truncate(row.objective)}
           </span>
         );
       case "owner":
-        return <span className="text-slate-600">{row.owner}</span>;
+        return <span className="text-xs text-slate-600">{row.owner}</span>;
       case "dueDate":
         return (
           <span
             className={cn(
-              "text-sm",
+              "font-mono text-xs",
               isOverdue(row.dueDate) && row.state !== "completed"
                 ? "font-semibold text-red-600"
                 : "text-slate-600"
@@ -189,10 +190,10 @@ function ListView({ filteredActions, navigate }) {
           </span>
         );
       case "channel":
-        return <span className="text-slate-500">{row.channel}</span>;
+        return <span className="text-xs text-slate-500">{row.channel}</span>;
       case "signal":
         return row.signalId ? (
-          <LinkIcon size={14} className="mx-auto text-primary-500" />
+          <LinkIcon size={14} className="mx-auto text-slate-500" />
         ) : (
           <span className="text-slate-300">-</span>
         );
@@ -229,34 +230,34 @@ function BoardView({ filteredActions, navigate }) {
   }));
 
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="grid grid-cols-5 gap-3">
       {stateColumns.map((col) => (
-        <div key={col.key} className="flex flex-col rounded-xl bg-slate-100 p-3">
+        <div key={col.key} className="flex flex-col rounded-lg border border-slate-200 bg-slate-50 p-3">
           {/* Column header */}
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
               {col.label}
             </h3>
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-200 px-1.5 text-xs font-semibold text-slate-600">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-200 px-1.5 text-[11px] font-semibold text-slate-600">
               {col.items.length}
             </span>
           </div>
 
           {/* Cards */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {col.items.map((action) => {
               const inv = getInvestor(action.investorId);
               return (
                 <div
                   key={action.id}
                   onClick={() => navigate(`/actions/${action.id}`)}
-                  className="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition-shadow hover:shadow-md"
+                  className="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 transition-colors hover:border-slate-300"
                 >
                   <p className="text-xs font-semibold text-slate-800">
                     {inv?.name ?? "Unknown"}
                   </p>
                   <p
-                    className="mt-1 text-xs text-slate-500"
+                    className="mt-1 text-xs text-slate-500 leading-relaxed"
                     title={action.objective}
                   >
                     {truncate(action.objective, 60)}
@@ -264,12 +265,12 @@ function BoardView({ filteredActions, navigate }) {
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {/* Owner initials */}
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-[10px] font-semibold text-slate-600">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600">
                         {getInitials(action.owner)}
                       </div>
                       <span
                         className={cn(
-                          "text-[11px]",
+                          "font-mono text-[10px]",
                           isOverdue(action.dueDate) && action.state !== "completed"
                             ? "font-semibold text-red-600"
                             : "text-slate-400"
@@ -311,15 +312,54 @@ export function ActionsPage() {
     return true;
   });
 
+  const overdueCount = filteredActions.filter(
+    (a) => isOverdue(a.dueDate) && a.state !== "completed"
+  ).length;
+
+  const inProgressCount = filteredActions.filter(
+    (a) => a.state === "in_progress"
+  ).length;
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-bold text-slate-900">Actions</h1>
           <p className="mt-0.5 text-sm text-slate-500">
-            {filteredActions.length} action{filteredActions.length !== 1 && "s"}
+            Engagement actions and outreach management
           </p>
+          <div className="mt-3 flex items-center gap-6">
+            <div>
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                TOTAL ACTIONS
+              </span>
+              <p className="font-mono text-lg font-bold text-slate-900">
+                {filteredActions.length}
+              </p>
+            </div>
+            <div className="h-8 w-px bg-slate-200" />
+            <div>
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                IN PROGRESS
+              </span>
+              <p className="font-mono text-lg font-bold text-slate-900">
+                {inProgressCount}
+              </p>
+            </div>
+            <div className="h-8 w-px bg-slate-200" />
+            <div>
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                OVERDUE
+              </span>
+              <p className={cn(
+                "font-mono text-lg font-bold",
+                overdueCount > 0 ? "text-red-600" : "text-slate-900"
+              )}>
+                {overdueCount}
+              </p>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           {/* View toggle */}
@@ -330,7 +370,7 @@ export function ActionsPage() {
                 "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                 viewMode === "list"
                   ? "bg-slate-900 text-white"
-                  : "text-slate-500 hover:text-slate-700"
+                  : "text-slate-400 hover:text-slate-600"
               )}
             >
               <List size={14} />
@@ -342,7 +382,7 @@ export function ActionsPage() {
                 "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
                 viewMode === "board"
                   ? "bg-slate-900 text-white"
-                  : "text-slate-500 hover:text-slate-700"
+                  : "text-slate-400 hover:text-slate-600"
               )}
             >
               <LayoutGrid size={14} />

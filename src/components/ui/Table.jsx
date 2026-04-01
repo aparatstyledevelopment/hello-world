@@ -2,15 +2,15 @@ import { cn } from "../../lib/utils";
 
 export function Table({ columns, data, onRowClick, renderCell, className }) {
   return (
-    <div className={cn("overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm", className)}>
+    <div className={cn("overflow-x-auto rounded-lg border border-slate-200 bg-white", className)}>
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-100">
+          <tr className="border-b border-slate-200">
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={cn(
-                  "px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400",
+                  "px-4 py-3 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400",
                   col.className
                 )}
               >
@@ -19,7 +19,7 @@ export function Table({ columns, data, onRowClick, renderCell, className }) {
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-50">
+        <tbody className="divide-y divide-slate-100">
           {data.map((row, idx) => (
             <tr
               key={row.id ?? idx}
@@ -32,7 +32,7 @@ export function Table({ columns, data, onRowClick, renderCell, className }) {
               {columns.map((col) => (
                 <td
                   key={col.key}
-                  className={cn("px-4 py-3 text-slate-700", col.className)}
+                  className={cn("px-4 py-3 text-sm text-slate-600", col.className)}
                 >
                   {renderCell ? renderCell(row, col) : row[col.key]}
                 </td>

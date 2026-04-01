@@ -15,7 +15,7 @@
 
   --color-sidebar: #0f172a;
   --color-sidebar-hover: #1e293b;
-  --color-sidebar-active: #1d4ed8;
+  --color-sidebar-active: #1e293b;
 
   --color-fact: #eff6ff;
   --color-fact-border: #3b82f6;
@@ -40,4 +40,36 @@ html { scroll-behavior: smooth; }
 :focus-visible {
   outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
+}
+
+/* Section labels - design system standard */
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8; /* slate-400 */
+}
+
+/* Mono data values */
+.data-value {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* Evidence/raw data blocks */
+.evidence-block {
+  background-color: #f8fafc; /* slate-50 */
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-radius: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.75rem;
+  padding: 0.75rem;
+}
+
+/* Recommendation banners */
+.recommendation-banner {
+  background-color: #1e293b; /* slate-800 */
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
 }

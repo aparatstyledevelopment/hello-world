@@ -1,11 +1,10 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { UserCircle, Filter } from "lucide-react";
+import { UserCircle } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
-import { Card } from "../components/ui/Card";
 import { EmptyState } from "../components/ui/EmptyState";
-import { investors, signals, getSignalsForInvestor } from "../data/mock-data";
+import { investors, getSignalsForInvestor } from "../data/mock-data";
 
 // ── Archetype derivation ────────────────────────────────
 function deriveArchetype(investor) {
@@ -16,7 +15,7 @@ function deriveArchetype(investor) {
     (s) => s.type === "governance_management"
   );
 
-  if (trend === "up" && (type === "active")) return "Active accumulator";
+  if (trend === "up" && type === "active") return "Active accumulator";
   if (trend === "down" && momentum === "negative") return "Silent reducer";
   if (type === "passive" && trend !== "down") return "Passive tracker";
   if (type === "sovereign" || type === "pension") return "Governance steward";
@@ -26,11 +25,11 @@ function deriveArchetype(investor) {
 }
 
 const archetypeColors = {
-  "Active accumulator": "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  "Silent reducer": "bg-red-50 text-red-700 ring-red-600/20",
-  "Passive tracker": "bg-sky-50 text-sky-700 ring-sky-600/20",
-  "Governance steward": "bg-violet-50 text-violet-700 ring-violet-600/20",
-  "Cautious trimmer": "bg-amber-50 text-amber-700 ring-amber-600/20",
+  "Active accumulator": "bg-emerald-50 text-emerald-700",
+  "Silent reducer": "bg-red-50 text-red-700",
+  "Passive tracker": "bg-sky-50 text-sky-700",
+  "Governance steward": "bg-violet-50 text-violet-700",
+  "Cautious trimmer": "bg-amber-50 text-amber-700",
 };
 
 const typeLabels = {
@@ -43,7 +42,9 @@ const typeLabels = {
 // ── Behavioral scores derived from data ─────────────────
 function deriveScores(investor) {
   const allSignals = getSignalsForInvestor(investor.id);
-  const govSignals = allSignals.filter((s) => s.type === "governance_management");
+  const govSignals = allSignals.filter(
+    (s) => s.type === "governance_management"
+  );
 
   const engagementBase =
     investor.engagementMomentum === "positive"
@@ -51,7 +52,10 @@ function deriveScores(investor) {
       : investor.engagementMomentum === "neutral"
       ? 50
       : 25;
-  const engagement = Math.min(100, engagementBase + investor.contacts.length * 10);
+  const engagement = Math.min(
+    100,
+    engagementBase + investor.contacts.length * 10
+  );
 
   const governance = Math.min(
     100,
@@ -61,11 +65,14 @@ function deriveScores(investor) {
   );
 
   const riskBase =
-    investor.holdingTrend === "down" ? 70 : investor.holdingTrend === "neutral" ? 35 : 15;
+    investor.holdingTrend === "down"
+      ? 70
+      : investor.holdingTrend === "neutral"
+      ? 35
+      : 15;
   const risk = Math.min(
     100,
-    riskBase +
-      allSignals.filter((s) => s.type === "retention_risk").length * 15
+    riskBase + allSignals.filter((s) => s.type === "retention_risk").length * 15
   );
 
   return { engagement, governance, risk };
@@ -83,7 +90,8 @@ function getGovernancePattern(investor) {
     (s) => s.type === "governance_management"
   );
   if (govSignals.length > 0) return "Active participant";
-  if (investor.type === "sovereign" || investor.type === "pension") return "Policy-driven voter";
+  if (investor.type === "sovereign" || investor.type === "pension")
+    return "Policy-driven voter";
   return "Generally supportive";
 }
 
@@ -136,12 +144,17 @@ const provenanceLabels = {
   team_assessed: "Team Assessed",
 };
 
+// ── Behavioral indicator bar ────────────────────────────
 function IndicatorBar({ label, value, color }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-slate-500">{label}</span>
-        <span className="text-xs font-medium text-slate-700">{value}%</span>
+        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+          {label}
+        </span>
+        <span className="font-mono text-xs font-medium text-slate-700">
+          {value}%
+        </span>
       </div>
       <div className="h-1.5 w-full rounded-full bg-slate-100">
         <div
@@ -192,20 +205,24 @@ export function PersonasPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Investor Personas</h1>
-        <p className="mt-0.5 text-sm text-slate-500">
-          Behavioral archetypes derived from holding patterns, engagement data, and
-          governance signals
+        <h1 className="text-3xl font-bold text-slate-900">
+          Investor Personas
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Behavioral archetypes derived from holding patterns, engagement data,
+          and governance signals
         </p>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <Filter size={16} className="text-slate-400" />
+        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+          Filters
+        </span>
         <select
           value={archetypeFilter}
           onChange={(e) => setArchetypeFilter(e.target.value)}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400"
         >
           <option value="">All Archetypes</option>
           {archetypes.map((a) => (
@@ -217,7 +234,7 @@ export function PersonasPage() {
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400"
         >
           <option value="">All Types</option>
           {Object.entries(typeLabels).map(([k, v]) => (
@@ -230,29 +247,36 @@ export function PersonasPage() {
 
       {/* Persona Grid */}
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {filtered.map((inv) => (
-            <Card key={inv.id} className="flex flex-col">
+            <div
+              key={inv.id}
+              className="flex flex-col rounded-lg border border-slate-200 bg-white p-5"
+            >
               {/* Header */}
               <div className="flex items-start justify-between gap-3 mb-4">
                 <div>
                   <Link
                     to={`/investors/${inv.id}`}
-                    className="text-sm font-semibold text-slate-900 hover:text-primary-600 hover:underline"
+                    className="text-sm font-semibold text-slate-900 hover:text-slate-600 hover:underline"
                   >
                     {inv.name}
                   </Link>
-                  <div className="mt-1 flex items-center gap-2">
+                  <div className="mt-1 flex items-center gap-1.5">
                     <span className="text-xs text-slate-500">
-                      {typeLabels[inv.type]} &middot; {inv.holdingPct}%
+                      {typeLabels[inv.type]}
+                    </span>
+                    <span className="text-slate-300">&middot;</span>
+                    <span className="font-mono text-xs text-slate-500">
+                      {inv.holdingPct}%
                     </span>
                   </div>
                 </div>
                 <span
                   className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset whitespace-nowrap",
+                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium whitespace-nowrap",
                     archetypeColors[inv.archetype] ||
-                      "bg-slate-100 text-slate-700 ring-slate-500/20"
+                      "bg-slate-100 text-slate-700"
                   )}
                 >
                   {inv.archetype}
@@ -261,71 +285,69 @@ export function PersonasPage() {
 
               {/* Key Characteristics */}
               <div className="space-y-2 mb-4">
-                <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Key Characteristics
                 </h4>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+                <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                   <div>
-                    <span className="text-slate-400">Holding period</span>
-                    <p className="font-medium text-slate-700">
+                    <dt className="text-slate-400">Holding period</dt>
+                    <dd className="font-medium text-slate-700">
                       {inv.holdingPeriod}
-                    </p>
+                    </dd>
                   </div>
                   <div>
-                    <span className="text-slate-400">Governance</span>
-                    <p className="font-medium text-slate-700">
+                    <dt className="text-slate-400">Governance</dt>
+                    <dd className="font-medium text-slate-700">
                       {inv.governancePattern}
-                    </p>
+                    </dd>
                   </div>
                   <div>
-                    <span className="text-slate-400">Communication</span>
-                    <p className="font-medium text-slate-700">
+                    <dt className="text-slate-400">Communication</dt>
+                    <dd className="font-medium text-slate-700">
                       {inv.communicationStyle}
-                    </p>
+                    </dd>
                   </div>
                   <div>
-                    <span className="text-slate-400">Decisions</span>
-                    <p className="font-medium text-slate-700">
+                    <dt className="text-slate-400">Decisions</dt>
+                    <dd className="font-medium text-slate-700">
                       {inv.decisionStructure}
-                    </p>
+                    </dd>
                   </div>
-                </div>
+                </dl>
               </div>
 
               {/* Behavioral Indicators */}
-              <div className="space-y-2 mb-4">
-                <h4 className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              <div className="space-y-2.5 mb-4">
+                <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                   Behavioral Indicators
                 </h4>
-                <div className="space-y-2">
-                  <IndicatorBar
-                    label="Engagement"
-                    value={inv.scores.engagement}
-                    color="bg-blue-500"
-                  />
-                  <IndicatorBar
-                    label="Governance"
-                    value={inv.scores.governance}
-                    color="bg-violet-500"
-                  />
-                  <IndicatorBar
-                    label="Risk"
-                    value={inv.scores.risk}
-                    color={
-                      inv.scores.risk >= 60
-                        ? "bg-red-500"
-                        : inv.scores.risk >= 35
-                        ? "bg-amber-500"
-                        : "bg-emerald-500"
-                    }
-                  />
-                </div>
+                <IndicatorBar
+                  label="Engagement"
+                  value={inv.scores.engagement}
+                  color="bg-blue-500"
+                />
+                <IndicatorBar
+                  label="Governance"
+                  value={inv.scores.governance}
+                  color="bg-violet-500"
+                />
+                <IndicatorBar
+                  label="Risk"
+                  value={inv.scores.risk}
+                  color={
+                    inv.scores.risk >= 60
+                      ? "bg-red-500"
+                      : inv.scores.risk >= 35
+                      ? "bg-amber-500"
+                      : "bg-emerald-500"
+                  }
+                />
               </div>
 
               {/* Signal Interpretation */}
               {inv.signalNote && (
-                <div className="mb-4 rounded-lg bg-slate-50 px-3 py-2">
-                  <p className="text-xs text-slate-600 leading-relaxed">
+                <div className="mb-4 rounded-lg bg-slate-50 p-3">
+                  <p className="font-mono text-xs text-slate-600 leading-relaxed">
                     {inv.signalNote}
                   </p>
                 </div>
@@ -333,7 +355,7 @@ export function PersonasPage() {
 
               {/* Provenance Badges */}
               {inv.provenanceBadges.length > 0 && (
-                <div className="mt-auto flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
+                <div className="mt-auto flex flex-wrap gap-1.5 pt-3 border-t border-slate-100">
                   {inv.provenanceBadges.map((p) => (
                     <Badge key={p} variant={p}>
                       {provenanceLabels[p]}
@@ -341,7 +363,7 @@ export function PersonasPage() {
                   ))}
                 </div>
               )}
-            </Card>
+            </div>
           ))}
         </div>
       ) : (
