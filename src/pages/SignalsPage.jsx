@@ -25,10 +25,10 @@ const TODAY = "2026-04-01";
 
 const urgencyOrder = { high: 0, medium: 1, low: 2 };
 
-const urgencyBorderColor = {
-  high: "border-l-red-500",
-  medium: "border-l-amber-500",
-  low: "border-l-slate-300",
+const urgencyChipStyle = {
+  high: "bg-red-50 text-red-700 border border-red-200",
+  medium: "bg-amber-50 text-amber-700 border border-amber-200",
+  low: "bg-emerald-50 text-emerald-700 border border-emerald-200",
 };
 
 const typeLabels = {
@@ -168,18 +168,14 @@ function SignalCard({ signal, navigate }) {
 
   return (
     <div
-      className={cn(
-        "rounded-lg border border-l-4 transition-all overflow-hidden",
-        urgencyBorderColor[signal.urgency],
-        isHigh ? "bg-red-50/20" : "bg-white"
-      )}
+      className="rounded-lg border border-slate-200 transition-all overflow-hidden bg-white hover:border-slate-300"
     >
       {/* Card header */}
       <button
         onClick={() => setExpanded(!expanded)}
         className={cn(
           "flex w-full items-start gap-4 text-left transition-colors",
-          isHigh ? "px-6 py-5 hover:bg-red-50/40" : "px-5 py-4 hover:bg-slate-50/80"
+          "px-5 py-4 hover:bg-slate-50/60"
         )}
       >
         {/* Icon circle */}
@@ -205,6 +201,9 @@ function SignalCard({ signal, navigate }) {
         <div className="flex-1 min-w-0">
           {/* Top row: badges + time + confidence */}
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+            <span className={cn("rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide", urgencyChipStyle[signal.urgency])}>
+              {signal.urgency === "high" ? "HIGH URGENCY" : signal.urgency === "medium" ? "MEDIUM" : "LOW"}
+            </span>
             <Badge variant={signal.type} kind="type" className="text-[9px] px-1.5 py-0.5" />
             <span className="text-[11px] text-slate-400">{relativeAge(signal.detectedAt)}</span>
             <div className="flex-1" />

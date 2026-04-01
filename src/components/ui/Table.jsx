@@ -48,7 +48,7 @@ export function Table({
                 className={cn(
                   "transition-colors hover:bg-slate-50",
                   onRowClick && "cursor-pointer",
-                  isEmphasis && "bg-red-50/40 border-l-2 border-l-red-400",
+                  isEmphasis && "bg-red-50/30",
                   row._muted && "opacity-60",
                   compact ? "" : "h-16",
                   rowClassName ? rowClassName(row) : undefined

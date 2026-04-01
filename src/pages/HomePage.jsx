@@ -31,10 +31,10 @@ const TODAY = "2026-04-01";
 
 const urgencyOrder = { high: 0, medium: 1, low: 2 };
 
-const urgencyBorderColor = {
-  high: "border-l-red-500",
-  medium: "border-l-amber-500",
-  low: "border-l-slate-300",
+const urgencyChipStyle = {
+  high: "bg-red-50 text-red-700 border border-red-200",
+  medium: "bg-amber-50 text-amber-700 border border-amber-200",
+  low: "bg-emerald-50 text-emerald-700 border border-emerald-200",
 };
 
 const typeIcons = {
@@ -138,8 +138,7 @@ export function HomePage() {
       {heroSignal && (
         <div
           className={cn(
-            "bg-white rounded-lg border border-l-4 overflow-hidden cursor-pointer transition-shadow hover:shadow-md",
-            urgencyBorderColor[heroSignal.urgency]
+            "bg-white rounded-lg border border-slate-200 overflow-hidden cursor-pointer transition-shadow hover:shadow-md hover:border-slate-300"
           )}
           onClick={() => navigate(`/signals/${heroSignal.id}`)}
         >
@@ -150,7 +149,9 @@ export function HomePage() {
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-50">
                   <AlertTriangle size={20} className="text-red-600" />
                 </div>
-                <Badge variant={heroSignal.urgency} kind="urgency" />
+                <span className={cn("rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide", urgencyChipStyle[heroSignal.urgency])}>
+                  {heroSignal.urgency === "high" ? "HIGH URGENCY" : heroSignal.urgency === "medium" ? "MEDIUM" : "LOW"}
+                </span>
                 <Badge variant={heroSignal.type} kind="type" />
               </div>
               <ConfidenceBadge mode="label" level={heroSignal.confidence} />
