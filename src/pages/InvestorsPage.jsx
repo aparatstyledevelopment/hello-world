@@ -98,10 +98,10 @@ const investorTypeLabels = {
 };
 
 const investorTypeStyles = {
-  passive: "bg-blue-50 text-blue-700 border border-blue-200",
-  active: "bg-violet-50 text-violet-700 border border-violet-200",
-  pension: "bg-amber-50 text-amber-700 border border-amber-200",
-  sovereign: "bg-teal-50 text-teal-700 border border-teal-200",
+  passive: "bg-gray-100 text-gray-700 border border-gray-200",
+  active: "bg-gray-100 text-gray-700 border border-gray-200",
+  pension: "bg-gray-100 text-gray-700 border border-gray-200",
+  sovereign: "bg-gray-100 text-gray-700 border border-gray-200",
 };
 
 export function InvestorsPage() {
@@ -161,8 +161,8 @@ export function InvestorsPage() {
       case "name":
         return (
           <div>
-            <span className="font-bold text-slate-900 text-sm">{row.name}</span>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <span className="font-bold text-black text-sm">{row.name}</span>
+            <p className="text-xs text-gray-400 mt-0.5">
               {investorTypeLabels[row.type] || row.type} &middot; Tier {row.tier}
             </p>
           </div>
@@ -172,7 +172,7 @@ export function InvestorsPage() {
           <span
             className={cn(
               "inline-flex items-center text-[11px] tracking-[0.05em] uppercase font-semibold rounded-md px-2.5 py-1",
-              investorTypeStyles[row.type] || "bg-slate-100 text-slate-700"
+              investorTypeStyles[row.type] || "bg-gray-100 text-gray-700"
             )}
           >
             {row.type?.toUpperCase()}
@@ -180,7 +180,7 @@ export function InvestorsPage() {
         );
       case "holdingPct":
         return (
-          <span className="font-mono text-lg text-slate-900">{row.holdingPct}%</span>
+          <span className="font-mono text-lg text-black">{row.holdingPct}%</span>
         );
       case "health":
         return <HealthDots values={row.healthDots} />;
@@ -191,7 +191,7 @@ export function InvestorsPage() {
           <span
             className={cn(
               "text-sm",
-              isOld ? "text-red-600 font-semibold" : "text-slate-600"
+              isOld ? "text-red-600 font-semibold" : "text-gray-600"
             )}
           >
             {row.lastTouch || "No contact"}
@@ -215,15 +215,15 @@ export function InvestorsPage() {
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-bold text-black tracking-tight">
           Priority Coverage Matrix
         </h1>
         <div className="flex items-center gap-3">
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800">
+          <button className="inline-flex items-center gap-1.5 rounded-lg bg-black px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-gray-800">
             <Filter size={14} />
             Filter
           </button>
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800">
+          <button className="inline-flex items-center gap-1.5 rounded-lg bg-black px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-gray-800">
             <FileDown size={14} />
             Export PDF
           </button>

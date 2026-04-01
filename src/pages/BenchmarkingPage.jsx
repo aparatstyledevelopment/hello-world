@@ -53,36 +53,36 @@ const peers = [
 function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status }) {
   const barColor = isOurs
     ? status === "above"
-      ? "bg-emerald-500"
+      ? "bg-black"
       : status === "below"
       ? "bg-red-500"
-      : "bg-slate-900"
-    : "bg-slate-300";
+      : "bg-black"
+    : "bg-gray-300";
   return (
     <div className="flex items-center gap-3 py-1.5">
       <span
         className={cn(
           "w-44 text-sm truncate",
-          isOurs ? "font-semibold text-slate-900" : "text-slate-600"
+          isOurs ? "font-semibold text-black" : "text-gray-600"
         )}
       >
         {label}
         {isOurs && (
           <span className={cn(
             "ml-1.5 text-[10px] font-bold uppercase tracking-[0.1em]",
-            status === "above" ? "text-emerald-600" : status === "below" ? "text-red-600" : "text-slate-400"
+            status === "above" ? "text-gray-700" : status === "below" ? "text-red-600" : "text-gray-400"
           )}>
             YOU
           </span>
         )}
       </span>
-      <div className="flex-1 h-2.5 rounded-full bg-slate-100">
+      <div className="flex-1 h-2.5 rounded-full bg-gray-100">
         <div
           className={cn(
             "h-2.5 rounded-full transition-all",
             barColor,
             isOurs && "ring-2 ring-offset-1",
-            isOurs && status === "above" && "ring-emerald-200",
+            isOurs && status === "above" && "ring-gray-300",
             isOurs && status === "below" && "ring-red-200"
           )}
           style={{ width: `${(value / maxValue) * 100}%` }}
@@ -94,10 +94,8 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
           isOurs
             ? status === "below"
               ? "text-red-600 font-bold"
-              : status === "above"
-              ? "text-emerald-600 font-bold"
-              : "text-slate-900"
-            : "text-slate-500"
+              : "text-black font-bold"
+            : "text-gray-500"
         )}
       >
         {value}
@@ -210,24 +208,24 @@ export function BenchmarkingPage() {
   }, [ourMetrics, sectorMedian]);
 
   const insightDotColor = {
-    positive: "bg-emerald-500",
+    positive: "bg-black",
     negative: "bg-red-500",
-    neutral: "bg-amber-500",
+    neutral: "bg-gray-400",
   };
 
   return (
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Peer Benchmarking</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-3xl font-bold text-black">Peer Benchmarking</h1>
+        <p className="mt-1 text-sm text-gray-500">
           How you compare, where you excel, and where to improve
         </p>
       </div>
 
       {/* ── Dark Concentration-style Card ─────────────────── */}
-      <div className="rounded-lg bg-slate-900 p-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+      <div className="rounded-lg bg-black p-5">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
           PEER POSITION INDEX
         </p>
         <div className="mt-3 flex items-baseline gap-4">
@@ -236,24 +234,24 @@ export function BenchmarkingPage() {
           </span>
           <span className={cn(
             "text-sm font-medium",
-            engagementStatus === "above" ? "text-emerald-400" : "text-red-400"
+            engagementStatus === "above" ? "text-gray-300" : "text-red-400"
           )}>
             Engagement intensity
           </span>
         </div>
-        <div className="mt-4 h-2.5 w-full rounded-full bg-slate-700">
+        <div className="mt-4 h-2.5 w-full rounded-full bg-gray-700">
           <div
             className={cn(
               "h-2.5 rounded-full transition-all",
-              engagementStatus === "above" ? "bg-emerald-500" : "bg-red-500"
+              engagementStatus === "above" ? "bg-white" : "bg-red-500"
             )}
             style={{ width: `${ourMetrics.engagementIntensity}%` }}
           />
         </div>
-        <p className="mt-2 text-xs text-slate-400">
+        <p className="mt-2 text-xs text-gray-400">
           {engagementStatus === "above" ? (
             <>
-              <span className="font-mono font-semibold text-emerald-400">Above</span> sector median ({sectorMedian?.engagementIntensity}%) — strong relative positioning
+              <span className="font-mono font-semibold text-white">Above</span> sector median ({sectorMedian?.engagementIntensity}%) — strong relative positioning
             </>
           ) : (
             <>
@@ -269,19 +267,19 @@ export function BenchmarkingPage() {
           label="Engagement Intensity"
           value={`${ourMetrics.engagementIntensity}%`}
           annotation={`${engagementStatus === "above" ? "Above" : "Below"} sector median (${sectorMedian?.engagementIntensity}%)`}
-          annotationColor={engagementStatus === "above" ? "emerald" : "red"}
+          annotationColor={engagementStatus === "above" ? "gray" : "red"}
         />
         <StatCard
           label="Shareholder Stability"
           value={`${ourMetrics.shareholderStability}%`}
           annotation={`${stabilityStatus === "above" ? "Above" : "Below"} sector median (${sectorMedian?.shareholderStability}%)`}
-          annotationColor={stabilityStatus === "above" ? "emerald" : "red"}
+          annotationColor={stabilityStatus === "above" ? "gray" : "red"}
         />
         <StatCard
           label="Areas to Improve"
           value={belowCount}
           annotation="Below sector average"
-          annotationColor={belowCount > 0 ? "red" : "emerald"}
+          annotationColor={belowCount > 0 ? "red" : "gray"}
         />
         <StatCard
           label="Peers Tracked"
@@ -291,35 +289,35 @@ export function BenchmarkingPage() {
       </div>
 
       {/* ── Two-column Comparison Table ───────────────────── */}
-      <Card variant="section" accentColor="blue" title="Ownership Overlap" subtitle="Common institutional investors shared with peers">
-        <div className="overflow-x-auto rounded-lg border border-slate-200">
+      <Card variant="section" accentColor="gray" title="Ownership Overlap" subtitle="Common institutional investors shared with peers">
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50">
+              <tr className="border-b border-gray-200 bg-gray-50">
                 {["COMPANY", "OVERLAP %", "ENGAGEMENT INTENSITY", "STABILITY"].map((col) => (
-                  <th key={col} className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  <th key={col} className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
                     {col}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-gray-100">
               {allEntries.map((entry) => (
                 <tr
                   key={entry.name}
                   className={cn(
-                    entry.isOurs && "bg-slate-900 text-white"
+                    entry.isOurs && "bg-black text-white"
                   )}
                 >
-                  <td className={cn("px-4 py-2.5", entry.isOurs ? "font-bold text-white" : "text-slate-700")}>
+                  <td className={cn("px-4 py-2.5", entry.isOurs ? "font-bold text-white" : "text-gray-700")}>
                     {entry.name}
                     {entry.isOurs && (
-                      <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-emerald-400">
+                      <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400">
                         YOU
                       </span>
                     )}
                   </td>
-                  <td className={cn("px-4 py-2.5 font-mono", entry.isOurs ? "text-slate-300" : "text-slate-700")}>
+                  <td className={cn("px-4 py-2.5 font-mono", entry.isOurs ? "text-gray-300" : "text-gray-700")}>
                     {entry.ownershipOverlap}%
                   </td>
                   <td className="px-4 py-2.5">
@@ -327,9 +325,9 @@ export function BenchmarkingPage() {
                       "font-mono",
                       entry.isOurs
                         ? engagementStatus === "above"
-                          ? "text-emerald-400 font-bold"
+                          ? "text-gray-300 font-bold"
                           : "text-red-400 font-bold"
-                        : "text-slate-700"
+                        : "text-gray-700"
                     )}>
                       {entry.engagementIntensity}
                     </span>
@@ -339,9 +337,9 @@ export function BenchmarkingPage() {
                       "font-mono",
                       entry.isOurs
                         ? stabilityStatus === "above"
-                          ? "text-emerald-400 font-bold"
+                          ? "text-gray-300 font-bold"
                           : "text-red-400 font-bold"
-                        : "text-slate-700"
+                        : "text-gray-700"
                     )}>
                       {entry.shareholderStability}%
                     </span>
@@ -355,7 +353,7 @@ export function BenchmarkingPage() {
 
       {/* ── Engagement Intensity + Shareholder Stability - Two Columns ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card variant="section" accentColor="emerald" title="Engagement Intensity" subtitle="Score reflecting interaction frequency and quality">
+        <Card variant="section" accentColor="gray" title="Engagement Intensity" subtitle="Score reflecting interaction frequency and quality">
           <div className="space-y-1">
             {allEntries
               .sort((a, b) => b.engagementIntensity - a.engagementIntensity)
@@ -371,7 +369,7 @@ export function BenchmarkingPage() {
           </div>
         </Card>
 
-        <Card variant="section" accentColor="violet" title="Shareholder Stability" subtitle="Percentage of shareholders with stable or growing positions">
+        <Card variant="section" accentColor="gray" title="Shareholder Stability" subtitle="Percentage of shareholders with stable or growing positions">
           <div className="space-y-1">
             {allEntries
               .sort((a, b) => b.shareholderStability - a.shareholderStability)
@@ -389,41 +387,41 @@ export function BenchmarkingPage() {
       </div>
 
       {/* ── Ownership Structure - Stacked Bars ────────────── */}
-      <Card variant="section" accentColor="indigo" title="Ownership Structure" subtitle="Breakdown by investor type">
-        <div className="mb-3 flex gap-4 text-xs text-slate-500">
+      <Card variant="section" accentColor="gray" title="Ownership Structure" subtitle="Breakdown by investor type">
+        <div className="mb-3 flex gap-4 text-xs text-gray-500">
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-sky-400" /> Passive
+            <span className="h-2.5 w-2.5 rounded-sm bg-black" /> Passive
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-violet-400" /> Active
+            <span className="h-2.5 w-2.5 rounded-sm bg-gray-500" /> Active
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-indigo-400" /> Sovereign
+            <span className="h-2.5 w-2.5 rounded-sm bg-gray-400" /> Sovereign
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-slate-300" /> Other
+            <span className="h-2.5 w-2.5 rounded-sm bg-gray-300" /> Other
           </span>
         </div>
         <div className="space-y-2">
           {allEntries.map((entry) => {
             const segments = [entry.passivePct, entry.activePct, entry.sovereignPct, entry.otherPct];
-            const colors = ["bg-sky-400", "bg-violet-400", "bg-indigo-400", "bg-slate-300"];
+            const colors = ["bg-black", "bg-gray-500", "bg-gray-400", "bg-gray-300"];
             return (
               <div key={entry.name} className="flex items-center gap-3 py-1.5">
                 <span
                   className={cn(
                     "w-44 text-sm truncate",
-                    entry.isOurs ? "font-semibold text-slate-900" : "text-slate-600"
+                    entry.isOurs ? "font-semibold text-black" : "text-gray-600"
                   )}
                 >
                   {entry.name}
                   {entry.isOurs && (
-                    <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                    <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">
                       YOU
                     </span>
                   )}
                 </span>
-                <div className="flex-1 h-2.5 rounded-full bg-slate-100 flex overflow-hidden">
+                <div className="flex-1 h-2.5 rounded-full bg-gray-100 flex overflow-hidden">
                   {segments.map((seg, i) => (
                     <div
                       key={i}
@@ -433,7 +431,7 @@ export function BenchmarkingPage() {
                     />
                   ))}
                 </div>
-                <span className="w-10 text-right font-mono text-xs text-slate-500">
+                <span className="w-10 text-right font-mono text-xs text-gray-500">
                   {segments[0]}%
                 </span>
               </div>
@@ -443,7 +441,7 @@ export function BenchmarkingPage() {
       </Card>
 
       {/* ── Key Insights (problems first) ─────────────────── */}
-      <Card variant="section" accentColor="amber" title="Key Insights" subtitle="Auto-generated peer analysis (issues first)">
+      <Card variant="section" accentColor="gray" title="Key Insights" subtitle="Auto-generated peer analysis (issues first)">
         <ul className="space-y-3">
           {insights.map((insight, i) => (
             <li
@@ -453,8 +451,8 @@ export function BenchmarkingPage() {
                 insight.status === "negative"
                   ? "bg-red-50 text-red-800 font-medium"
                   : insight.status === "positive"
-                  ? "text-slate-600"
-                  : "text-slate-600"
+                  ? "text-gray-600"
+                  : "text-gray-600"
               )}
             >
               <span
@@ -471,8 +469,8 @@ export function BenchmarkingPage() {
       </Card>
 
       {/* ── Recommendation ────────────────────────────────── */}
-      <div className="rounded-lg bg-slate-900 text-white p-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+      <div className="rounded-lg bg-black text-white p-5">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-2">
           RECOMMENDATION
         </p>
         <p className="text-sm leading-relaxed">
