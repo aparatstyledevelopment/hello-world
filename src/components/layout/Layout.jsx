@@ -52,7 +52,9 @@ export function Layout() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <HeaderBar />
         <main className="flex-1 overflow-y-auto bg-white">
-          <Outlet />
+          <div className="min-h-full">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
