@@ -131,7 +131,6 @@ const timelineTypeBadge = {
 
 const tabConfig = [
   { key: "overview", label: "OVERVIEW", icon: BarChart3 },
-  { key: "persona", label: "PERSONA & PEOPLE", icon: Users },
   { key: "engagement", label: "ENGAGEMENT & TIMELINE", icon: Activity },
 ];
 
@@ -341,71 +340,37 @@ function OverviewTab({ investor, signals }) {
       </div>
       </div>
 
-      {/* IR Sentiment Card (dark) - two columns: score+bars left, quote right */}
-      <Card variant="dark" title="IR Sentiment">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="font-mono text-4xl font-bold text-white">
-                {irSentiment.score}/10
-              </span>
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]",
-                  irSentiment.score >= 7
-                    ? "bg-black/20 text-gray-400"
-                    : irSentiment.score >= 5
-                    ? "bg-gray-400/20 text-gray-400"
-                    : "bg-red-50 text-red-400"
-                )}
-              >
-                {irSentiment.status}
-              </span>
+      {/* IR Sentiment Card (compact dark) */}
+      <div className="rounded-lg bg-black p-4 flex items-center gap-6">
+        <div className="flex items-baseline gap-2">
+          <span className="font-mono text-2xl font-bold text-white">
+            {irSentiment.score}/10
+          </span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.05em] text-gray-400">
+            {irSentiment.status}
+          </span>
+        </div>
+        <div className="flex-1 flex items-center gap-6">
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] uppercase tracking-[0.1em] text-gray-500">Quality</span>
+              <span className="text-[10px] font-mono text-gray-400">{irSentiment.quality}%</span>
             </div>
-
-            {/* Engagement quality bar */}
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] uppercase tracking-[0.1em] text-gray-400">
-                  Engagement Quality
-                </span>
-                <span className="text-xs font-mono text-gray-300">
-                  {irSentiment.quality}%
-                </span>
-              </div>
-              <div className="h-2 rounded-full bg-gray-700">
-                <div
-                  className="h-2 rounded-full bg-black transition-all"
-                  style={{ width: `${irSentiment.quality}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Management trust bar */}
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] uppercase tracking-[0.1em] text-gray-400">
-                  Management Trust
-                </span>
-                <span className="text-xs font-mono text-gray-300">
-                  {irSentiment.trust}%
-                </span>
-              </div>
-              <div className="h-2 rounded-full bg-gray-700">
-                <div
-                  className="h-2 rounded-full bg-gray-700 transition-all"
-                  style={{ width: `${irSentiment.trust}%` }}
-                />
-              </div>
+            <div className="h-1.5 rounded-full bg-gray-800">
+              <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${irSentiment.quality}%` }} />
             </div>
           </div>
-          <div className="flex items-center">
-            <p className="text-sm italic text-gray-400 leading-relaxed">
-              &ldquo;{sentimentQuotes[sentiment]}&rdquo;
-            </p>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] uppercase tracking-[0.1em] text-gray-500">Trust</span>
+              <span className="text-[10px] font-mono text-gray-400">{irSentiment.trust}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-gray-800">
+              <div className="h-1.5 rounded-full bg-gray-400 transition-all" style={{ width: `${irSentiment.trust}%` }} />
+            </div>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* RECENT SIGNALS */}
       <div>
@@ -532,176 +497,56 @@ function OverviewTab({ investor, signals }) {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-// ── Persona & People Tab ─────────────────────────────────
-function PersonaTab({ investor }) {
-  // Categorize contacts by role
-  const portfolioManagers = investor.contacts.filter(
-    (c) => c.role.toLowerCase().includes("portfolio") || c.role.toLowerCase().includes("manager")
-  );
-  const specialists = investor.contacts.filter(
-    (c) =>
-      c.role.toLowerCase().includes("analyst") ||
-      c.role.toLowerCase().includes("stewardship") ||
-      c.role.toLowerCase().includes("governance") ||
-      c.role.toLowerCase().includes("investment") ||
-      c.role.toLowerCase().includes("responsible")
-  );
-  // Catch any that didn't match either category
-  const allCategorized = new Set([...portfolioManagers, ...specialists].map((c) => c.id));
-  const other = investor.contacts.filter((c) => !allCategorized.has(c.id));
+      {/* CONTACT MAP (from persona) */}
+      {(() => {
+        const portfolioManagers = investor.contacts.filter(
+          (c) => c.role.toLowerCase().includes("portfolio") || c.role.toLowerCase().includes("manager")
+        );
+        const specialists = investor.contacts.filter(
+          (c) =>
+            c.role.toLowerCase().includes("analyst") ||
+            c.role.toLowerCase().includes("stewardship") ||
+            c.role.toLowerCase().includes("governance") ||
+            c.role.toLowerCase().includes("investment") ||
+            c.role.toLowerCase().includes("responsible")
+        );
+        const allCategorized = new Set([...portfolioManagers, ...specialists].map((c) => c.id));
+        const otherContacts = investor.contacts.filter((c) => !allCategorized.has(c.id));
 
-  function ContactCard({ contact }) {
-    const days = daysSince(contact.lastInteraction);
-    const isRecent = days !== null && days <= 30;
-    const initials = contact.name
-      .split(" ")
-      .map((w) => w[0])
-      .join("")
-      .toUpperCase();
-
-    return (
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gray-200 text-sm font-bold text-gray-600">
-            {initials}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-bold text-black">{contact.name}</p>
-            <p className="text-xs text-gray-500">{contact.role}</p>
-            <div className="mt-2 flex items-center gap-1.5">
-              <span
-                className={cn(
-                  "h-2 w-2 rounded-full",
-                  isRecent ? "bg-black" : "bg-gray-400"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-xs",
-                  days !== null && days > 30
-                    ? "font-semibold text-red-500"
-                    : "text-gray-500"
-                )}
-              >
-                {days !== null ? `${days}d ago` : "No interaction"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-5">
-      {/* CONTACT MAP */}
-      <Card variant="section" accentColor="blue" title="Contact Map">
-        <div className="space-y-6">
-          {/* Portfolio Managers */}
-          {portfolioManagers.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
-                  Portfolio Managers
-                </h4>
-                <Badge variant="portfolio_manager" kind="role" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {portfolioManagers.map((contact) => (
-                  <ContactCard key={contact.id} contact={contact} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Strategic Specialists */}
-          {specialists.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
-                  Strategic Specialists
-                </h4>
-                <Badge variant="esg_specialist" kind="role" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {specialists.map((contact) => (
-                  <ContactCard key={contact.id} contact={contact} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Other contacts */}
-          {other.length > 0 && (
-            <div>
-              <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
-                Other Contacts
-              </h4>
-              <div className="grid grid-cols-2 gap-3">
-                {other.map((contact) => (
-                  <ContactCard key={contact.id} contact={contact} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* View all link */}
-          <button className="text-xs font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-800 transition-colors">
-            VIEW ALL CONTACTS &rarr;
-          </button>
-        </div>
-      </Card>
-
-      {/* Investor Persona - consolidated table */}
-      <div>
-        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
-          INVESTOR PERSONA
-        </h3>
-        <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
-          {/* Provenance summary bar */}
-          <div className="flex items-center gap-4 px-4 py-3 bg-gray-50 border-b border-gray-200">
-            {["observed", "inferred", "team_assessed"].map((prov) => {
-              const count = investor.stateParameters.filter((p) => p.provenance === prov).length;
-              const colors = { observed: "bg-gray-700", inferred: "bg-amber-400", team_assessed: "bg-black" };
-              const labels = { observed: "Observed", inferred: "Inferred", team_assessed: "Team Assessed" };
-              return (
-                <span key={prov} className="flex items-center gap-1.5 text-xs text-gray-500">
-                  <span className={cn("h-2 w-2 rounded-full", colors[prov])} />
-                  {labels[prov]}
-                  <span className="font-mono font-bold text-gray-700">{count}</span>
-                </span>
-              );
-            })}
-          </div>
-
-          {/* All parameters in a single table */}
-          <div className="divide-y divide-gray-100">
-            {investor.stateParameters.map((param, idx) => {
-              const provColors = { observed: "bg-gray-700", inferred: "bg-amber-400", team_assessed: "bg-black" };
-              const provLabels = { observed: "Observed", inferred: "Inferred", team_assessed: "Team" };
-              return (
-                <div key={idx} className="flex items-center gap-4 px-4 py-3">
-                  <span className={cn("h-2 w-2 rounded-full flex-shrink-0", provColors[param.provenance])} title={param.provenance} />
-                  <span className="text-sm text-gray-500 w-40 flex-shrink-0">{param.label}</span>
-                  <span className="text-sm font-medium text-black flex-1">{param.value}</span>
-                  <span className="text-[10px] uppercase tracking-wider text-gray-400">{provLabels[param.provenance]}</span>
-                  <span
-                    className={cn(
-                      "h-2 w-2 rounded-full flex-shrink-0",
-                      param.freshness === "fresh" ? "bg-black" : "bg-gray-400"
-                    )}
-                    title={param.freshness}
-                  />
+        function ContactCard({ contact }) {
+          const days = daysSince(contact.lastInteraction);
+          return (
+            <div className="rounded-lg border border-gray-200 bg-white p-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-200 text-xs font-bold text-gray-600">
+                  {contact.name.split(" ").map((w) => w[0]).join("").toUpperCase()}
                 </div>
-              );
-            })}
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-black text-sm">{contact.name}</p>
+                  <p className="text-xs text-gray-500">{contact.role}</p>
+                  <span className={cn("text-xs mt-1 block", days !== null && days > 30 ? "font-semibold text-red-500" : "text-gray-500")}>
+                    {days !== null ? `${days}d ago` : "No interaction"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+              KEY CONTACTS
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {[...portfolioManagers, ...specialists, ...otherContacts].map((c) => (
+                <ContactCard key={c.id} contact={c} />
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
+        );
+      })()}
     </div>
   );
 }
@@ -1034,7 +879,6 @@ export function InvestorDetailPage() {
         {activeTab === "overview" && (
           <OverviewTab investor={investor} signals={signals} />
         )}
-        {activeTab === "persona" && <PersonaTab investor={investor} />}
         {activeTab === "engagement" && (
           <EngagementTab investorId={id} investor={investor} />
         )}
