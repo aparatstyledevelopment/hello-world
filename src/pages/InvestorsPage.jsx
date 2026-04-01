@@ -211,23 +211,67 @@ export function InvestorsPage() {
     }
   };
 
+  const highPressureCount = filtered.filter((i) => i.pressure === "HIGH").length;
+  const staleCount = filtered.filter((i) => i.freshness.label === "Stale").length;
+  const totalHolding = filtered.reduce((s, i) => s + i.holdingPct, 0).toFixed(1);
+
   return (
-    <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-          Priority Coverage Matrix
-        </h1>
-        <div className="flex items-center gap-3">
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800">
-            <Filter size={14} />
-            Filter
-          </button>
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800">
-            <FileDown size={14} />
-            Export PDF
-          </button>
+      <div>
+        <h1 className="text-xl font-bold text-slate-900">Investor Coverage</h1>
+        <p className="mt-0.5 text-sm text-slate-400">
+          Priority coverage matrix across relationship health, engagement recency, and risk signals
+        </p>
+      </div>
+
+      {/* Dark hero narrative */}
+      <div className="rounded-lg bg-slate-900 p-5">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-2">COVERAGE NARRATIVE</p>
+        <p className="text-sm text-slate-300 leading-relaxed">
+          The tracked investor base comprises <span className="font-bold text-white">{filtered.length} investors</span> holding
+          a combined <span className="font-bold text-white">{totalHolding}%</span> of outstanding shares.
+          {highPressureCount > 0 && (
+            <> <span className="font-bold text-red-400">{highPressureCount} investor{highPressureCount > 1 ? "s" : ""}</span> flagged
+            at elevated pressure requiring immediate attention.</>
+          )}
+          {staleCount > 0 && (
+            <> <span className="font-bold text-amber-400">{staleCount} relationship{staleCount > 1 ? "s" : ""}</span> show
+            stale engagement with no recent touchpoints.</>
+          )}
+        </p>
+      </div>
+
+      {/* Key stats */}
+      <div className="grid grid-cols-4 gap-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Total Investors</p>
+          <p className="mt-1 font-mono text-2xl font-bold text-slate-900">{filtered.length}</p>
         </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Combined Holding</p>
+          <p className="mt-1 font-mono text-2xl font-bold text-slate-900">{totalHolding}%</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">High Pressure</p>
+          <p className={cn("mt-1 font-mono text-2xl font-bold", highPressureCount > 0 ? "text-red-600" : "text-slate-900")}>{highPressureCount}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Stale Contacts</p>
+          <p className={cn("mt-1 font-mono text-2xl font-bold", staleCount > 0 ? "text-red-600" : "text-slate-900")}>{staleCount}</p>
+        </div>
+      </div>
+
+      {/* Action bar */}
+      <div className="flex items-center justify-end gap-3">
+        <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800">
+          <Filter size={14} />
+          Filter
+        </button>
+        <button className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-slate-800">
+          <FileDown size={14} />
+          Export PDF
+        </button>
       </div>
 
       {/* Table */}

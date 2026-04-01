@@ -11,8 +11,6 @@ import {
   Vote,
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import { StatCard } from "../components/ui/StatCard";
-import { Card } from "../components/ui/Card";
 import { SentimentMeter } from "../components/ui/SentimentMeter";
 import { Badge } from "../components/ui/Badge";
 import { HealthDots } from "../components/ui/HealthDots";
@@ -237,11 +235,11 @@ export function AGMPage() {
   const classBVotes = 18;
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">AGM Intelligence</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-xl font-bold text-slate-900">AGM Intelligence</h1>
+        <p className="mt-0.5 text-sm text-slate-400">
           Proxy season preparation and governance risk management
         </p>
       </div>
@@ -274,7 +272,10 @@ export function AGMPage() {
       </div>
 
       {/* ── Process Roadmap (Vertical Timeline) ──────────── */}
-      <Card variant="section" accentColor="blue" title="Process Roadmap" subtitle="AGM preparation phases and milestones">
+      <div>
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1">PROCESS ROADMAP</h2>
+        <p className="text-xs text-slate-400 mb-4">AGM preparation phases and milestones</p>
+        <div className="rounded-lg border border-slate-200 bg-white p-5">
         <div className="relative ml-4">
           {roadmapPhases.map((phase, idx) => {
             const isCompleted = phase.status === "completed";
@@ -351,10 +352,14 @@ export function AGMPage() {
             );
           })}
         </div>
-      </Card>
+        </div>
+      </div>
 
       {/* ── Voting Power Disparity ────────────────────────── */}
-      <Card variant="section" accentColor="violet" title="Voting Power Disparity" subtitle="Share class voting weight distribution">
+      <div>
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1">VOTING POWER DISPARITY</h2>
+        <p className="text-xs text-slate-400 mb-4">Share class voting weight distribution</p>
+        <div className="rounded-lg border border-slate-200 bg-white p-5">
         <div className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
@@ -386,7 +391,8 @@ export function AGMPage() {
             </p>
           </div>
         </div>
-      </Card>
+        </div>
+      </div>
 
       {/* ── Governance Issue Tracker with SentimentMeter ──── */}
       <div>
@@ -435,7 +441,9 @@ export function AGMPage() {
       </div>
 
       {/* ── Predicted Voting Table ────────────────────────── */}
-      <Card variant="section" accentColor="red" title="Predicted Voting Outcomes" subtitle={`Projected voting behavior for ${AGM_DATE} AGM`}>
+      <div>
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1">PREDICTED VOTING OUTCOMES</h2>
+        <p className="text-xs text-slate-400 mb-4">Projected voting behavior for {AGM_DATE} AGM</p>
         <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-sm">
             <thead>
@@ -545,10 +553,12 @@ export function AGMPage() {
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
       {/* ── Historical Voting ─────────────────────────────── */}
-      <Card variant="section" accentColor="slate" title="Historical Voting Results" subtitle="AGM voting outcomes 2023-2025">
+      <div>
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1">HISTORICAL VOTING RESULTS</h2>
+        <p className="text-xs text-slate-400 mb-4">AGM voting outcomes 2023-2025</p>
         <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-sm">
             <thead>
@@ -612,7 +622,7 @@ export function AGMPage() {
             structure recommended.
           </p>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

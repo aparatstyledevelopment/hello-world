@@ -12,7 +12,6 @@ import {
   FileText,
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import { Card } from "../components/ui/Card";
 import { Badge } from "../components/ui/Badge";
 import { TimelineEntry } from "../components/ui/TimelineEntry";
 import { HealthDots } from "../components/ui/HealthDots";
@@ -219,24 +218,53 @@ export function CollaborationPage() {
   }, []);
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Team Collaboration</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-xl font-bold text-slate-900">Team Collaboration</h1>
+        <p className="mt-0.5 text-sm text-slate-400">
           Coordinate investor engagement across the IR team
         </p>
       </div>
 
+      {/* Dark hero narrative */}
+      <div className="rounded-lg bg-slate-900 p-5">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-2">COLLABORATION NARRATIVE</p>
+        <p className="text-sm text-slate-300 leading-relaxed">
+          The IR team of <span className="font-bold text-white">{teamData.length} members</span> is managing
+          {" "}<span className="font-bold text-white">{teamData.reduce((s, m) => s + m.activeActions, 0)} active actions</span> and
+          {" "}<span className="font-bold text-white">{teamData.reduce((s, m) => s + m.openSignals, 0)} open signals</span> across
+          {" "}{investors.length} tracked investors.
+          {teamData.some((m) => m.activeActions >= 4) && (
+            <> <span className="font-bold text-amber-400">{teamData.filter((m) => m.activeActions >= 4).map((m) => m.name).join(", ")}</span> {teamData.filter((m) => m.activeActions >= 4).length > 1 ? "are" : "is"} approaching
+            workload capacity and may require rebalancing.</>
+          )}
+        </p>
+      </div>
+
+      {/* Key stats */}
+      <div className="grid grid-cols-4 gap-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Team Members</p>
+          <p className="mt-1 font-mono text-2xl font-bold text-slate-900">{teamData.length}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Active Actions</p>
+          <p className="mt-1 font-mono text-2xl font-bold text-slate-900">{teamData.reduce((s, m) => s + m.activeActions, 0)}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Open Signals</p>
+          <p className={cn("mt-1 font-mono text-2xl font-bold", teamData.reduce((s, m) => s + m.openSignals, 0) > 0 ? "text-amber-600" : "text-slate-900")}>{teamData.reduce((s, m) => s + m.openSignals, 0)}</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">Handoff Notes</p>
+          <p className="mt-1 font-mono text-2xl font-bold text-slate-900">{handoffNotes.length}</p>
+        </div>
+      </div>
+
       {/* ── Team Cards (Strategic Specialists style) ──────── */}
       <div>
-        <div className="flex items-center gap-3 mb-4">
-          <h2 className="text-base font-bold text-slate-900">Team Workload Overview</h2>
-          <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
-            {teamData.length}
-          </span>
-        </div>
-        <hr className="border-slate-200 mb-5" />
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-4">TEAM WORKLOAD OVERVIEW</h2>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {teamData.map((member) => (
@@ -304,7 +332,9 @@ export function CollaborationPage() {
       </div>
 
       {/* ── Priority Coverage Matrix ─────────────────────── */}
-      <Card variant="section" accentColor="blue" title="Priority Coverage Matrix" subtitle="Primary ownership, engagement recency, and open work items">
+      <div>
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1">PRIORITY COVERAGE MATRIX</h2>
+        <p className="text-xs text-slate-400 mb-4">Primary ownership, engagement recency, and open work items</p>
         <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-sm">
             <thead>
@@ -383,21 +413,25 @@ export function CollaborationPage() {
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
       {/* ── Engagement History (TimelineEntry) ────────────── */}
-      <Card variant="section" accentColor="emerald" title="Engagement History" subtitle="Recent team activity feed">
-        {activityFeed.map((entry, idx) => (
-          <TimelineEntry
-            key={entry.id}
-            icon={entry.icon}
-            title={entry.user}
-            date={entry.time}
-            description={entry.text}
-            isLast={idx === activityFeed.length - 1}
-          />
-        ))}
-      </Card>
+      <div>
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1">ENGAGEMENT HISTORY</h2>
+        <p className="text-xs text-slate-400 mb-4">Recent team activity feed</p>
+        <div className="rounded-lg border border-slate-200 bg-white p-5">
+          {activityFeed.map((entry, idx) => (
+            <TimelineEntry
+              key={entry.id}
+              icon={entry.icon}
+              title={entry.user}
+              date={entry.time}
+              description={entry.text}
+              isLast={idx === activityFeed.length - 1}
+            />
+          ))}
+        </div>
+      </div>
 
       {/* ── Handoff Notes (Log & Actions style) ──────────── */}
       <div>
