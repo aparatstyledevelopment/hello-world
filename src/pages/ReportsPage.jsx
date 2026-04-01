@@ -95,22 +95,6 @@ function MiniTable({ columns, rows }) {
   );
 }
 
-function MetricRow({ label, value, highlight }) {
-  return (
-    <div className="flex items-center justify-between py-1.5">
-      <span className="text-sm text-slate-600">{label}</span>
-      <span
-        className={cn(
-          "text-sm font-semibold font-mono",
-          highlight ? "text-slate-900" : "text-slate-900"
-        )}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
-
 export function ReportsPage() {
   // ── Computed data ───────────────────────────────────────
   const engagement = useMemo(() => {
@@ -256,9 +240,89 @@ export function ReportsPage() {
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Reports</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Comprehensive analytics across engagement, ownership, effectiveness,
-          and governance
+          Key metrics at a glance, then drill into any report for details
         </p>
+      </div>
+
+      {/* ── HERO METRICS ──────────────────────────────────── */}
+      <div className="grid grid-cols-4 gap-4">
+        <div className="rounded-lg border border-slate-200 bg-white p-6 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            Signal Conversion Rate
+          </p>
+          <p className={cn(
+            "mt-2 text-5xl font-mono font-bold",
+            effectiveness.conversionRate >= 40 ? "text-emerald-600" : effectiveness.conversionRate >= 25 ? "text-amber-600" : "text-red-600"
+          )}>
+            {effectiveness.conversionRate}%
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            {effectiveness.actioned} of {effectiveness.totalSignals} signals actioned
+          </p>
+        </div>
+
+        <div className={cn(
+          "rounded-lg border-2 p-6 text-center",
+          engagement.coverageGaps.length > 0
+            ? "border-red-200 bg-red-50"
+            : "border-emerald-200 bg-emerald-50"
+        )}>
+          <p className={cn(
+            "text-[11px] font-medium uppercase tracking-[0.1em]",
+            engagement.coverageGaps.length > 0 ? "text-red-400" : "text-emerald-400"
+          )}>
+            Coverage Gaps
+          </p>
+          <p className={cn(
+            "mt-2 text-5xl font-mono font-bold",
+            engagement.coverageGaps.length > 0 ? "text-red-600" : "text-emerald-600"
+          )}>
+            {engagement.coverageGaps.length}
+          </p>
+          <p className={cn(
+            "mt-1 text-xs",
+            engagement.coverageGaps.length > 0 ? "text-red-500" : "text-emerald-500"
+          )}>
+            {engagement.coverageGaps.length > 0 ? "Investors under-engaged" : "All investors covered"}
+          </p>
+        </div>
+
+        <div className={cn(
+          "rounded-lg border-2 p-6 text-center",
+          governance.engagementStatus.atRisk > 0
+            ? "border-red-200 bg-red-50"
+            : "border-slate-200 bg-white"
+        )}>
+          <p className={cn(
+            "text-[11px] font-medium uppercase tracking-[0.1em]",
+            governance.engagementStatus.atRisk > 0 ? "text-red-400" : "text-slate-400"
+          )}>
+            Gov. At Risk
+          </p>
+          <p className={cn(
+            "mt-2 text-5xl font-mono font-bold",
+            governance.engagementStatus.atRisk > 0 ? "text-red-600" : "text-slate-900"
+          )}>
+            {governance.engagementStatus.atRisk}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            of {governance.sensitiveInvestors.length} governance-sensitive
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-white p-6 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            Action Completion
+          </p>
+          <p className="mt-2 text-5xl font-mono font-bold text-slate-900">
+            {effectiveness.totalActions > 0
+              ? Math.round((effectiveness.completedActions / effectiveness.totalActions) * 100)
+              : 0}%
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            {effectiveness.completedActions} / {effectiveness.totalActions} actions done
+          </p>
+        </div>
       </div>
 
       {/* ── Engagement Report ──────────────────────────── */}

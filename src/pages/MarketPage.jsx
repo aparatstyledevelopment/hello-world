@@ -137,10 +137,22 @@ const categoryBadgeColors = {
   Media: "bg-slate-100 text-slate-600",
 };
 
-const relevanceDot = {
+const relevanceBorderColor = {
+  high: "border-l-red-500",
+  medium: "border-l-amber-400",
+  low: "border-l-slate-300",
+};
+
+const relevanceBarWidth = {
+  high: "w-full",
+  medium: "w-2/3",
+  low: "w-1/3",
+};
+
+const relevanceBarColor = {
   high: "bg-red-500",
-  medium: "bg-amber-500",
-  low: "bg-slate-400",
+  medium: "bg-amber-400",
+  low: "bg-slate-300",
 };
 
 const relevanceLabel = {
@@ -148,6 +160,36 @@ const relevanceLabel = {
   medium: "text-amber-600",
   low: "text-slate-500",
 };
+
+// Relevance score visual: segmented bar
+function RelevanceIndicator({ relevance, affectedCount }) {
+  const score = relevance === "high" ? 3 : relevance === "medium" ? 2 : 1;
+  const boosted = Math.min(4, score + (affectedCount > 0 ? 1 : 0));
+  const color = relevance === "high" ? "bg-red-500" : relevance === "medium" ? "bg-amber-400" : "bg-slate-300";
+  return (
+    <div className="flex items-center gap-1.5">
+      <span
+        className={cn(
+          "text-[10px] font-bold uppercase tracking-[0.1em]",
+          relevanceLabel[relevance]
+        )}
+      >
+        {relevance}
+      </span>
+      <div className="flex gap-0.5">
+        {[1, 2, 3, 4].map((seg) => (
+          <div
+            key={seg}
+            className={cn(
+              "h-2.5 w-3 rounded-sm",
+              seg <= boosted ? color : "bg-slate-100"
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function MarketPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -167,7 +209,10 @@ export function MarketPage() {
     const uniqueInvestors = new Set(
       marketIntelligence.flatMap((m) => m.affectedInvestorIds)
     ).size;
-    return { total: marketIntelligence.length, high, thisWeek, uniqueInvestors };
+    const withInvestors = marketIntelligence.filter(
+      (m) => m.affectedInvestorIds.length > 0
+    ).length;
+    return { total: marketIntelligence.length, high, thisWeek, uniqueInvestors, withInvestors };
   }, []);
 
   return (
@@ -178,16 +223,32 @@ export function MarketPage() {
           Market Intelligence
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          Curated market events affecting your investor base
+          What's happening in the market, what's relevant to your investors, and where to act
         </p>
       </div>
 
-      {/* Quick Stats */}
+      {/* Hero Stats */}
       <div className="grid grid-cols-4 gap-4">
-        <StatCard value={stats.total} label="Total items" />
-        <StatCard value={stats.high} label="High relevance" trend="up" />
-        <StatCard value={stats.thisWeek} label="This week" />
-        <StatCard value={stats.uniqueInvestors} label="Investors affected" />
+        <div className="rounded-lg border-2 border-red-200 bg-red-50 p-5 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-red-400">High Relevance</p>
+          <p className="mt-1 text-5xl font-mono font-bold text-red-600">{stats.high}</p>
+          <p className="mt-1 text-xs text-red-500">Require attention</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Investors Affected</p>
+          <p className="mt-1 text-4xl font-mono font-bold text-slate-900">{stats.uniqueInvestors}</p>
+          <p className="mt-1 text-xs text-slate-500">Across all items</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Affecting Your Investors</p>
+          <p className="mt-1 text-4xl font-mono font-bold text-slate-900">{stats.withInvestors}</p>
+          <p className="mt-1 text-xs text-slate-500">of {stats.total} items</p>
+        </div>
+        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">This Week</p>
+          <p className="mt-1 text-3xl font-mono font-bold text-slate-700">{stats.thisWeek}</p>
+          <p className="mt-1 text-xs text-slate-400">New items</p>
+        </div>
       </div>
 
       {/* Filter Pills */}
@@ -208,13 +269,14 @@ export function MarketPage() {
         ))}
       </div>
 
-      {/* Recommendation box */}
+      {/* Intelligence Summary */}
       <div className="rounded-lg bg-slate-800 text-white p-4">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
           INTELLIGENCE SUMMARY
         </p>
         <p className="text-sm leading-relaxed">
-          {stats.high} high-relevance items detected this period affecting {stats.uniqueInvestors} investors.
+          <span className="font-mono font-bold text-red-400">{stats.high}</span> high-relevance items detected this period affecting{" "}
+          <span className="font-mono font-bold text-white">{stats.uniqueInvestors}</span> investors.
           Ownership changes and peer activity dominate the feed. Prioritize engagement with affected holders.
         </p>
       </div>
@@ -222,96 +284,135 @@ export function MarketPage() {
       {/* Intelligence Cards */}
       {filtered.length > 0 ? (
         <div className="space-y-3">
-          {filtered.map((item) => (
-            <div
-              key={item.id}
-              className="rounded-lg border border-slate-200 bg-white p-5"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 space-y-3">
-                  {/* Date + Category Badge */}
-                  <div className="flex items-center gap-2.5">
-                    <span className="font-mono text-xs text-slate-400">
-                      {item.date}
-                    </span>
-                    <span
-                      className={cn(
-                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium",
-                        categoryBadgeColors[item.category]
-                      )}
-                    >
-                      {item.category}
-                    </span>
-                  </div>
+          {filtered.map((item) => {
+            const hasAffected = item.affectedInvestorIds.length > 0;
+            const isHigh = item.relevance === "high";
+            const isMuted = !hasAffected && !isHigh;
 
-                  {/* Title */}
-                  <h3 className="text-sm font-semibold text-slate-900">
-                    {item.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {item.description}
-                  </p>
-
-                  {/* Relevance + Affected Investors + Source */}
-                  <div className="flex flex-wrap items-center gap-5 pt-3 border-t border-slate-100">
-                    {/* Relevance */}
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                        Relevance
+            return (
+              <div
+                key={item.id}
+                className={cn(
+                  "rounded-lg border bg-white border-l-4 transition-all",
+                  relevanceBorderColor[item.relevance],
+                  isHigh
+                    ? "border-slate-200 p-6 shadow-md ring-1 ring-red-100"
+                    : hasAffected
+                    ? "border-slate-200 p-5 shadow-sm"
+                    : "border-slate-100 p-4",
+                  isMuted && "opacity-60"
+                )}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 space-y-3">
+                    {/* Date + Category Badge + Relevance Indicator */}
+                    <div className="flex items-center gap-3">
+                      <span className={cn(
+                        "font-mono text-xs",
+                        isHigh ? "text-slate-600 font-medium" : "text-slate-400"
+                      )}>
+                        {item.date}
                       </span>
-                      <span className="flex items-center gap-1">
-                        <span
-                          className={cn(
-                            "h-1.5 w-1.5 rounded-full",
-                            relevanceDot[item.relevance]
-                          )}
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium",
+                          categoryBadgeColors[item.category]
+                        )}
+                      >
+                        {item.category}
+                      </span>
+                      {/* Relevance intensity indicator */}
+                      <div className="ml-auto">
+                        <RelevanceIndicator
+                          relevance={item.relevance}
+                          affectedCount={item.affectedInvestorIds.length}
                         />
-                        <span
-                          className={cn(
-                            "text-xs font-semibold capitalize",
-                            relevanceLabel[item.relevance]
-                          )}
-                        >
-                          {item.relevance}
-                        </span>
-                      </span>
+                      </div>
                     </div>
 
-                    {/* Affected Investors */}
-                    {item.affectedInvestorIds.length > 0 && (
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                          Affects
-                        </span>
-                        <span className="flex flex-wrap gap-1.5">
-                          {item.affectedInvestorIds.map((id) => {
-                            const inv = getInvestor(id);
-                            return inv ? (
-                              <Link
-                                key={id}
-                                to={`/investors/${id}`}
-                                className="text-xs font-medium text-slate-700 hover:text-slate-900 hover:underline"
-                              >
-                                {inv.name}
-                              </Link>
-                            ) : null;
-                          })}
-                        </span>
-                      </div>
-                    )}
+                    {/* Title */}
+                    <h3
+                      className={cn(
+                        "font-semibold text-slate-900",
+                        isHigh ? "text-lg" : hasAffected ? "text-base" : "text-sm"
+                      )}
+                    >
+                      {item.title}
+                    </h3>
 
-                    {/* Source */}
-                    <div className="flex items-center gap-1 text-xs text-slate-400 ml-auto">
-                      <ExternalLink size={11} />
-                      <span>{item.source}</span>
+                    {/* Description */}
+                    <p
+                      className={cn(
+                        "leading-relaxed",
+                        isMuted
+                          ? "text-xs text-slate-400"
+                          : isHigh
+                          ? "text-sm text-slate-700"
+                          : "text-sm text-slate-600"
+                      )}
+                    >
+                      {item.description}
+                    </p>
+
+                    {/* Affected Investors + Source */}
+                    <div className={cn(
+                      "flex flex-wrap items-center gap-5 pt-3 border-t",
+                      hasAffected ? "border-slate-200" : "border-slate-50"
+                    )}>
+                      {/* Affected Investors */}
+                      {hasAffected ? (
+                        <div className="flex items-center gap-2">
+                          <span className={cn(
+                            "inline-flex items-center justify-center rounded-full font-mono text-xs font-bold h-7 min-w-7 px-2",
+                            isHigh
+                              ? "bg-red-600 text-white"
+                              : "bg-slate-900 text-white"
+                          )}>
+                            {item.affectedInvestorIds.length}
+                          </span>
+                          <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                            Your investors
+                          </span>
+                          <span className="flex flex-wrap gap-1.5 ml-1">
+                            {item.affectedInvestorIds.map((id) => {
+                              const inv = getInvestor(id);
+                              return inv ? (
+                                <Link
+                                  key={id}
+                                  to={`/investors/${id}`}
+                                  className={cn(
+                                    "text-xs font-bold hover:underline",
+                                    isHigh
+                                      ? "text-red-700 hover:text-red-900"
+                                      : "text-slate-800 hover:text-slate-900"
+                                  )}
+                                >
+                                  {inv.name}
+                                </Link>
+                              ) : null;
+                            })}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-slate-300 italic">
+                          No direct investor impact
+                        </span>
+                      )}
+
+                      {/* Source */}
+                      <div className={cn(
+                        "flex items-center gap-1 text-xs ml-auto",
+                        isMuted ? "text-slate-300" : "text-slate-400"
+                      )}>
+                        <ExternalLink size={11} />
+                        <span>{item.source}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <EmptyState

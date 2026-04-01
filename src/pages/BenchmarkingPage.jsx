@@ -47,7 +47,14 @@ const peers = [
   },
 ];
 
-function HorizontalBar({ label, value, maxValue = 100, isOurs = false }) {
+function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status }) {
+  const barColor = isOurs
+    ? status === "above"
+      ? "bg-emerald-500"
+      : status === "below"
+      ? "bg-red-500"
+      : "bg-slate-900"
+    : "bg-slate-300";
   return (
     <div className="flex items-center gap-3 py-1.5">
       <span
@@ -58,24 +65,30 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false }) {
       >
         {label}
         {isOurs && (
-          <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+          <span className={cn(
+            "ml-1.5 text-[10px] font-bold uppercase tracking-[0.1em]",
+            status === "above" ? "text-emerald-600" : status === "below" ? "text-red-600" : "text-slate-400"
+          )}>
             YOU
           </span>
         )}
       </span>
       <div className="flex-1 h-1.5 rounded-full bg-slate-100">
         <div
-          className={cn(
-            "h-1.5 rounded-full transition-all",
-            isOurs ? "bg-slate-900" : "bg-slate-300"
-          )}
+          className={cn("h-1.5 rounded-full transition-all", barColor)}
           style={{ width: `${(value / maxValue) * 100}%` }}
         />
       </div>
       <span
         className={cn(
           "w-10 text-right font-mono text-sm font-medium",
-          isOurs ? "text-slate-900" : "text-slate-500"
+          isOurs
+            ? status === "below"
+              ? "text-red-600 font-bold"
+              : status === "above"
+              ? "text-emerald-600 font-bold"
+              : "text-slate-900"
+            : "text-slate-500"
         )}
       >
         {value}
@@ -160,40 +173,54 @@ export function BenchmarkingPage() {
     };
   }, []);
 
+  const sectorMedian = peers.find((p) => p.name === "Sector Median");
+
   const allEntries = [{ ...ourMetrics, isOurs: true }, ...peers.map((p) => ({ ...p, isOurs: false }))];
 
-  // Auto-generated insights
+  // Determine above/below for each metric
+  const engagementStatus = sectorMedian
+    ? ourMetrics.engagementIntensity >= sectorMedian.engagementIntensity ? "above" : "below"
+    : "neutral";
+  const stabilityStatus = sectorMedian
+    ? ourMetrics.shareholderStability >= sectorMedian.shareholderStability ? "above" : "below"
+    : "neutral";
+
+  // Count how many metrics are below
+  const belowCount = [engagementStatus, stabilityStatus].filter((s) => s === "below").length;
+
+  // Auto-generated insights -- problems first, then strengths
   const insights = useMemo(() => {
-    const bullets = [];
-    const sectorMedian = peers.find((p) => p.name === "Sector Median");
+    const negatives = [];
+    const positives = [];
+    const neutrals = [];
 
     if (sectorMedian) {
       if (ourMetrics.engagementIntensity > sectorMedian.engagementIntensity) {
-        bullets.push({
+        positives.push({
           text: `Our engagement intensity (${ourMetrics.engagementIntensity}) is above the sector median (${sectorMedian.engagementIntensity}), indicating strong investor outreach relative to peers.`,
           status: "positive",
         });
       } else {
-        bullets.push({
+        negatives.push({
           text: `Our engagement intensity (${ourMetrics.engagementIntensity}) is below the sector median (${sectorMedian.engagementIntensity}). Consider increasing interaction frequency.`,
           status: "negative",
         });
       }
 
       if (ourMetrics.shareholderStability > sectorMedian.shareholderStability) {
-        bullets.push({
+        positives.push({
           text: `Shareholder stability at ${ourMetrics.shareholderStability}% exceeds the sector median (${sectorMedian.shareholderStability}%), suggesting a loyal investor base.`,
           status: "positive",
         });
       } else {
-        bullets.push({
+        negatives.push({
           text: `Shareholder stability at ${ourMetrics.shareholderStability}% is below the sector median (${sectorMedian.shareholderStability}%). Retention efforts should be prioritized.`,
           status: "negative",
         });
       }
 
       if (ourMetrics.passivePct > sectorMedian.passivePct) {
-        bullets.push({
+        neutrals.push({
           text: `Passive ownership concentration (${ourMetrics.passivePct}%) is higher than the sector median (${sectorMedian.passivePct}%). This reduces activist risk but limits engagement-driven influence.`,
           status: "neutral",
         });
@@ -202,13 +229,14 @@ export function BenchmarkingPage() {
 
     const highOverlap = peers.filter((p) => p.ownershipOverlap >= 70);
     if (highOverlap.length > 0) {
-      bullets.push({
+      neutrals.push({
         text: `High ownership overlap (>70%) with ${highOverlap.map((p) => p.name).join(", ")} means shared investor preferences likely apply.`,
         status: "neutral",
       });
     }
 
-    return bullets;
+    // Problems first, then neutrals, then strengths
+    return [...negatives, ...neutrals, ...positives];
   }, [ourMetrics]);
 
   const insightDotColor = {
@@ -223,30 +251,90 @@ export function BenchmarkingPage() {
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Peer Benchmarking</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Compare your IR metrics against sector peers
+          How you compare, where you excel, and where to improve
         </p>
       </div>
 
-      {/* Summary Stats */}
+      {/* Summary Stats with above/below coloring */}
       <div className="grid grid-cols-4 gap-4">
-        <StatCard
-          value={`${ourMetrics.engagementIntensity}%`}
-          label="Engagement intensity"
-          trend={ourMetrics.engagementIntensity >= 55 ? "up" : "down"}
-        />
-        <StatCard
-          value={`${ourMetrics.shareholderStability}%`}
-          label="Shareholder stability"
-          trend={ourMetrics.shareholderStability >= 72 ? "up" : "down"}
-        />
-        <StatCard
-          value={peers.length}
-          label="Peer companies"
-        />
-        <StatCard
-          value={`${ourMetrics.passivePct}%`}
-          label="Passive ownership"
-        />
+        <div className={cn(
+          "rounded-lg border-2 p-5 text-center",
+          engagementStatus === "above"
+            ? "border-emerald-200 bg-emerald-50"
+            : "border-red-200 bg-red-50"
+        )}>
+          <p className={cn(
+            "text-[11px] font-medium uppercase tracking-[0.1em]",
+            engagementStatus === "above" ? "text-emerald-400" : "text-red-400"
+          )}>
+            Engagement Intensity
+          </p>
+          <p className={cn(
+            "mt-1 text-5xl font-mono font-bold",
+            engagementStatus === "above" ? "text-emerald-600" : "text-red-600"
+          )}>
+            {ourMetrics.engagementIntensity}%
+          </p>
+          <p className={cn(
+            "mt-1 text-xs font-semibold",
+            engagementStatus === "above" ? "text-emerald-600" : "text-red-600"
+          )}>
+            {engagementStatus === "above" ? "Above" : "Below"} sector median ({sectorMedian?.engagementIntensity}%)
+          </p>
+        </div>
+
+        <div className={cn(
+          "rounded-lg border-2 p-5 text-center",
+          stabilityStatus === "above"
+            ? "border-emerald-200 bg-emerald-50"
+            : "border-red-200 bg-red-50"
+        )}>
+          <p className={cn(
+            "text-[11px] font-medium uppercase tracking-[0.1em]",
+            stabilityStatus === "above" ? "text-emerald-400" : "text-red-400"
+          )}>
+            Shareholder Stability
+          </p>
+          <p className={cn(
+            "mt-1 text-5xl font-mono font-bold",
+            stabilityStatus === "above" ? "text-emerald-600" : "text-red-600"
+          )}>
+            {ourMetrics.shareholderStability}%
+          </p>
+          <p className={cn(
+            "mt-1 text-xs font-semibold",
+            stabilityStatus === "above" ? "text-emerald-600" : "text-red-600"
+          )}>
+            {stabilityStatus === "above" ? "Above" : "Below"} sector median ({sectorMedian?.shareholderStability}%)
+          </p>
+        </div>
+
+        <div className={cn(
+          "rounded-lg border-2 p-5 text-center",
+          belowCount > 0
+            ? "border-red-200 bg-red-50"
+            : "border-emerald-200 bg-emerald-50"
+        )}>
+          <p className={cn(
+            "text-[11px] font-medium uppercase tracking-[0.1em]",
+            belowCount > 0 ? "text-red-400" : "text-emerald-400"
+          )}>
+            Areas to Improve
+          </p>
+          <p className={cn(
+            "mt-1 text-5xl font-mono font-bold",
+            belowCount > 0 ? "text-red-600" : "text-emerald-600"
+          )}>
+            {belowCount}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">Below sector average</p>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Peers Tracked</p>
+          <p className="mt-1 text-4xl font-mono font-bold text-slate-700">{peers.length}</p>
+          <p className="mt-1 text-xs text-slate-400">Including sector median</p>
+        </div>
       </div>
 
       {/* Ownership Overlap Table */}
@@ -278,37 +366,64 @@ export function BenchmarkingPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {allEntries.map((entry) => (
-                <tr
-                  key={entry.name}
-                  className={entry.isOurs ? "bg-slate-50" : ""}
-                >
-                  <td
+              {allEntries.map((entry) => {
+                const isBelow = entry.isOurs && (engagementStatus === "below" || stabilityStatus === "below");
+                return (
+                  <tr
+                    key={entry.name}
                     className={cn(
-                      "px-4 py-2.5",
                       entry.isOurs
-                        ? "font-semibold text-slate-900"
-                        : "text-slate-700"
+                        ? isBelow
+                          ? "bg-red-50/50"
+                          : "bg-emerald-50/50"
+                        : ""
                     )}
                   >
-                    {entry.name}
-                    {entry.isOurs && (
-                      <span className="ml-2 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                        YOU
+                    <td
+                      className={cn(
+                        "px-4 py-2.5",
+                        entry.isOurs
+                          ? "font-bold text-slate-900"
+                          : "text-slate-700"
+                      )}
+                    >
+                      {entry.name}
+                      {entry.isOurs && (
+                        <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400">
+                          YOU
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2.5 font-mono text-slate-700">
+                      {entry.ownershipOverlap}%
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span className={cn(
+                        "font-mono",
+                        entry.isOurs
+                          ? engagementStatus === "above"
+                            ? "text-emerald-600 font-bold"
+                            : "text-red-600 font-bold"
+                          : "text-slate-700"
+                      )}>
+                        {entry.engagementIntensity}
                       </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2.5 font-mono text-slate-700">
-                    {entry.ownershipOverlap}%
-                  </td>
-                  <td className="px-4 py-2.5 font-mono text-slate-700">
-                    {entry.engagementIntensity}
-                  </td>
-                  <td className="px-4 py-2.5 font-mono text-slate-700">
-                    {entry.shareholderStability}%
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span className={cn(
+                        "font-mono",
+                        entry.isOurs
+                          ? stabilityStatus === "above"
+                            ? "text-emerald-600 font-bold"
+                            : "text-red-600 font-bold"
+                          : "text-slate-700"
+                      )}>
+                        {entry.shareholderStability}%
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -333,6 +448,7 @@ export function BenchmarkingPage() {
                 label={entry.name}
                 value={entry.engagementIntensity}
                 isOurs={entry.isOurs}
+                status={entry.isOurs ? engagementStatus : undefined}
               />
             ))}
         </div>
@@ -357,6 +473,7 @@ export function BenchmarkingPage() {
                 label={entry.name}
                 value={entry.shareholderStability}
                 isOurs={entry.isOurs}
+                status={entry.isOurs ? stabilityStatus : undefined}
               />
             ))}
         </div>
@@ -403,23 +520,34 @@ export function BenchmarkingPage() {
         </div>
       </div>
 
-      {/* Key Insights */}
+      {/* Key Insights - problems first */}
       <div className="rounded-lg border border-slate-200 bg-white p-5">
         <div className="mb-4">
           <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
             Key Insights
           </h3>
           <p className="mt-0.5 text-xs text-slate-500">
-            Auto-generated peer analysis
+            Auto-generated peer analysis (issues first)
           </p>
         </div>
         <ul className="space-y-3">
           {insights.map((insight, i) => (
-            <li key={i} className="flex gap-3 text-sm text-slate-700">
+            <li
+              key={i}
+              className={cn(
+                "flex gap-3 text-sm rounded-lg px-3 py-2.5",
+                insight.status === "negative"
+                  ? "bg-red-50 text-red-800 font-medium"
+                  : insight.status === "positive"
+                  ? "text-slate-600"
+                  : "text-slate-600"
+              )}
+            >
               <span
                 className={cn(
-                  "mt-1.5 h-2 w-2 rounded-full flex-shrink-0",
-                  insightDotColor[insight.status]
+                  "mt-1.5 flex-shrink-0 rounded-full",
+                  insightDotColor[insight.status],
+                  insight.status === "negative" ? "h-3 w-3" : "h-2 w-2"
                 )}
               />
               <span className="leading-relaxed">{insight.text}</span>
@@ -434,6 +562,11 @@ export function BenchmarkingPage() {
           RECOMMENDATION
         </p>
         <p className="text-sm leading-relaxed">
+          {belowCount > 0 ? (
+            <>
+              <span className="font-bold text-red-400">{belowCount} metric{belowCount > 1 ? "s" : ""} below sector average.</span>{" "}
+            </>
+          ) : null}
           Focus engagement efforts on differentiating from peers with high ownership overlap.
           Your shareholder stability and engagement metrics should be monitored quarterly against
           sector benchmarks to track competitive positioning.

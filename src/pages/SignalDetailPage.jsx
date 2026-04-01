@@ -33,9 +33,9 @@ const TODAY = "2026-04-01";
 // -- Helpers -------------------------------------------------------
 
 const urgencyConfig = {
-  high: { label: "HIGH", icon: AlertTriangle, color: "text-red-600", bg: "bg-red-50", border: "border-red-200" },
-  medium: { label: "MEDIUM", icon: Clock, color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" },
-  low: { label: "LOW", icon: null, color: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200" },
+  high: { label: "HIGH URGENCY", icon: AlertTriangle, color: "text-red-600", bg: "bg-red-50", border: "border-red-200", bannerBg: "bg-red-600" },
+  medium: { label: "MEDIUM URGENCY", icon: Clock, color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200", bannerBg: "bg-amber-500" },
+  low: { label: "LOW URGENCY", icon: null, color: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200", bannerBg: "bg-slate-400" },
 };
 
 const typeLabels = {
@@ -228,7 +228,7 @@ function RelatedSignals({ signal, navigate }) {
                     urg.bg, urg.border, urg.color, "border"
                   )}
                 >
-                  {urg.label}
+                  {urg.label.split(" ")[0]}
                 </span>
                 <span className="text-[10px] text-slate-400">{typeLabels[s.type]}</span>
               </div>
@@ -355,6 +355,7 @@ export function SignalDetailPage() {
   const transitions = stateTransitions[signal.state] ?? [];
   const signalActions = actions.filter((a) => a.signalId === signal.id);
   const contact = investor?.contacts?.[0];
+  const isHigh = signal.urgency === "high";
 
   // Contextual content
   const whyItMatters = signal.description;
@@ -392,7 +393,7 @@ export function SignalDetailPage() {
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-400 transition-colors hover:text-slate-900"
         >
           <ArrowLeft size={16} />
           Back
@@ -418,152 +419,171 @@ export function SignalDetailPage() {
         </div>
       </div>
 
-      {/* Signal header card */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5 mb-6">
-        <div className="flex items-center gap-3 mb-3">
-          <span
-            className={cn(
-              "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold tracking-wide",
-              urg.bg, urg.border, urg.color, "border"
-            )}
-          >
-            {UrgIcon && <UrgIcon size={10} />}
+      {/* HEADER: Signal title LARGE with urgency banner */}
+      <div className={cn(
+        "rounded-xl border overflow-hidden mb-8",
+        isHigh ? "border-red-200" : "border-slate-200"
+      )}>
+        {/* Urgency banner */}
+        <div className={cn(
+          "px-6 py-3 flex items-center gap-2",
+          urg.bannerBg
+        )}>
+          {UrgIcon && <UrgIcon size={14} className="text-white" />}
+          <span className="text-xs font-bold tracking-widest text-white">
             {urg.label}
           </span>
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium tracking-[0.1em] text-slate-400">
-            <TypeIcon size={11} />
-            {typeLabels[signal.type]}
-          </span>
-          <span className="text-[11px] text-slate-400">
-            {relativeAge(signal.detectedAt)}
+          <span className="text-xs text-white/60 ml-2">
+            {typeLabels[signal.type]} &middot; {relativeAge(signal.detectedAt)}
           </span>
           <div className="flex-1" />
           <SignalStrength level={signal.confidence} />
-          <TierPill tier={investor?.tier ?? 3} />
-          <span className="text-sm font-medium text-slate-700">
-            {investor?.name ?? "Unknown"}
-          </span>
         </div>
-        <h1 className="text-lg font-bold text-slate-900">{signal.headline}</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Detected {formatDate(signal.detectedAt)} via {signal.source}
-        </p>
+
+        <div className="bg-white px-8 py-7">
+          <h1 className="text-2xl font-bold text-slate-900 leading-tight tracking-tight">
+            {signal.headline}
+          </h1>
+          <div className="mt-3 flex items-center gap-3 text-sm text-slate-400">
+            <span>Detected {formatDate(signal.detectedAt)} via {signal.source}</span>
+            <span>&middot;</span>
+            <TierPill tier={investor?.tier ?? 3} />
+            <span className="font-medium text-slate-700">
+              {investor?.name ?? "Unknown"}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Main layout */}
       <div className="flex gap-6">
-        {/* Main content */}
-        <div className="min-w-0 flex-1 space-y-5">
+        {/* Main content - narrative flow: facts -> meaning -> action */}
+        <div className="min-w-0 flex-1 space-y-6">
 
-          {/* Summary */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
-              SUMMARY
+          {/* 1. WHAT HAPPENED (facts - slightly muted foundation) */}
+          <div className="rounded-xl border border-slate-200 bg-white p-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-4">
+              WHAT HAPPENED
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               {signal.description}
             </p>
             {signal.parameters && signal.parameters.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {signal.parameters.map((p, i) => (
-                  <div key={i} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-1.5">
-                    <span className="text-[11px] text-slate-400">{p.label}</span>
-                    <span className="ml-2 font-mono text-xs font-medium text-slate-700">{p.value}</span>
+                  <div key={i} className="rounded-lg border border-slate-100 bg-slate-50/70 px-4 py-3">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400 mb-1">{p.label}</p>
+                    <p className="font-mono text-sm font-semibold text-slate-800">{p.value}</p>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* WHY IT MATTERS */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+          {/* 2. WHY IT MATTERS (interpretation - more prominent) */}
+          <div className="rounded-xl border border-slate-200 bg-white p-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-4">
               WHY IT MATTERS
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
+            <p className="text-lg font-medium text-slate-800 leading-relaxed">
               {whyItMatters}
             </p>
+            <div className="mt-4 flex items-center gap-3">
+              <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Confidence</span>
+              <SignalStrength level={signal.confidence} />
+              <span className="text-xs font-medium text-slate-500 capitalize">{signal.confidence}</span>
+            </div>
           </div>
 
-          {/* PERSONA CONTEXT */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+          {/* 3. PERSONA CONTEXT */}
+          <div className="rounded-xl border border-slate-200 bg-white p-6">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
               PERSONA CONTEXT
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               {personaContext}
             </p>
           </div>
 
-          {/* LIKELY IMPACT */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+          {/* 4. LIKELY IMPACT (builds urgency toward action) */}
+          <div className={cn(
+            "rounded-xl border p-6",
+            isHigh ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+          )}>
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-3">
               LIKELY IMPACT
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
+            <p className={cn(
+              "text-base leading-relaxed",
+              isHigh ? "text-red-900 font-medium" : "text-slate-700"
+            )}>
               {likelyImpact}
             </p>
           </div>
 
-          {/* RECOMMENDED ACTION (dark box) */}
-          <div className="rounded-lg bg-slate-800 p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
-              RECOMMENDED ACTION
-            </p>
-            <p className="text-sm text-white leading-relaxed mb-4">
-              {recommendedAction}
-            </p>
-
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div>
-                <p className="text-[11px] text-slate-400 mb-0.5">CHANNEL</p>
-                <p className="text-sm text-slate-200">{recommendedChannel}</p>
-              </div>
-              <div>
-                <p className="text-[11px] text-slate-400 mb-0.5">TIMELINE</p>
-                <p className="text-sm text-slate-200">{recommendedTimeline}</p>
-              </div>
-              {contact && (
-                <div>
-                  <p className="text-[11px] text-slate-400 mb-0.5">CONTACT</p>
-                  <p className="text-sm text-slate-200">{contact.name}</p>
-                </div>
-              )}
-              {signalActions.length > 0 && signalActions[0].messageAngle && (
-                <div>
-                  <p className="text-[11px] text-slate-400 mb-0.5">MESSAGE ANGLE</p>
-                  <p className="text-sm text-slate-200">{signalActions[0].messageAngle}</p>
-                </div>
-              )}
+          {/* 5. RECOMMENDED ACTION - THE CLIMAX - most visually prominent */}
+          <div className="rounded-xl bg-slate-900 overflow-hidden shadow-lg">
+            <div className="px-8 pt-8 pb-2">
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-4">
+                RECOMMENDED ACTION
+              </p>
+              <p className="text-xl font-bold text-white leading-relaxed">
+                {recommendedAction}
+              </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="px-8 py-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mb-1">CHANNEL</p>
+                  <p className="text-sm font-medium text-slate-200">{recommendedChannel}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mb-1">TIMELINE</p>
+                  <p className="text-sm font-medium text-slate-200">{recommendedTimeline}</p>
+                </div>
+                {contact && (
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mb-1">CONTACT</p>
+                    <p className="text-sm font-medium text-slate-200">{contact.name}</p>
+                  </div>
+                )}
+                {signalActions.length > 0 && signalActions[0].messageAngle && (
+                  <div className="col-span-2 sm:col-span-3">
+                    <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500 mb-1">MESSAGE ANGLE</p>
+                    <p className="text-sm font-medium text-slate-200">{signalActions[0].messageAngle}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="px-8 pb-8 flex items-center gap-4">
               <button
                 onClick={() => navigate(`/actions/new?signal=${signal.id}`)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-xs font-medium text-slate-900 transition-colors hover:bg-slate-100"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-slate-900 transition-colors hover:bg-slate-100 shadow-sm"
               >
-                Execute <ArrowRight size={12} />
+                Execute <ArrowRight size={14} />
               </button>
               {signalActions.length > 0 && (
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-slate-500">
                   {signalActions.length} action{signalActions.length !== 1 && "s"} already linked
                 </span>
               )}
             </div>
           </div>
 
-          {/* RAW DATA / SOURCE TRAIL (collapsible) */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
+          {/* 6. RAW DATA - de-emphasized supporting evidence */}
+          <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-5">
             <button
               onClick={() => setRawDataOpen(!rawDataOpen)}
-              className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 hover:text-slate-600 transition-colors w-full text-left"
+              className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-300 hover:text-slate-500 transition-colors w-full text-left"
             >
               {rawDataOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
               RAW DATA / SOURCE TRAIL
             </button>
             {rawDataOpen && (
-              <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
-                <pre className="font-mono text-xs text-slate-600 whitespace-pre-wrap leading-relaxed">
+              <div className="mt-3 rounded-lg border border-slate-200 bg-white p-4">
+                <pre className="font-mono text-xs text-slate-400 whitespace-pre-wrap leading-relaxed">
 {JSON.stringify(
   {
     id: signal.id,

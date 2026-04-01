@@ -113,7 +113,76 @@ function FilterPill({ label, active, onClick }) {
   );
 }
 
-// -- Signal Card (expandable) ---------------------------------------
+// -- Signal Pressure Summary Bar -----------------------------------
+
+function SignalPressureSummary({ filteredSignals }) {
+  const highCount = filteredSignals.filter((s) => s.urgency === "high").length;
+  const mediumCount = filteredSignals.filter((s) => s.urgency === "medium").length;
+  const lowCount = filteredSignals.filter((s) => s.urgency === "low").length;
+  const total = filteredSignals.length || 1;
+
+  const highPct = (highCount / total) * 100;
+  const mediumPct = (mediumCount / total) * 100;
+  const lowPct = (lowCount / total) * 100;
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white px-6 py-4 mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+          SIGNAL PRESSURE
+        </p>
+        <p className="text-[11px] text-slate-400">
+          {filteredSignals.length} TOTAL
+        </p>
+      </div>
+
+      {/* Stacked bar */}
+      <div className="flex h-3 w-full rounded-full overflow-hidden bg-slate-100">
+        {highCount > 0 && (
+          <div
+            className="bg-red-500 transition-all"
+            style={{ width: `${highPct}%` }}
+          />
+        )}
+        {mediumCount > 0 && (
+          <div
+            className="bg-amber-400 transition-all"
+            style={{ width: `${mediumPct}%` }}
+          />
+        )}
+        {lowCount > 0 && (
+          <div
+            className="bg-emerald-400 transition-all"
+            style={{ width: `${lowPct}%` }}
+          />
+        )}
+      </div>
+
+      {/* Counts */}
+      <div className="flex items-center gap-4 mt-2.5">
+        <span className="flex items-center gap-1.5 text-xs">
+          <span className="h-2 w-2 rounded-full bg-red-500" />
+          <span className={cn("font-mono font-bold", highCount > 0 ? "text-red-600" : "text-slate-400")}>
+            {highCount}
+          </span>
+          <span className="text-slate-400">High</span>
+        </span>
+        <span className="flex items-center gap-1.5 text-xs">
+          <span className="h-2 w-2 rounded-full bg-amber-400" />
+          <span className="font-mono font-bold text-slate-600">{mediumCount}</span>
+          <span className="text-slate-400">Medium</span>
+        </span>
+        <span className="flex items-center gap-1.5 text-xs">
+          <span className="h-2 w-2 rounded-full bg-emerald-400" />
+          <span className="font-mono font-bold text-slate-600">{lowCount}</span>
+          <span className="text-slate-400">Low</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// -- Signal Card (expandable) with STRONG urgency differentiation ----
 
 function SignalCard({ signal, navigate }) {
   const [expanded, setExpanded] = useState(false);
@@ -122,6 +191,9 @@ function SignalCard({ signal, navigate }) {
   const urg = urgencyConfig[signal.urgency];
   const UrgIcon = urg.icon;
   const TypeIcon = typeIcons[signal.type] || Radio;
+  const isHigh = signal.urgency === "high";
+  const isMedium = signal.urgency === "medium";
+  const isLow = signal.urgency === "low";
 
   // Build contextual data
   const whyItMatters = signal.description;
@@ -148,11 +220,27 @@ function SignalCard({ signal, navigate }) {
       : "Maintain engagement cadence and leverage positive developments in upcoming communications.";
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white">
+    <div
+      className={cn(
+        "rounded-lg border transition-all",
+        isHigh
+          ? "bg-red-50/30 border-red-200 shadow-sm"
+          : isMedium
+          ? "bg-white border-slate-200"
+          : "bg-slate-50/50 border-slate-200/70"
+      )}
+    >
       {/* Header row */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-50"
+        className={cn(
+          "flex w-full items-center gap-3 text-left transition-colors",
+          isHigh
+            ? "px-5 py-4 hover:bg-red-50/50"
+            : isMedium
+            ? "px-4 py-3 hover:bg-slate-50"
+            : "px-4 py-2.5 hover:bg-slate-100/50"
+        )}
       >
         <div className="flex-shrink-0 text-slate-400">
           {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -160,20 +248,27 @@ function SignalCard({ signal, navigate }) {
 
         <span
           className={cn(
-            "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold tracking-wide",
-            urg.bg, urg.border, urg.color, "border"
+            "inline-flex items-center gap-1 rounded font-bold tracking-wide",
+            isHigh
+              ? "bg-red-100 border border-red-300 text-red-700 px-2 py-1 text-sm"
+              : isMedium
+              ? "bg-amber-50 border border-amber-200 text-amber-600 px-1.5 py-0.5 text-[10px]"
+              : "text-slate-400 px-1.5 py-0.5 text-[10px]"
           )}
         >
-          {UrgIcon && <UrgIcon size={10} />}
+          {UrgIcon && <UrgIcon size={isHigh ? 13 : 10} />}
           {urg.label}
         </span>
 
-        <span className="inline-flex items-center gap-1 text-[11px] font-medium tracking-[0.1em] text-slate-400">
+        <span className={cn(
+          "inline-flex items-center gap-1 font-medium tracking-[0.1em] text-slate-400",
+          isHigh ? "text-xs" : "text-[11px]"
+        )}>
           <TypeIcon size={11} />
           {typeLabels[signal.type]}
         </span>
 
-        <span className="text-[11px] text-slate-400">
+        <span className={cn("text-slate-400", isLow ? "text-[10px]" : "text-[11px]")}>
           {relativeAge(signal.detectedAt)}
         </span>
 
@@ -181,20 +276,39 @@ function SignalCard({ signal, navigate }) {
 
         <SignalStrength level={signal.confidence} />
         <TierPill tier={inv?.tier ?? 3} />
-        <span className="text-sm font-medium text-slate-700">
+        <span className={cn(
+          "font-medium text-slate-700",
+          isHigh ? "text-sm" : isLow ? "text-xs text-slate-500" : "text-sm"
+        )}>
           {inv?.name ?? "Unknown"}
         </span>
       </button>
 
       {/* Title + description */}
-      <div className="px-4 pb-3 pl-11">
-        <p className="text-sm font-semibold text-slate-900">{signal.headline}</p>
-        <p className="mt-0.5 text-sm text-slate-500">{truncate(signal.description)}</p>
+      <div className={cn(
+        "pl-11",
+        isHigh ? "px-5 pb-4" : isMedium ? "px-4 pb-3" : "px-4 pb-2.5"
+      )}>
+        <p className={cn(
+          "text-slate-900",
+          isHigh ? "text-lg font-bold" : isMedium ? "text-base font-semibold" : "text-sm font-medium text-slate-700"
+        )}>
+          {signal.headline}
+        </p>
+        <p className={cn(
+          "mt-0.5 leading-relaxed",
+          isHigh ? "text-sm text-slate-600" : isMedium ? "text-sm text-slate-500" : "text-xs text-slate-400"
+        )}>
+          {truncate(signal.description, isHigh ? 160 : 120)}
+        </p>
       </div>
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="border-t border-slate-100 px-4 py-4 pl-11 space-y-5">
+        <div className={cn(
+          "border-t px-4 py-4 pl-11 space-y-5",
+          isHigh ? "border-red-100" : "border-slate-100"
+        )}>
           {/* WHY IT MATTERS */}
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1.5">
@@ -238,7 +352,7 @@ function SignalCard({ signal, navigate }) {
           )}
 
           {/* RECOMMENDED ACTION (dark box) */}
-          <div className="rounded-lg bg-slate-800 p-4">
+          <div className="rounded-lg bg-slate-900 p-5">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
               RECOMMENDED ACTION
             </p>
@@ -250,7 +364,7 @@ function SignalCard({ signal, navigate }) {
                 e.stopPropagation();
                 navigate(`/signals/${signal.id}`);
               }}
-              className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2 text-xs font-medium text-slate-900 transition-colors hover:bg-slate-100"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2.5 text-xs font-bold text-slate-900 transition-colors hover:bg-slate-100"
             >
               Execute <ArrowRight size={12} />
             </button>
@@ -263,14 +377,14 @@ function SignalCard({ signal, navigate }) {
                 e.stopPropagation();
                 setRawDataOpen(!rawDataOpen);
               }}
-              className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 hover:text-slate-600 transition-colors"
+              className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-300 hover:text-slate-500 transition-colors"
             >
               {rawDataOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
               RAW DATA / SOURCE TRAIL
             </button>
             {rawDataOpen && (
               <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                <pre className="font-mono text-xs text-slate-600 whitespace-pre-wrap">
+                <pre className="font-mono text-xs text-slate-500 whitespace-pre-wrap">
 {JSON.stringify(
   {
     id: signal.id,
@@ -402,8 +516,8 @@ export function SignalsPage() {
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-slate-900">Signals</h1>
-        <p className="mt-0.5 text-sm text-slate-500">
+        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Signals</h1>
+        <p className="mt-0.5 text-sm text-slate-400">
           Real-time intelligence desk. Ranked interpretation over raw data.
         </p>
       </div>
@@ -435,12 +549,15 @@ export function SignalsPage() {
         </div>
       </div>
 
+      {/* Signal pressure summary bar */}
+      <SignalPressureSummary filteredSignals={filtered} />
+
       {/* Main layout: feed + sidebar */}
       <div className="flex gap-6">
         {/* Feed */}
         <div className="min-w-0 flex-1">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
               RANKED INTELLIGENCE FEED
             </p>
             <p className="text-[11px] text-slate-400">
@@ -457,7 +574,7 @@ export function SignalsPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {filtered.map((s) => (
                 <SignalCard key={s.id} signal={s} navigate={navigate} />
               ))}

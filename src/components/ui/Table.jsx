@@ -1,6 +1,6 @@
 import { cn } from "../../lib/utils";
 
-export function Table({ columns, data, onRowClick, renderCell, className }) {
+export function Table({ columns, data, onRowClick, renderCell, rowClassName, className }) {
   return (
     <div className={cn("overflow-x-auto rounded-lg border border-slate-200 bg-white", className)}>
       <table className="w-full text-sm">
@@ -26,7 +26,8 @@ export function Table({ columns, data, onRowClick, renderCell, className }) {
               onClick={onRowClick ? () => onRowClick(row) : undefined}
               className={cn(
                 "transition-colors",
-                onRowClick && "cursor-pointer hover:bg-slate-50"
+                onRowClick && "cursor-pointer hover:bg-slate-50",
+                rowClassName ? rowClassName(row) : undefined
               )}
             >
               {columns.map((col) => (
