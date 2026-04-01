@@ -174,10 +174,11 @@ function OverviewTab({ investor, signals }) {
   };
 
   return (
-    <div className="space-y-8">
-      {/* STRUCTURAL SNAPSHOT */}
-      <Card variant="section" accentColor="blue" title="Structural Snapshot">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="space-y-5">
+      {/* STRUCTURAL SNAPSHOT + STATE & SENTIMENT - Two columns */}
+      <div className="flex flex-col md:flex-row gap-4">
+      <Card variant="section" accentColor="blue" title="Structural Snapshot" className="flex-1 min-w-0">
+        <div className="grid grid-cols-2 gap-3">
           <StatCard
             label="TOTAL STAKE"
             value={`${investor.holdingPct}%`}
@@ -207,7 +208,7 @@ function OverviewTab({ investor, signals }) {
             annotation="Based on current holdings"
             annotationColor="slate"
           />
-          <div className="rounded-lg border border-slate-200 bg-white p-6">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
               MAR STATUS
             </p>
@@ -230,12 +231,12 @@ function OverviewTab({ investor, signals }) {
         </div>
       </Card>
 
-      {/* STATE & SENTIMENT */}
-      <div>
+      {/* STATE & SENTIMENT - right column */}
+      <div className="w-full md:w-80 flex-shrink-0">
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
           STATE & SENTIMENT
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {/* Conviction */}
           <div className="rounded-lg border border-slate-200 bg-white p-5">
             <div className="flex items-center justify-between mb-3">
@@ -338,10 +339,11 @@ function OverviewTab({ investor, signals }) {
           </div>
         </div>
       </div>
+      </div>
 
-      {/* IR Sentiment Card (dark) */}
+      {/* IR Sentiment Card (dark) - two columns: score+bars left, quote right */}
       <Card variant="dark" title="IR Sentiment">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <div className="flex items-baseline gap-3 mb-4">
               <span className="font-mono text-4xl font-bold text-white">
@@ -450,7 +452,7 @@ function OverviewTab({ investor, signals }) {
               {/* Vertical line */}
               <div className="absolute left-[5px] top-1.5 bottom-1.5 w-0.5 bg-slate-200" />
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {timeline.map((evt) => (
                   <div key={evt.id} className="relative">
                     {/* Dot */}
@@ -587,7 +589,7 @@ function PersonaTab({ investor }) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       {/* CONTACT MAP */}
       <Card variant="section" accentColor="blue" title="Contact Map">
         <div className="space-y-6">
@@ -751,7 +753,7 @@ function EngagementTab({ investorId, investor }) {
     .filter((v, i, a) => a.indexOf(v) === i);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Main Timeline */}
       <div className="col-span-2">
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">

@@ -198,7 +198,7 @@ export function MarketPage() {
   }, []);
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Market Intelligence</h1>
@@ -208,9 +208,9 @@ export function MarketPage() {
       </div>
 
       {/* ── Concentration + Shareholder Base Row ─────────── */}
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Dark Concentration Index Card */}
-        <div className="rounded-lg bg-slate-900 p-6 md:w-80 md:flex-shrink-0">
+        <div className="rounded-lg bg-slate-900 p-5 md:w-80 md:flex-shrink-0">
           <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
             CONCENTRATION INDEX
           </p>
@@ -233,7 +233,7 @@ export function MarketPage() {
         {/* Shareholder Base Highlights */}
         <div className="flex-1 min-w-0">
         <Card variant="section" accentColor="blue" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* Top 5 Buyers */}
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">

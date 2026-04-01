@@ -123,7 +123,7 @@ export function HomePage() {
   const heroInvestor = heroSignal ? getInvestor(heroSignal.investorId) : null;
 
   return (
-    <div className="space-y-8 p-4 md:p-6 ">
+    <div className="space-y-5 p-4 md:p-6 ">
       {/* Page header */}
       <div>
         <h1 className="text-xl font-bold text-slate-900 tracking-tight">
@@ -142,7 +142,7 @@ export function HomePage() {
           )}
           onClick={() => navigate(`/signals/${heroSignal.id}`)}
         >
-          <div className="px-8 py-8">
+          <div className="px-5 py-5">
             {/* Top row: icon + badges + confidence */}
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
@@ -187,7 +187,7 @@ export function HomePage() {
       )}
 
       {/* -- KEY METRICS ROW -------------------------------------------- */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-2 md:grid-cols-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard
           label="NEW SIGNALS"
           value={newSignalCount}
@@ -212,9 +212,10 @@ export function HomePage() {
         />
       </div>
 
-      {/* -- INTELLIGENCE FEED ------------------------------------------ */}
+      {/* -- INTELLIGENCE FEED + TOP HOLDER STATUS ----------------------- */}
+      <div className="flex flex-col md:flex-row gap-4">
       {remainingSignals.length > 0 && (
-        <Card variant="section" accentColor="blue">
+        <Card variant="section" accentColor="blue" className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-base font-bold text-slate-900">Intelligence Feed</h3>
             <span className="inline-flex items-center bg-blue-50 text-blue-700 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider">
@@ -276,6 +277,58 @@ export function HomePage() {
         </Card>
       )}
 
+      {/* Dark holder card - right side of feed */}
+      <Card variant="dark" title="TOP HOLDER STATUS" className="w-72 flex-shrink-0 hidden md:block">
+        <div className="flex items-baseline gap-3 mb-4">
+          <span className="font-mono text-3xl font-bold text-white">
+            {totalOwnership.toFixed(1)}%
+          </span>
+          <span className="text-xs text-slate-400">tracked</span>
+        </div>
+
+        <div className="space-y-2">
+          {topHolders.map((holder) => {
+            const trend = holder.holdingTrend;
+            const trendColor =
+              trend === "up"
+                ? "text-emerald-400"
+                : trend === "down"
+                ? "text-red-400"
+                : "text-slate-500";
+            const trendArrow =
+              trend === "up" ? "\u2191" : trend === "down" ? "\u2193" : "\u2192";
+
+            return (
+              <div
+                key={holder.id}
+                className="flex items-center justify-between rounded-lg bg-slate-800 px-3 py-2.5"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-700 text-[10px] font-bold text-slate-300">
+                    {holder.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{holder.name}</p>
+                    <p className="text-[10px] text-slate-500 uppercase tracking-wider">
+                      {holder.type} &middot; T{holder.tier}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-base font-bold text-white">
+                    {holder.holdingPct}%
+                  </span>
+                  <span className={cn("text-sm font-bold", trendColor)}>
+                    {trendArrow}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+      </div>
+
       {/* -- RECOMMENDED ACTIONS ---------------------------------------- */}
       {recommendedActions.length > 0 && (
         <section>
@@ -305,64 +358,13 @@ export function HomePage() {
         </section>
       )}
 
-      {/* -- TOP HOLDER STATUS (Dark accent card) ----------------------- */}
-      <div className="flex flex-col md:flex-row gap-6">
-      <Card variant="dark" title="TOP HOLDER STATUS" className="md:max-w-sm md:flex-shrink-0">
-        <div className="flex items-baseline gap-3 mb-6">
-          <span className="font-mono text-4xl font-bold text-white">
-            {totalOwnership.toFixed(1)}%
-          </span>
-          <span className="text-sm text-slate-400">aggregate tracked ownership</span>
-        </div>
-
-        <div className="space-y-3">
-          {topHolders.map((holder) => {
-            const trend = holder.holdingTrend;
-            const trendColor =
-              trend === "up"
-                ? "text-emerald-400"
-                : trend === "down"
-                ? "text-red-400"
-                : "text-slate-500";
-            const trendArrow =
-              trend === "up" ? "\u2191" : trend === "down" ? "\u2193" : "\u2192";
-
-            return (
-              <div
-                key={holder.id}
-                className="flex items-center justify-between rounded-lg bg-slate-800 px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-700 text-[10px] font-bold text-slate-300">
-                    {holder.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">{holder.name}</p>
-                    <p className="text-[11px] text-slate-500 uppercase tracking-wider">
-                      {holder.type} &middot; TIER {holder.tier}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-bold text-white">
-                    {holder.holdingPct}%
-                  </span>
-                  <span className={cn("text-sm font-bold", trendColor)}>
-                    {trendArrow}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-
-      {/* Quick Summary */}
-      <div className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white p-6">
+      {/* -- OWNERSHIP OVERVIEW ----------------------------------------- */}
+      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex-1 min-w-0 rounded-lg border border-slate-200 bg-white p-5">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-4">
           OWNERSHIP OVERVIEW
         </p>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-slate-500">Total tracked investors</span>
             <span className="font-mono text-sm font-bold text-slate-900">{investors.length}</span>
