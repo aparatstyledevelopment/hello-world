@@ -314,7 +314,7 @@ export function SignalDetailPage() {
                     {investor?.name ?? "Unknown"}
                   </span>
                   <span className="text-[10px] text-terminal-text-dim font-mono uppercase tracking-wider">
-                    {investor?.type ?? "investor"} · T{investor?.tier?.replace("T", "") ?? "?"}
+                    {investor?.type ?? "investor"} · T{investor?.tier ?? "?"}
                   </span>
                 </div>
               </div>
@@ -657,11 +657,11 @@ export function SignalDetailPage() {
                     </span>
                     <span className={cn(
                       "inline-flex items-center rounded px-1.5 py-0 text-[9px] font-mono font-bold tracking-wider border",
-                      investor.tier === "T1" ? "border-terminal-amber/40 text-terminal-amber bg-terminal-amber/5"
-                        : investor.tier === "T2" ? "border-terminal-border-bright text-terminal-text"
+                      investor.tier === 1 || investor.tier === "T1" ? "border-terminal-amber/40 text-terminal-amber bg-terminal-amber/5"
+                        : investor.tier === 2 || investor.tier === "T2" ? "border-terminal-border-bright text-terminal-text"
                         : "border-terminal-border text-terminal-text-dim"
                     )}>
-                      {investor.tier}
+                      T{String(investor.tier).replace("T", "")}
                     </span>
                   </div>
 
