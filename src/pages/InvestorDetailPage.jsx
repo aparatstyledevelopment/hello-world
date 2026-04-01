@@ -238,7 +238,7 @@ function OverviewTab({ investor, signals }) {
         </h3>
         <div className="grid grid-cols-2 gap-3">
           {/* Conviction */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 CONVICTION
@@ -261,7 +261,7 @@ function OverviewTab({ investor, signals }) {
           </div>
 
           {/* Sentiment */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 SENTIMENT
@@ -285,7 +285,7 @@ function OverviewTab({ investor, signals }) {
           </div>
 
           {/* Freshness */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 FRESHNESS
@@ -315,7 +315,7 @@ function OverviewTab({ investor, signals }) {
           </div>
 
           {/* Engagement */}
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
+          <div className="rounded-lg border border-slate-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
               <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 ENGAGEMENT
@@ -452,7 +452,7 @@ function OverviewTab({ investor, signals }) {
               {/* Vertical line */}
               <div className="absolute left-[5px] top-1.5 bottom-1.5 w-0.5 bg-slate-200" />
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {timeline.map((evt) => (
                   <div key={evt.id} className="relative">
                     {/* Dot */}
@@ -938,7 +938,7 @@ export function InvestorDetailPage() {
     : "Engagement has gone stale. Re-engage to maintain relationship health.";
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-5">
       {/* Back link */}
       <Link
         to="/investors"

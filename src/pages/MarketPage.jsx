@@ -414,26 +414,26 @@ export function MarketPage() {
 
       {/* ── Key Engagement Metrics ────────────────────────── */}
       <Card variant="section" accentColor="emerald" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-2 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">HIGH RELEVANCE ITEMS</p>
-            <p className="mt-2 font-mono text-4xl font-bold text-red-600">{stats.high}</p>
-            <p className="mt-1 text-xs text-slate-500">Require attention</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-red-600">{stats.high}</p>
+            <p className="mt-0.5 text-xs text-slate-500">Require attention</p>
           </div>
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">INVESTORS AFFECTED</p>
-            <p className="mt-2 font-mono text-4xl font-bold text-slate-900">{stats.uniqueInvestors}</p>
-            <p className="mt-1 text-xs text-slate-500">Across all items</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-slate-900">{stats.uniqueInvestors}</p>
+            <p className="mt-0.5 text-xs text-slate-500">Across all items</p>
           </div>
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">THIS WEEK</p>
-            <p className="mt-2 font-mono text-4xl font-bold text-slate-900">{stats.thisWeek}</p>
-            <p className="mt-1 text-xs text-slate-500">New items</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-slate-900">{stats.thisWeek}</p>
+            <p className="mt-0.5 text-xs text-slate-500">New items</p>
           </div>
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">AFFECTING YOUR BASE</p>
-            <p className="mt-2 font-mono text-4xl font-bold text-slate-900">{stats.withInvestors}</p>
-            <p className="mt-1 text-xs text-slate-500">of {stats.total} total</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-slate-900">{stats.withInvestors}</p>
+            <p className="mt-0.5 text-xs text-slate-500">of {stats.total} total</p>
           </div>
         </div>
       </Card>

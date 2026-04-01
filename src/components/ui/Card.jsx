@@ -1,12 +1,12 @@
 import { cn } from "../../lib/utils";
 
 const variantStyles = {
-  default: "bg-white border border-slate-200 rounded-lg p-6",
-  dark: "bg-slate-900 text-white rounded-lg p-6",
-  section: "bg-white border border-slate-200 rounded-lg p-6",
-  fact: "bg-blue-50/30 border border-blue-100 rounded-lg p-6",
-  inference: "bg-amber-50/30 border border-amber-100 rounded-lg p-6",
-  recommendation: "bg-emerald-50/30 border border-emerald-100 rounded-lg p-6",
+  default: "bg-white border border-slate-200 rounded-lg p-5",
+  dark: "bg-slate-900 text-white rounded-lg p-5",
+  section: "bg-white border border-slate-200 rounded-lg p-5",
+  fact: "bg-blue-50/30 border border-blue-100 rounded-lg p-5",
+  inference: "bg-amber-50/30 border border-amber-100 rounded-lg p-5",
+  recommendation: "bg-emerald-50/30 border border-emerald-100 rounded-lg p-5",
 };
 
 const accentChipColors = {

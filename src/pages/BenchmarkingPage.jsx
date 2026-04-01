@@ -216,7 +216,7 @@ export function BenchmarkingPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
+    <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Peer Benchmarking</h1>
@@ -226,7 +226,7 @@ export function BenchmarkingPage() {
       </div>
 
       {/* ── Dark Concentration-style Card ─────────────────── */}
-      <div className="rounded-lg bg-slate-900 p-6">
+      <div className="rounded-lg bg-slate-900 p-5">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
           PEER POSITION INDEX
         </p>
@@ -264,7 +264,7 @@ export function BenchmarkingPage() {
       </div>
 
       {/* ── Summary Stats ─────────────────────────────────── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard
           label="Engagement Intensity"
           value={`${ourMetrics.engagementIntensity}%`}
@@ -353,39 +353,40 @@ export function BenchmarkingPage() {
         </div>
       </Card>
 
-      {/* ── Engagement Intensity Bars ─────────────────────── */}
-      <Card variant="section" accentColor="emerald" title="Engagement Intensity" subtitle="Score reflecting interaction frequency and quality">
-        <div className="space-y-1">
-          {allEntries
-            .sort((a, b) => b.engagementIntensity - a.engagementIntensity)
-            .map((entry) => (
-              <HorizontalBar
-                key={entry.name}
-                label={entry.name}
-                value={entry.engagementIntensity}
-                isOurs={entry.isOurs}
-                status={entry.isOurs ? engagementStatus : undefined}
-              />
-            ))}
-        </div>
-      </Card>
+      {/* ── Engagement Intensity + Shareholder Stability - Two Columns ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card variant="section" accentColor="emerald" title="Engagement Intensity" subtitle="Score reflecting interaction frequency and quality">
+          <div className="space-y-1">
+            {allEntries
+              .sort((a, b) => b.engagementIntensity - a.engagementIntensity)
+              .map((entry) => (
+                <HorizontalBar
+                  key={entry.name}
+                  label={entry.name}
+                  value={entry.engagementIntensity}
+                  isOurs={entry.isOurs}
+                  status={entry.isOurs ? engagementStatus : undefined}
+                />
+              ))}
+          </div>
+        </Card>
 
-      {/* ── Shareholder Stability Bars ────────────────────── */}
-      <Card variant="section" accentColor="violet" title="Shareholder Stability" subtitle="Percentage of shareholders with stable or growing positions">
-        <div className="space-y-1">
-          {allEntries
-            .sort((a, b) => b.shareholderStability - a.shareholderStability)
-            .map((entry) => (
-              <HorizontalBar
-                key={entry.name}
-                label={entry.name}
-                value={entry.shareholderStability}
-                isOurs={entry.isOurs}
-                status={entry.isOurs ? stabilityStatus : undefined}
-              />
-            ))}
-        </div>
-      </Card>
+        <Card variant="section" accentColor="violet" title="Shareholder Stability" subtitle="Percentage of shareholders with stable or growing positions">
+          <div className="space-y-1">
+            {allEntries
+              .sort((a, b) => b.shareholderStability - a.shareholderStability)
+              .map((entry) => (
+                <HorizontalBar
+                  key={entry.name}
+                  label={entry.name}
+                  value={entry.shareholderStability}
+                  isOurs={entry.isOurs}
+                  status={entry.isOurs ? stabilityStatus : undefined}
+                />
+              ))}
+          </div>
+        </Card>
+      </div>
 
       {/* ── Ownership Structure - Stacked Bars ────────────── */}
       <Card variant="section" accentColor="indigo" title="Ownership Structure" subtitle="Breakdown by investor type">
@@ -470,7 +471,7 @@ export function BenchmarkingPage() {
       </Card>
 
       {/* ── Recommendation ────────────────────────────────── */}
-      <div className="rounded-lg bg-slate-900 text-white p-6">
+      <div className="rounded-lg bg-slate-900 text-white p-5">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
           RECOMMENDATION
         </p>
