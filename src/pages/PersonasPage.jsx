@@ -28,11 +28,11 @@ function deriveArchetype(investor) {
 }
 
 const archetypeColors = {
-  "Active accumulator": "bg-gray-100 text-gray-800 border-gray-300",
+  "Active accumulator": "bg-gray-200 text-black border-gray-300",
   "Silent reducer": "bg-red-100 text-red-800 border-red-300",
-  "Passive tracker": "bg-gray-50 text-gray-700 border-gray-200",
-  "Governance steward": "bg-gray-100 text-gray-800 border-gray-300",
-  "Cautious trimmer": "bg-gray-100 text-gray-700 border-gray-300",
+  "Passive tracker": "bg-gray-100 text-gray-700 border-gray-200",
+  "Governance steward": "bg-gray-200 text-gray-800 border-gray-300",
+  "Cautious trimmer": "bg-gray-100 text-gray-700 border-gray-200",
 };
 
 const typeLabels = {
@@ -512,9 +512,8 @@ export function PersonasPage() {
 function StatCard({ label, value, annotation, annotationColor = "gray", variant = "light" }) {
   const isDark = variant === "dark";
   const colorMap = {
-    gray: "text-gray-500",
     red: "text-red-600",
-    black: "text-black",
+    gray: "text-gray-500",
   };
 
   return (

@@ -12,19 +12,19 @@ export function SettingsPage() {
   return (
     <div className="min-h-full p-4 md:p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-        <p className="mt-1 text-sm text-slate-500">Platform configuration and system preferences.</p>
+        <h1 className="text-3xl font-bold text-black">Settings</h1>
+        <p className="mt-1 text-sm text-gray-500">Platform configuration and system preferences.</p>
       </div>
 
       <div className="space-y-4">
         {sections.map((s) => (
-          <div key={s.title} className="flex items-start gap-4 rounded-lg border border-slate-200 p-5 transition-colors hover:bg-slate-50">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100">
-              <s.icon size={18} className="text-slate-600" />
+          <div key={s.title} className="flex items-start gap-4 rounded-lg border border-gray-200 p-5 transition-colors hover:bg-gray-50">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
+              <s.icon size={18} className="text-gray-600" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-slate-900">{s.title}</h3>
-              <p className="mt-1 text-sm text-slate-500">{s.desc}</p>
+              <h3 className="text-sm font-semibold text-black">{s.title}</h3>
+              <p className="mt-1 text-sm text-gray-500">{s.desc}</p>
             </div>
           </div>
         ))}
