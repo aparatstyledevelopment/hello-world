@@ -7,10 +7,12 @@ import {
   Plus,
   Link as LinkIcon,
   AlertCircle,
-  Search,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
+import { Card } from "../components/ui/Card";
+import { StatCard } from "../components/ui/StatCard";
+import { ActionCard } from "../components/ui/ActionCard";
 import { Table } from "../components/ui/Table";
 import { EmptyState } from "../components/ui/EmptyState";
 import {
@@ -46,6 +48,22 @@ const typeLabels = {
   governance_management: "Governance",
   information_gap: "Info Gap",
   relationship_maintenance: "Relationship",
+};
+
+const phaseColors = {
+  planned: "border-blue-400 bg-blue-50/30",
+  preparing: "border-amber-400 bg-amber-50/30",
+  in_progress: "border-emerald-400 bg-emerald-50/30",
+  awaiting_logging: "border-purple-400 bg-purple-50/30",
+  completed: "border-slate-300 bg-slate-50/30",
+};
+
+const phaseHeaderColors = {
+  planned: "text-blue-700",
+  preparing: "text-amber-700",
+  in_progress: "text-emerald-700",
+  awaiting_logging: "text-purple-700",
+  completed: "text-slate-500",
 };
 
 function truncate(str, len = 50) {
@@ -162,11 +180,17 @@ function ListView({ filteredActions, navigate }) {
         return <Badge variant={row.type}>{typeLabels[row.type]}</Badge>;
       case "investor": {
         const inv = getInvestor(row.investorId);
-        return <span className="font-semibold text-slate-900">{inv?.name ?? "Unknown"}</span>;
+        return (
+          <span className="font-semibold text-slate-900">
+            {inv?.name ?? "Unknown"}
+          </span>
+        );
       }
       case "contact": {
         const con = getContact(row.contactId);
-        return <span className="text-slate-500 text-xs">{con?.name ?? "-"}</span>;
+        return (
+          <span className="text-slate-500 text-xs">{con?.name ?? "-"}</span>
+        );
       }
       case "objective":
         return (
@@ -222,7 +246,7 @@ function ListView({ filteredActions, navigate }) {
   );
 }
 
-// ── Board View (Kanban) ───────────────────────────────────
+// ── Board View (Kanban with ActionCard + phase headers) ───
 function BoardView({ filteredActions, navigate }) {
   const stateColumns = actionStates.map((s) => ({
     ...s,
@@ -230,62 +254,65 @@ function BoardView({ filteredActions, navigate }) {
   }));
 
   return (
-    <div className="grid grid-cols-5 gap-3">
-      {stateColumns.map((col) => (
-        <div key={col.key} className="flex flex-col rounded-lg border border-slate-200 bg-slate-50 p-3">
-          {/* Column header */}
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-              {col.label}
-            </h3>
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-200 px-1.5 text-[11px] font-semibold text-slate-600">
-              {col.items.length}
-            </span>
+    <div className="grid grid-cols-5 gap-4">
+      {stateColumns.map((col, colIdx) => (
+        <div key={col.key} className="flex flex-col">
+          {/* Phase-style header */}
+          <div
+            className={cn(
+              "rounded-t-lg border-t-2 px-4 py-3 mb-0",
+              phaseColors[col.key]
+            )}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "text-[10px] font-bold uppercase tracking-[0.15em]",
+                    phaseHeaderColors[col.key]
+                  )}
+                >
+                  PHASE {String(colIdx + 1).padStart(2, "0")}
+                </span>
+                <span className="text-[11px] font-semibold text-slate-700 uppercase">
+                  {col.label}
+                </span>
+              </div>
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-white/80 px-1.5 text-[11px] font-semibold text-slate-600 shadow-sm">
+                {col.items.length}
+              </span>
+            </div>
           </div>
 
-          {/* Cards */}
-          <div className="flex flex-col gap-2">
-            {col.items.map((action) => {
-              const inv = getInvestor(action.investorId);
-              return (
-                <div
-                  key={action.id}
-                  onClick={() => navigate(`/actions/${action.id}`)}
-                  className="cursor-pointer rounded-lg border border-slate-200 bg-white p-3 transition-colors hover:border-slate-300"
-                >
-                  <p className="text-xs font-semibold text-slate-800">
-                    {inv?.name ?? "Unknown"}
-                  </p>
-                  <p
-                    className="mt-1 text-xs text-slate-500 leading-relaxed"
-                    title={action.objective}
+          {/* Cards container */}
+          <div className="flex flex-col gap-2 rounded-b-lg border border-t-0 border-slate-200 bg-slate-50/50 p-2 min-h-[200px]">
+            {col.items.length === 0 ? (
+              <div className="flex items-center justify-center py-8">
+                <p className="text-xs text-slate-400">No actions</p>
+              </div>
+            ) : (
+              col.items.map((action) => {
+                const inv = getInvestor(action.investorId);
+                return (
+                  <div
+                    key={action.id}
+                    onClick={() => navigate(`/actions/${action.id}`)}
+                    className="cursor-pointer"
                   >
-                    {truncate(action.objective, 60)}
-                  </p>
-                  <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      {/* Owner initials */}
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-slate-100 text-[10px] font-semibold text-slate-600">
-                        {getInitials(action.owner)}
-                      </div>
-                      <span
-                        className={cn(
-                          "font-mono text-[10px]",
-                          isOverdue(action.dueDate) && action.state !== "completed"
-                            ? "font-semibold text-red-600"
-                            : "text-slate-400"
-                        )}
-                      >
-                        {action.dueDate}
-                      </span>
-                    </div>
-                    <Badge variant={action.type} className="text-[10px]">
-                      {typeLabels[action.type]}
-                    </Badge>
+                    <ActionCard
+                      title={inv?.name ?? "Unknown"}
+                      description={truncate(action.objective, 70)}
+                      channel={action.channel}
+                      timing={
+                        isOverdue(action.dueDate) && action.state !== "completed"
+                          ? `OVERDUE: ${action.dueDate}`
+                          : action.dueDate
+                      }
+                    />
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       ))}
@@ -296,7 +323,7 @@ function BoardView({ filteredActions, navigate }) {
 // ── Main Page ─────────────────────────────────────────────
 export function ActionsPage() {
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState("list");
+  const [viewMode, setViewMode] = useState("board");
   const [filters, setFilters] = useState({
     state: "",
     type: "",
@@ -330,32 +357,28 @@ export function ActionsPage() {
             Engagement actions and outreach management
           </p>
           <div className="mt-3 flex items-center gap-6">
-            <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                TOTAL ACTIONS
-              </span>
-              <p className="font-mono text-lg font-bold text-slate-900">
-                {filteredActions.length}
-              </p>
-            </div>
+            <StatCard
+              label="TOTAL ACTIONS"
+              value={filteredActions.length}
+              className="border-0 p-0 bg-transparent"
+            />
             <div className="h-8 w-px bg-slate-200" />
-            <div>
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                IN PROGRESS
-              </span>
-              <p className="font-mono text-lg font-bold text-slate-900">
-                {inProgressCount}
-              </p>
-            </div>
+            <StatCard
+              label="IN PROGRESS"
+              value={inProgressCount}
+              className="border-0 p-0 bg-transparent"
+            />
             <div className="h-8 w-px bg-slate-200" />
             <div>
               <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
                 OVERDUE
               </span>
-              <p className={cn(
-                "font-mono text-lg font-bold",
-                overdueCount > 0 ? "text-red-600" : "text-slate-900"
-              )}>
+              <p
+                className={cn(
+                  "font-mono text-lg font-bold",
+                  overdueCount > 0 ? "text-red-600" : "text-slate-900"
+                )}
+              >
                 {overdueCount}
               </p>
             </div>

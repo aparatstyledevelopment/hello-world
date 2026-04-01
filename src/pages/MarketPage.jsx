@@ -1,12 +1,26 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { TrendingUp, ExternalLink } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  ExternalLink,
+  BarChart3,
+  Globe,
+  FileText,
+  Radio,
+  Newspaper,
+  Shield,
+} from "lucide-react";
 import { cn } from "../lib/utils";
 import { StatCard } from "../components/ui/StatCard";
+import { Card } from "../components/ui/Card";
+import { Badge } from "../components/ui/Badge";
+import { ActionCard } from "../components/ui/ActionCard";
 import { EmptyState } from "../components/ui/EmptyState";
+import { HealthDots } from "../components/ui/HealthDots";
 import { getInvestor } from "../data/mock-data";
 
-// ── Market intelligence feed (inline mock) ──────────────
+// ── Market intelligence feed ───────────────────────────
 const marketIntelligence = [
   {
     id: "mi-001",
@@ -120,76 +134,46 @@ const marketIntelligence = [
   },
 ];
 
-const categories = [
-  "All",
-  "Ownership",
-  "Peer",
-  "Fund flows",
-  "Regulatory",
-  "Media",
-];
+const categories = ["All", "Ownership", "Peer", "Fund flows", "Regulatory", "Media"];
+
+const categoryIcons = {
+  Ownership: BarChart3,
+  Peer: Globe,
+  "Fund flows": TrendingUp,
+  Regulatory: Shield,
+  Media: Newspaper,
+};
 
 const categoryBadgeColors = {
-  Ownership: "bg-blue-50 text-blue-700",
-  Peer: "bg-violet-50 text-violet-700",
-  "Fund flows": "bg-teal-50 text-teal-700",
-  Regulatory: "bg-amber-50 text-amber-700",
-  Media: "bg-slate-100 text-slate-600",
+  Ownership: "bg-blue-50 text-blue-700 border border-blue-200",
+  Peer: "bg-violet-50 text-violet-700 border border-violet-200",
+  "Fund flows": "bg-teal-50 text-teal-700 border border-teal-200",
+  Regulatory: "bg-amber-50 text-amber-700 border border-amber-200",
+  Media: "bg-slate-100 text-slate-600 border border-slate-200",
 };
 
-const relevanceBorderColor = {
-  high: "border-l-red-500",
-  medium: "border-l-amber-400",
-  low: "border-l-slate-300",
+const priorityColors = {
+  high: "bg-red-50 text-red-700 border border-red-200",
+  medium: "bg-amber-50 text-amber-700 border border-amber-200",
+  low: "bg-slate-100 text-slate-500 border border-slate-200",
 };
 
-const relevanceBarWidth = {
-  high: "w-full",
-  medium: "w-2/3",
-  low: "w-1/3",
-};
+// ── Top buyers / sellers for Q4 ────────────────────────
+const topBuyers = [
+  { name: "BlackRock Fund Advisors", change: "+0.5%", id: "inv-001" },
+  { name: "Wellington Management", change: "+0.6%", id: "inv-003" },
+  { name: "Norges Bank IM", change: "+0.1%", id: "inv-007" },
+  { name: "CalPERS", change: "+0.1%", id: "inv-005" },
+  { name: "Vanguard Group", change: "+0.0%", id: "inv-002" },
+];
 
-const relevanceBarColor = {
-  high: "bg-red-500",
-  medium: "bg-amber-400",
-  low: "bg-slate-300",
-};
-
-const relevanceLabel = {
-  high: "text-red-600",
-  medium: "text-amber-600",
-  low: "text-slate-500",
-};
-
-// Relevance score visual: segmented bar
-function RelevanceIndicator({ relevance, affectedCount }) {
-  const score = relevance === "high" ? 3 : relevance === "medium" ? 2 : 1;
-  const boosted = Math.min(4, score + (affectedCount > 0 ? 1 : 0));
-  const color = relevance === "high" ? "bg-red-500" : relevance === "medium" ? "bg-amber-400" : "bg-slate-300";
-  return (
-    <div className="flex items-center gap-1.5">
-      <span
-        className={cn(
-          "text-[10px] font-bold uppercase tracking-[0.1em]",
-          relevanceLabel[relevance]
-        )}
-      >
-        {relevance}
-      </span>
-      <div className="flex gap-0.5">
-        {[1, 2, 3, 4].map((seg) => (
-          <div
-            key={seg}
-            className={cn(
-              "h-2.5 w-3 rounded-sm",
-              seg <= boosted ? color : "bg-slate-100"
-            )}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+const topSellers = [
+  { name: "Harris Associates", change: "-0.6%", id: "inv-004" },
+  { name: "Artisan Partners", change: "-0.3%", id: "inv-006" },
+  { name: "Vanguard Group", change: "-0.3%", id: "inv-002" },
+  { name: "Hedge Fund Alpha", change: "-0.2%", id: null },
+  { name: "Quant Capital", change: "-0.1%", id: null },
+];
 
 export function MarketPage() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -200,9 +184,7 @@ export function MarketPage() {
   }, [activeCategory]);
 
   const stats = useMemo(() => {
-    const high = marketIntelligence.filter(
-      (m) => m.relevance === "high"
-    ).length;
+    const high = marketIntelligence.filter((m) => m.relevance === "high").length;
     const thisWeek = marketIntelligence.filter(
       (m) => new Date(m.date) >= new Date("2026-03-22")
     ).length;
@@ -216,211 +198,240 @@ export function MarketPage() {
   }, []);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">
-          Market Intelligence
-        </h1>
+        <h1 className="text-3xl font-bold text-slate-900">Market Intelligence</h1>
         <p className="mt-1 text-sm text-slate-500">
-          What's happening in the market, what's relevant to your investors, and where to act
+          Ownership shifts, peer activity, and market signals that matter to your investors
         </p>
       </div>
 
-      {/* Hero Stats */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="rounded-lg border-2 border-red-200 bg-red-50 p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-red-400">High Relevance</p>
-          <p className="mt-1 text-5xl font-mono font-bold text-red-600">{stats.high}</p>
-          <p className="mt-1 text-xs text-red-500">Require attention</p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Investors Affected</p>
-          <p className="mt-1 text-4xl font-mono font-bold text-slate-900">{stats.uniqueInvestors}</p>
-          <p className="mt-1 text-xs text-slate-500">Across all items</p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Affecting Your Investors</p>
-          <p className="mt-1 text-4xl font-mono font-bold text-slate-900">{stats.withInvestors}</p>
-          <p className="mt-1 text-xs text-slate-500">of {stats.total} items</p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">This Week</p>
-          <p className="mt-1 text-3xl font-mono font-bold text-slate-700">{stats.thisWeek}</p>
-          <p className="mt-1 text-xs text-slate-400">New items</p>
-        </div>
-      </div>
-
-      {/* Filter Pills */}
-      <div className="flex flex-wrap gap-2">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={cn(
-              "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
-              activeCategory === cat
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-            )}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Intelligence Summary */}
-      <div className="rounded-lg bg-slate-800 text-white p-4">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
-          INTELLIGENCE SUMMARY
+      {/* ── Dark Concentration Index Card ──────────────────── */}
+      <div className="rounded-lg bg-slate-900 p-6">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+          CONCENTRATION INDEX
         </p>
-        <p className="text-sm leading-relaxed">
-          <span className="font-mono font-bold text-red-400">{stats.high}</span> high-relevance items detected this period affecting{" "}
-          <span className="font-mono font-bold text-white">{stats.uniqueInvestors}</span> investors.
-          Ownership changes and peer activity dominate the feed. Prioritize engagement with affected holders.
+        <div className="mt-3 flex items-baseline gap-4">
+          <span className="font-mono text-5xl font-bold text-white">42.8%</span>
+          <span className="text-sm font-medium text-emerald-400">Top-5 holder share</span>
+        </div>
+        <div className="mt-4 h-2.5 w-full rounded-full bg-slate-700">
+          <div
+            className="h-2.5 rounded-full bg-emerald-500 transition-all"
+            style={{ width: "42.8%" }}
+          />
+        </div>
+        <p className="mt-2 text-xs text-slate-400">
+          Shifted <span className="font-mono font-semibold text-emerald-400">+1.2%</span> vs. prior quarter
+          — concentration tightening among top institutional holders
         </p>
       </div>
 
-      {/* Intelligence Cards */}
-      {filtered.length > 0 ? (
-        <div className="space-y-3">
-          {filtered.map((item) => {
-            const hasAffected = item.affectedInvestorIds.length > 0;
-            const isHigh = item.relevance === "high";
-            const isMuted = !hasAffected && !isHigh;
+      {/* ── Shareholder Base Highlights ────────────────────── */}
+      <Card variant="section" accentColor="blue" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Top 5 Buyers */}
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+              TOP 5 BUYERS (Q4)
+            </p>
+            <div className="space-y-2">
+              {topBuyers.map((b) => (
+                <div key={b.name} className="flex items-center justify-between rounded-lg bg-emerald-50/50 px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp size={14} className="text-emerald-500" />
+                    {b.id ? (
+                      <Link to={`/investors/${b.id}`} className="text-sm font-medium text-slate-800 hover:underline">
+                        {b.name}
+                      </Link>
+                    ) : (
+                      <span className="text-sm font-medium text-slate-800">{b.name}</span>
+                    )}
+                  </div>
+                  <span className="font-mono text-sm font-bold text-emerald-600">{b.change}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-            return (
-              <div
-                key={item.id}
-                className={cn(
-                  "rounded-lg border bg-white border-l-4 transition-all",
-                  relevanceBorderColor[item.relevance],
-                  isHigh
-                    ? "border-slate-200 p-6 shadow-md ring-1 ring-red-100"
-                    : hasAffected
-                    ? "border-slate-200 p-5 shadow-sm"
-                    : "border-slate-100 p-4",
-                  isMuted && "opacity-60"
-                )}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 space-y-3">
-                    {/* Date + Category Badge + Relevance Indicator */}
-                    <div className="flex items-center gap-3">
-                      <span className={cn(
-                        "font-mono text-xs",
-                        isHigh ? "text-slate-600 font-medium" : "text-slate-400"
-                      )}>
-                        {item.date}
-                      </span>
-                      <span
+          {/* Top 5 Sellers */}
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
+              TOP 5 SELLERS (Q4)
+            </p>
+            <div className="space-y-2">
+              {topSellers.map((s) => (
+                <div key={s.name} className="flex items-center justify-between rounded-lg bg-red-50/50 px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <TrendingDown size={14} className="text-red-500" />
+                    {s.id ? (
+                      <Link to={`/investors/${s.id}`} className="text-sm font-medium text-slate-800 hover:underline">
+                        {s.name}
+                      </Link>
+                    ) : (
+                      <span className="text-sm font-medium text-slate-800">{s.name}</span>
+                    )}
+                  </div>
+                  <span className="font-mono text-sm font-bold text-red-600">{s.change}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* ── Intelligence Feed ─────────────────────────────── */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-base font-bold text-slate-900">Intelligence Feed</h2>
+            <p className="text-xs text-slate-500 mt-0.5">Market events relevant to your shareholder base</p>
+          </div>
+        </div>
+
+        {/* Filter Pills */}
+        <div className="flex flex-wrap gap-2 mb-5">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={cn(
+                "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+                activeCategory === cat
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+              )}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Intel Cards */}
+        {filtered.length > 0 ? (
+          <div className="space-y-3">
+            {filtered.map((item) => {
+              const CatIcon = categoryIcons[item.category] || FileText;
+              const hasAffected = item.affectedInvestorIds.length > 0;
+
+              return (
+                <div
+                  key={item.id}
+                  className="rounded-lg border border-slate-200 bg-white p-5"
+                >
+                  <div className="flex items-start gap-4">
+                    {/* Icon circle */}
+                    <div
+                      className={cn(
+                        "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
+                        item.relevance === "high"
+                          ? "bg-red-100"
+                          : item.relevance === "medium"
+                          ? "bg-amber-50"
+                          : "bg-slate-100"
+                      )}
+                    >
+                      <CatIcon
+                        size={18}
                         className={cn(
-                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium",
-                          categoryBadgeColors[item.category]
+                          item.relevance === "high"
+                            ? "text-red-600"
+                            : item.relevance === "medium"
+                            ? "text-amber-600"
+                            : "text-slate-500"
                         )}
-                      >
-                        {item.category}
-                      </span>
-                      {/* Relevance intensity indicator */}
-                      <div className="ml-auto">
-                        <RelevanceIndicator
-                          relevance={item.relevance}
-                          affectedCount={item.affectedInvestorIds.length}
-                        />
-                      </div>
+                      />
                     </div>
 
-                    {/* Title */}
-                    <h3
-                      className={cn(
-                        "font-semibold text-slate-900",
-                        isHigh ? "text-lg" : hasAffected ? "text-base" : "text-sm"
-                      )}
-                    >
-                      {item.title}
-                    </h3>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <h3 className="text-sm font-semibold text-slate-900">{item.title}</h3>
+                        <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]", priorityColors[item.relevance])}>
+                          {item.relevance}
+                        </span>
+                      </div>
 
-                    {/* Description */}
-                    <p
-                      className={cn(
-                        "leading-relaxed",
-                        isMuted
-                          ? "text-xs text-slate-400"
-                          : isHigh
-                          ? "text-sm text-slate-700"
-                          : "text-sm text-slate-600"
-                      )}
-                    >
-                      {item.description}
-                    </p>
+                      <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                        {item.description}
+                      </p>
 
-                    {/* Affected Investors + Source */}
-                    <div className={cn(
-                      "flex flex-wrap items-center gap-5 pt-3 border-t",
-                      hasAffected ? "border-slate-200" : "border-slate-50"
-                    )}>
-                      {/* Affected Investors */}
-                      {hasAffected ? (
-                        <div className="flex items-center gap-2">
-                          <span className={cn(
-                            "inline-flex items-center justify-center rounded-full font-mono text-xs font-bold h-7 min-w-7 px-2",
-                            isHigh
-                              ? "bg-red-600 text-white"
-                              : "bg-slate-900 text-white"
-                          )}>
-                            {item.affectedInvestorIds.length}
-                          </span>
-                          <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                            Your investors
-                          </span>
-                          <span className="flex flex-wrap gap-1.5 ml-1">
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className={cn("inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]", categoryBadgeColors[item.category])}>
+                          {item.category}
+                        </span>
+
+                        {hasAffected && (
+                          <div className="flex items-center gap-1.5">
+                            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
+                              {item.affectedInvestorIds.length}
+                            </span>
+                            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                              YOUR INVESTORS
+                            </span>
                             {item.affectedInvestorIds.map((id) => {
                               const inv = getInvestor(id);
                               return inv ? (
                                 <Link
                                   key={id}
                                   to={`/investors/${id}`}
-                                  className={cn(
-                                    "text-xs font-bold hover:underline",
-                                    isHigh
-                                      ? "text-red-700 hover:text-red-900"
-                                      : "text-slate-800 hover:text-slate-900"
-                                  )}
+                                  className="text-xs font-semibold text-slate-700 hover:text-slate-900 hover:underline"
                                 >
                                   {inv.name}
                                 </Link>
                               ) : null;
                             })}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-[11px] text-slate-300 italic">
-                          No direct investor impact
-                        </span>
-                      )}
+                          </div>
+                        )}
 
-                      {/* Source */}
-                      <div className={cn(
-                        "flex items-center gap-1 text-xs ml-auto",
-                        isMuted ? "text-slate-300" : "text-slate-400"
-                      )}>
-                        <ExternalLink size={11} />
-                        <span>{item.source}</span>
+                        <div className="flex items-center gap-1 text-xs text-slate-400 ml-auto">
+                          <ExternalLink size={11} />
+                          <span>{item.source}</span>
+                          <span className="text-slate-300 mx-1">&middot;</span>
+                          <span className="font-mono">{item.date}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        ) : (
+          <EmptyState
+            icon={TrendingUp}
+            title="No intelligence items"
+            description="No market intelligence matching this filter."
+          />
+        )}
+      </div>
+
+      {/* ── Key Engagement Metrics ────────────────────────── */}
+      <Card variant="section" accentColor="emerald" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+          <div className="text-center">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">HIGH RELEVANCE ITEMS</p>
+            <p className="mt-2 font-mono text-4xl font-bold text-red-600">{stats.high}</p>
+            <p className="mt-1 text-xs text-slate-500">Require attention</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">INVESTORS AFFECTED</p>
+            <p className="mt-2 font-mono text-4xl font-bold text-slate-900">{stats.uniqueInvestors}</p>
+            <p className="mt-1 text-xs text-slate-500">Across all items</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">THIS WEEK</p>
+            <p className="mt-2 font-mono text-4xl font-bold text-slate-900">{stats.thisWeek}</p>
+            <p className="mt-1 text-xs text-slate-500">New items</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">AFFECTING YOUR BASE</p>
+            <p className="mt-2 font-mono text-4xl font-bold text-slate-900">{stats.withInvestors}</p>
+            <p className="mt-1 text-xs text-slate-500">of {stats.total} total</p>
+          </div>
         </div>
-      ) : (
-        <EmptyState
-          icon={TrendingUp}
-          title="No intelligence items"
-          description="No market intelligence matching this filter."
-        />
-      )}
+      </Card>
     </div>
   );
 }

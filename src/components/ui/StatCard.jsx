@@ -1,34 +1,71 @@
 import { cn } from "../../lib/utils";
 
-const trendConfig = {
-  up: { icon: "↑", color: "text-emerald-600" },
-  down: { icon: "↓", color: "text-red-600" },
-  neutral: { icon: "→", color: "text-slate-400" },
+const annotationColors = {
+  emerald: "text-emerald-600",
+  red: "text-red-600",
+  amber: "text-amber-600",
+  blue: "text-blue-600",
+  slate: "text-slate-500",
 };
 
-export function StatCard({ value, label, trend, className }) {
-  const t = trend ? trendConfig[trend] : null;
+export function StatCard({
+  label,
+  value,
+  annotation,
+  annotationColor = "emerald",
+  threshold,
+  variant = "light",
+  className,
+}) {
+  const isDark = variant === "dark";
 
   return (
     <div
       className={cn(
-        "rounded-lg border border-slate-200 bg-white px-5 py-4",
+        "rounded-lg p-6",
+        isDark ? "bg-slate-900 text-white" : "border border-slate-200 bg-white",
         className
       )}
     >
-      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-        {label}
-      </p>
-      <div className="mt-2 flex items-baseline gap-2">
-        <span className="font-mono text-2xl font-bold text-slate-900">
+      {label && (
+        <p
+          className={cn(
+            "text-[11px] font-medium uppercase tracking-[0.1em]",
+            isDark ? "text-slate-400" : "text-slate-400"
+          )}
+        >
+          {label}
+        </p>
+      )}
+
+      <div className="mt-3 flex items-baseline gap-3">
+        <span
+          className={cn(
+            "font-mono text-3xl font-bold",
+            isDark ? "text-white" : "text-slate-900"
+          )}
+        >
           {value}
         </span>
-        {t && (
-          <span className={cn("text-sm font-medium", t.color)}>
-            {t.icon}
+        {threshold && (
+          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em] text-slate-600">
+            {threshold}
           </span>
         )}
       </div>
+
+      {annotation && (
+        <p
+          className={cn(
+            "mt-2 text-xs font-medium",
+            isDark
+              ? "text-emerald-400"
+              : annotationColors[annotationColor] ?? annotationColors.slate
+          )}
+        >
+          {annotation}
+        </p>
+      )}
     </div>
   );
 }

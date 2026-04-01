@@ -9,9 +9,17 @@ import {
   Circle,
   Clock,
   AlertTriangle,
+  FileText,
+  Target,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
+import { Card } from "../components/ui/Card";
+import { StatCard } from "../components/ui/StatCard";
+import { ActionCard } from "../components/ui/ActionCard";
+import { TimelineEntry } from "../components/ui/TimelineEntry";
+import { EmptyState } from "../components/ui/EmptyState";
 import {
   actions,
   investors,
@@ -41,6 +49,14 @@ const stateLabels = {
   completed: "Completed",
 };
 
+const phaseDescriptions = {
+  planned: "Define objectives and identify target contacts",
+  preparing: "Prepare materials, talking points, and message angle",
+  in_progress: "Execute outreach and engagement activities",
+  awaiting_logging: "Record outcomes and capture intelligence",
+  completed: "Action closed. Outcomes logged and reviewed.",
+};
+
 function getNextState(current) {
   const idx = actionStates.findIndex((s) => s.key === current);
   if (idx >= 0 && idx < actionStates.length - 1) {
@@ -53,40 +69,35 @@ function getStateIndex(state) {
   return actionStates.findIndex((s) => s.key === state);
 }
 
-// ── Lifecycle Stepper ─────────────────────────────────────
-function LifecycleStepper({ currentState }) {
+// ── Phase Timeline Stepper ───────────────────────────────
+function PhaseTimeline({ currentState }) {
   const currentIdx = getStateIndex(currentState);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="grid grid-cols-5 gap-3">
       {actionStates.map((step, idx) => {
         const isCompleted = idx < currentIdx;
         const isCurrent = idx === currentIdx;
+        const isFuture = idx > currentIdx;
+        const phaseNum = String(idx + 1).padStart(2, "0");
 
         return (
-          <div key={step.key} className="flex items-center flex-1 last:flex-none">
-            <div className="flex flex-col items-center">
-              <div
-                className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-full border-2 transition-colors",
-                  isCompleted
-                    ? "border-emerald-500 bg-emerald-500 text-white"
-                    : isCurrent
-                    ? "border-slate-900 bg-slate-50 text-slate-900"
-                    : "border-slate-200 bg-white text-slate-400"
-                )}
-              >
-                {isCompleted ? (
-                  <CheckCircle2 size={16} />
-                ) : isCurrent ? (
-                  <Circle size={16} fill="currentColor" />
-                ) : (
-                  <Circle size={16} />
-                )}
-              </div>
+          <div
+            key={step.key}
+            className={cn(
+              "relative rounded-lg border p-4 transition-all",
+              isCompleted
+                ? "border-emerald-200 bg-emerald-50/50"
+                : isCurrent
+                ? "border-slate-800 bg-white shadow-sm ring-1 ring-slate-800/10"
+                : "border-slate-200 bg-slate-50/50"
+            )}
+          >
+            {/* Phase number */}
+            <div className="flex items-center justify-between mb-2">
               <span
                 className={cn(
-                  "mt-1.5 text-[11px] font-medium uppercase tracking-[0.05em] whitespace-nowrap",
+                  "text-[10px] font-bold uppercase tracking-[0.15em]",
                   isCompleted
                     ? "text-emerald-600"
                     : isCurrent
@@ -94,14 +105,53 @@ function LifecycleStepper({ currentState }) {
                     : "text-slate-400"
                 )}
               >
-                {step.label}
+                PHASE {phaseNum}
               </span>
+              {isCompleted && (
+                <CheckCircle2
+                  size={16}
+                  className="text-emerald-500"
+                />
+              )}
+              {isCurrent && (
+                <span className="h-2.5 w-2.5 rounded-full bg-slate-900 animate-pulse" />
+              )}
             </div>
+
+            {/* Step label */}
+            <p
+              className={cn(
+                "text-sm font-semibold",
+                isCompleted
+                  ? "text-emerald-700"
+                  : isCurrent
+                  ? "text-slate-900"
+                  : "text-slate-400"
+              )}
+            >
+              {step.label}
+            </p>
+
+            {/* Description */}
+            <p
+              className={cn(
+                "mt-1 text-[11px] leading-relaxed",
+                isCompleted
+                  ? "text-emerald-600/70"
+                  : isCurrent
+                  ? "text-slate-500"
+                  : "text-slate-400"
+              )}
+            >
+              {phaseDescriptions[step.key]}
+            </p>
+
+            {/* Connector line */}
             {idx < actionStates.length - 1 && (
               <div
                 className={cn(
-                  "mx-2 h-0.5 flex-1",
-                  idx < currentIdx ? "bg-emerald-500" : "bg-slate-200"
+                  "absolute right-0 top-1/2 h-0.5 w-3 translate-x-full -translate-y-1/2",
+                  isCompleted ? "bg-emerald-400" : "bg-slate-200"
                 )}
               />
             )}
@@ -119,44 +169,37 @@ function DetailSidebar({ action, signal, investor }) {
         (a) => a.state !== "completed" && a.id !== action?.id
       )
     : [];
-  const timeline = investor ? getTimelineForInvestor(investor.id).slice(0, 5) : [];
+  const timeline = investor
+    ? getTimelineForInvestor(investor.id).slice(0, 5)
+    : [];
 
   return (
     <div className="space-y-4">
       {/* Linked Signal */}
       {signal && (
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
-            LINKED SIGNAL
-          </h3>
+        <Card title="Linked Signal">
           <Link to={`/signals/${signal.id}`} className="group block">
             <div className="flex items-start gap-2">
-              <Bell size={14} className="mt-0.5 text-amber-500 shrink-0" />
+              <Bell
+                size={14}
+                className="mt-0.5 text-amber-500 shrink-0"
+              />
               <div>
                 <p className="text-sm font-medium text-slate-800 group-hover:text-slate-600">
                   {signal.headline}
                 </p>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <span className={cn(
-                    "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium",
-                    signal.urgency === "high" ? "bg-red-50 text-red-700" : signal.urgency === "medium" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-600"
-                  )}>
-                    {signal.urgency.toUpperCase()}
-                  </span>
+                  <Badge variant={signal.urgency} kind="urgency" />
                 </div>
               </div>
             </div>
           </Link>
-        </div>
+        </Card>
       )}
 
       {/* Open Actions for Investor */}
       {investor && (
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
-            OPEN ACTIONS
-          </h3>
-          <p className="text-xs text-slate-500 mb-3">{openActions.length} for {investor.name}</p>
+        <Card title="Open Actions" subtitle={`${openActions.length} for ${investor.name}`}>
           {openActions.length === 0 ? (
             <p className="text-xs text-slate-400">No other open actions</p>
           ) : (
@@ -167,62 +210,65 @@ function DetailSidebar({ action, signal, investor }) {
                     to={`/actions/${a.id}`}
                     className="block rounded-lg border border-slate-100 p-2.5 text-xs text-slate-600 hover:bg-slate-50 transition-colors"
                   >
-                    <span className="font-medium text-slate-800">{a.objective.slice(0, 60)}...</span>
+                    <span className="font-medium text-slate-800">
+                      {a.objective.slice(0, 60)}...
+                    </span>
                     <div className="mt-1.5 flex items-center gap-2">
                       <Badge variant={a.type} className="text-[10px]" />
-                      <span className="font-mono text-slate-400">{a.dueDate}</span>
+                      <span className="font-mono text-slate-400">
+                        {a.dueDate}
+                      </span>
                     </div>
                   </Link>
                 </li>
               ))}
             </ul>
           )}
-        </div>
+        </Card>
       )}
 
       {/* Recent Timeline */}
       {investor && timeline.length > 0 && (
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
-            RECENT TIMELINE
-          </h3>
-          <ul className="space-y-2.5">
-            {timeline.map((evt) => (
-              <li key={evt.id} className="flex items-start gap-2 text-xs">
-                <Clock size={12} className="mt-0.5 shrink-0 text-slate-400" />
-                <div>
-                  <span className="font-mono text-slate-400">{evt.date}</span>
-                  <p className="text-slate-600 mt-0.5">{evt.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Card title="Recent Timeline">
+          {timeline.map((evt, idx) => (
+            <TimelineEntry
+              key={evt.id}
+              icon={Clock}
+              title={evt.description}
+              date={evt.date}
+              isLast={idx === timeline.length - 1}
+            />
+          ))}
+        </Card>
       )}
 
       {/* Investor State Metrics */}
       {investor && (
-        <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
-            INVESTOR STATE
-          </h3>
+        <Card title="Investor State">
           <div className="space-y-2.5">
             {investor.stateParameters.slice(0, 4).map((param, idx) => (
-              <div key={idx} className="flex items-center justify-between text-xs">
+              <div
+                key={idx}
+                className="flex items-center justify-between text-xs"
+              >
                 <span className="text-slate-500">{param.label}</span>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-medium text-slate-700">{param.value}</span>
+                  <span className="font-medium text-slate-700">
+                    {param.value}
+                  </span>
                   <span
                     className={cn(
                       "h-1.5 w-1.5 rounded-full",
-                      param.freshness === "fresh" ? "bg-emerald-500" : "bg-amber-500"
+                      param.freshness === "fresh"
+                        ? "bg-emerald-500"
+                        : "bg-amber-500"
                     )}
                   />
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
@@ -236,7 +282,9 @@ export function ActionDetailPage() {
   const isNew = id === "new";
 
   const preLinkedSignalId = searchParams.get("signal");
-  const preLinkedSignal = preLinkedSignalId ? getSignal(preLinkedSignalId) : null;
+  const preLinkedSignal = preLinkedSignalId
+    ? getSignal(preLinkedSignalId)
+    : null;
 
   const existingAction = !isNew ? actions.find((a) => a.id === id) : null;
 
@@ -312,7 +360,8 @@ export function ActionDetailPage() {
     }
   };
 
-  const inputClasses = "mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400";
+  const inputClasses =
+    "mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400";
 
   return (
     <div className="p-6 space-y-6">
@@ -337,26 +386,27 @@ export function ActionDetailPage() {
         )}
       </div>
 
-      {/* Lifecycle Stepper */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
-        <LifecycleStepper currentState={form.state} />
-      </div>
+      {/* Phase Timeline Stepper */}
+      <PhaseTimeline currentState={form.state} />
 
       {/* Two-column layout */}
       <div className="grid grid-cols-3 gap-6">
         {/* Form -- 2/3 */}
         <div className="col-span-2 space-y-5">
-          <div className="rounded-lg border border-slate-200 bg-white p-5">
+          <Card>
             <div className="grid grid-cols-2 gap-4">
               {/* Investor */}
               <label className="block">
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Investor</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Investor
+                </span>
                 <select
                   value={form.investorId}
                   onChange={handleChange("investorId")}
                   className={cn(
                     inputClasses,
-                    isPreFilled("investorId") && "bg-amber-50 border-amber-300"
+                    isPreFilled("investorId") &&
+                      "bg-amber-50 border-amber-300"
                   )}
                 >
                   <option value="">Select investor...</option>
@@ -370,7 +420,9 @@ export function ActionDetailPage() {
 
               {/* Contact */}
               <label className="block">
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Contact</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Contact
+                </span>
                 <select
                   value={form.contactId}
                   onChange={handleChange("contactId")}
@@ -387,7 +439,9 @@ export function ActionDetailPage() {
 
               {/* Type */}
               <label className="block">
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Type</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Type
+                </span>
                 <select
                   value={form.type}
                   onChange={handleChange("type")}
@@ -407,7 +461,9 @@ export function ActionDetailPage() {
 
               {/* Owner */}
               <label className="block">
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Owner</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Owner
+                </span>
                 <select
                   value={form.owner}
                   onChange={handleChange("owner")}
@@ -424,7 +480,9 @@ export function ActionDetailPage() {
 
               {/* Due Date */}
               <label className="block">
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Due Date</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Due Date
+                </span>
                 <input
                   type="date"
                   value={form.dueDate}
@@ -435,7 +493,9 @@ export function ActionDetailPage() {
 
               {/* Channel */}
               <label className="block">
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Channel</span>
+                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                  Channel
+                </span>
                 <select
                   value={form.channel}
                   onChange={handleChange("channel")}
@@ -453,7 +513,9 @@ export function ActionDetailPage() {
 
             {/* Objective */}
             <label className="mt-4 block">
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Objective</span>
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                Objective
+              </span>
               <input
                 type="text"
                 value={form.objective}
@@ -501,26 +563,73 @@ export function ActionDetailPage() {
                 className={inputClasses}
               />
             </label>
+          </Card>
 
-            {/* Outcome -- only for awaiting_logging / completed */}
-            {showOutcome && (
-              <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-                <div className="mb-2 flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-amber-600" />
-                  <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-amber-700">
-                    Outcome
-                  </span>
+          {/* Log & Actions Outcome Section */}
+          {showOutcome && (
+            <Card
+              variant="section"
+              accentColor="amber"
+              title="Log & Actions"
+              subtitle="Record the outcome and any follow-up items"
+            >
+              <div className="space-y-4">
+                {/* Outcome status indicators */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="rounded-lg border border-slate-200 bg-white p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Target size={14} className="text-slate-400" />
+                      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                        Objective Met
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {form.outcome ? "Yes" : "Pending"}
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <MessageSquare size={14} className="text-slate-400" />
+                      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                        Follow-Up
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {form.state === "completed" ? "Closed" : "Required"}
+                    </p>
+                  </div>
+                  <div className="rounded-lg border border-slate-200 bg-white p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <FileText size={14} className="text-slate-400" />
+                      <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                        Intelligence
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-900">
+                      {form.outcome ? "Captured" : "Awaiting"}
+                    </p>
+                  </div>
                 </div>
-                <textarea
-                  value={form.outcome}
-                  onChange={handleChange("outcome")}
-                  rows={3}
-                  placeholder="Record the outcome of this action..."
-                  className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                />
+
+                {/* Outcome textarea */}
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <AlertTriangle size={14} className="text-amber-600" />
+                    <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-amber-700">
+                      Outcome Notes
+                    </span>
+                  </div>
+                  <textarea
+                    value={form.outcome}
+                    onChange={handleChange("outcome")}
+                    rows={3}
+                    placeholder="Record the outcome of this action..."
+                    className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  />
+                </div>
               </div>
-            )}
-          </div>
+            </Card>
+          )}
 
           {/* Action buttons */}
           <div className="flex items-center gap-3">
@@ -554,7 +663,11 @@ export function ActionDetailPage() {
 
         {/* Sidebar -- 1/3 */}
         <div className="col-span-1">
-          <DetailSidebar action={existingAction} signal={signal} investor={investor} />
+          <DetailSidebar
+            action={existingAction}
+            signal={signal}
+            investor={investor}
+          />
         </div>
       </div>
     </div>

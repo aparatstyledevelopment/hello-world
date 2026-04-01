@@ -1,6 +1,10 @@
 import { useState, useMemo } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "../lib/utils";
+import { StatCard } from "../components/ui/StatCard";
+import { Card } from "../components/ui/Card";
+import { Table } from "../components/ui/Table";
+import { HealthDots } from "../components/ui/HealthDots";
 import {
   investors,
   signals,
@@ -9,17 +13,20 @@ import {
 } from "../data/mock-data";
 
 // ── Collapsible Report Section ──────────────────────────
-function ReportCard({ title, subtitle, defaultOpen = false, children }) {
+function ReportSection({ title, subtitle, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
+    <div className={cn(
+      "rounded-lg border border-slate-200 bg-white overflow-hidden",
+      "border-l-4 border-l-blue-500"
+    )}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between text-left p-5"
+        className="flex w-full items-center justify-between text-left px-6 py-5"
       >
         <div>
-          <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
+          <h2 className="text-base font-bold text-slate-900">{title}</h2>
           {subtitle && (
             <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>
           )}
@@ -30,27 +37,7 @@ function ReportCard({ title, subtitle, defaultOpen = false, children }) {
           <ChevronRight size={18} className="text-slate-400" />
         )}
       </button>
-      {open && <div className="border-t border-slate-100 p-5 space-y-4">{children}</div>}
-    </div>
-  );
-}
-
-function StatGrid({ items }) {
-  return (
-    <div className={cn("grid gap-px bg-slate-100 rounded-lg overflow-hidden border border-slate-200", items.length <= 4 ? `grid-cols-${items.length}` : "grid-cols-4")}>
-      {items.map((item) => (
-        <div key={item.label} className="bg-white px-4 py-3 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            {item.label}
-          </p>
-          <p className={cn("mt-1 text-lg font-bold text-slate-900", item.mono !== false && "font-mono")}>
-            {item.value}
-          </p>
-          {item.highlight && (
-            <p className="text-[11px] text-emerald-600 font-medium">{item.highlight}</p>
-          )}
-        </div>
-      ))}
+      {open && <div className="border-t border-slate-100 px-6 py-5 space-y-5">{children}</div>}
     </div>
   );
 }
@@ -106,7 +93,6 @@ export function ReportsPage() {
       byType[e.type] = (byType[e.type] || 0) + 1;
     });
 
-    // Derive "team" from owner mapping
     const investorOwners = {};
     investors.forEach((inv) => {
       investorOwners[inv.id] = inv.relationshipOwner;
@@ -116,7 +102,6 @@ export function ReportsPage() {
       byTeam[owner] = (byTeam[owner] || 0) + 1;
     });
 
-    // Coverage gaps: investors with 0 or 1 interactions
     const interactionCounts = {};
     allEvents.forEach((e) => {
       interactionCounts[e.investorId] = (interactionCounts[e.investorId] || 0) + 1;
@@ -234,6 +219,10 @@ export function ReportsPage() {
     return { govSignals, sensitiveInvestors, topics, engagementStatus, votingRiskCount };
   }, []);
 
+  const actionCompletionPct = effectiveness.totalActions > 0
+    ? Math.round((effectiveness.completedActions / effectiveness.totalActions) * 100)
+    : 0;
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -244,105 +233,61 @@ export function ReportsPage() {
         </p>
       </div>
 
-      {/* ── HERO METRICS ──────────────────────────────────── */}
+      {/* ── HERO METRICS (dark StatCards) ─────────────────── */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="rounded-lg border border-slate-200 bg-white p-6 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Signal Conversion Rate
-          </p>
-          <p className={cn(
-            "mt-2 text-5xl font-mono font-bold",
-            effectiveness.conversionRate >= 40 ? "text-emerald-600" : effectiveness.conversionRate >= 25 ? "text-amber-600" : "text-red-600"
-          )}>
-            {effectiveness.conversionRate}%
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {effectiveness.actioned} of {effectiveness.totalSignals} signals actioned
-          </p>
-        </div>
-
-        <div className={cn(
-          "rounded-lg border-2 p-6 text-center",
-          engagement.coverageGaps.length > 0
-            ? "border-red-200 bg-red-50"
-            : "border-emerald-200 bg-emerald-50"
-        )}>
-          <p className={cn(
-            "text-[11px] font-medium uppercase tracking-[0.1em]",
-            engagement.coverageGaps.length > 0 ? "text-red-400" : "text-emerald-400"
-          )}>
-            Coverage Gaps
-          </p>
-          <p className={cn(
-            "mt-2 text-5xl font-mono font-bold",
-            engagement.coverageGaps.length > 0 ? "text-red-600" : "text-emerald-600"
-          )}>
-            {engagement.coverageGaps.length}
-          </p>
-          <p className={cn(
-            "mt-1 text-xs",
-            engagement.coverageGaps.length > 0 ? "text-red-500" : "text-emerald-500"
-          )}>
-            {engagement.coverageGaps.length > 0 ? "Investors under-engaged" : "All investors covered"}
-          </p>
-        </div>
-
-        <div className={cn(
-          "rounded-lg border-2 p-6 text-center",
-          governance.engagementStatus.atRisk > 0
-            ? "border-red-200 bg-red-50"
-            : "border-slate-200 bg-white"
-        )}>
-          <p className={cn(
-            "text-[11px] font-medium uppercase tracking-[0.1em]",
-            governance.engagementStatus.atRisk > 0 ? "text-red-400" : "text-slate-400"
-          )}>
-            Gov. At Risk
-          </p>
-          <p className={cn(
-            "mt-2 text-5xl font-mono font-bold",
-            governance.engagementStatus.atRisk > 0 ? "text-red-600" : "text-slate-900"
-          )}>
-            {governance.engagementStatus.atRisk}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            of {governance.sensitiveInvestors.length} governance-sensitive
-          </p>
-        </div>
-
-        <div className="rounded-lg border border-slate-200 bg-white p-6 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Action Completion
-          </p>
-          <p className="mt-2 text-5xl font-mono font-bold text-slate-900">
-            {effectiveness.totalActions > 0
-              ? Math.round((effectiveness.completedActions / effectiveness.totalActions) * 100)
-              : 0}%
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {effectiveness.completedActions} / {effectiveness.totalActions} actions done
-          </p>
-        </div>
+        <StatCard
+          variant="dark"
+          label="Signal Conversion Rate"
+          value={`${effectiveness.conversionRate}%`}
+          annotation={`${effectiveness.actioned} of ${effectiveness.totalSignals} signals actioned`}
+        />
+        <StatCard
+          variant="dark"
+          label="Coverage Gaps"
+          value={engagement.coverageGaps.length}
+          annotation={engagement.coverageGaps.length > 0 ? "Investors under-engaged" : "All investors covered"}
+        />
+        <StatCard
+          variant="dark"
+          label="Gov. At Risk"
+          value={governance.engagementStatus.atRisk}
+          annotation={`of ${governance.sensitiveInvestors.length} governance-sensitive`}
+        />
+        <StatCard
+          variant="dark"
+          label="Action Completion"
+          value={`${actionCompletionPct}%`}
+          annotation={`${effectiveness.completedActions} / ${effectiveness.totalActions} actions done`}
+        />
       </div>
 
       {/* ── Engagement Report ──────────────────────────── */}
-      <ReportCard
+      <ReportSection
         title="Engagement Report"
         subtitle="Interaction analytics and coverage analysis"
         defaultOpen={true}
       >
-        <StatGrid
-          items={[
+        <div className="grid grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+          {[
             { label: "Total Interactions", value: engagement.totalInteractions },
             { label: "By Type Categories", value: Object.keys(engagement.byType).length },
             { label: "Team Members", value: Object.keys(engagement.byTeam).length },
             { label: "Coverage Gaps", value: engagement.coverageGaps.length },
-          ]}
-        />
+          ].map((item) => (
+            <div key={item.label} className="bg-white px-4 py-3 text-center">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                {item.label}
+              </p>
+              <p className="mt-1 text-lg font-bold font-mono text-slate-900">
+                {item.value}
+              </p>
+            </div>
+          ))}
+        </div>
 
         <SectionHeading>Interactions by Type</SectionHeading>
         <MiniTable
-          columns={["Type", "Count"]}
+          columns={["TYPE", "COUNT"]}
           rows={Object.entries(engagement.byType).map(([type, count]) => [
             type,
             String(count),
@@ -351,7 +296,7 @@ export function ReportsPage() {
 
         <SectionHeading>Interactions by Team Member</SectionHeading>
         <MiniTable
-          columns={["Team Member", "Interactions"]}
+          columns={["TEAM MEMBER", "INTERACTIONS"]}
           rows={Object.entries(engagement.byTeam).map(([name, count]) => [
             name,
             String(count),
@@ -361,7 +306,7 @@ export function ReportsPage() {
         <SectionHeading>Coverage Gaps</SectionHeading>
         {engagement.coverageGaps.length > 0 ? (
           <MiniTable
-            columns={["Investor", "Type", "Holding", "Interactions"]}
+            columns={["INVESTOR", "TYPE", "HOLDING", "INTERACTIONS"]}
             rows={engagement.coverageGaps.map((inv) => [
               inv.name,
               inv.type,
@@ -374,25 +319,34 @@ export function ReportsPage() {
         ) : (
           <p className="text-sm text-slate-500">No coverage gaps detected.</p>
         )}
-      </ReportCard>
+      </ReportSection>
 
       {/* ── Ownership Report ───────────────────────────── */}
-      <ReportCard
+      <ReportSection
         title="Ownership Report"
         subtitle="Shareholder structure and concentration analysis"
       >
-        <StatGrid
-          items={[
+        <div className="grid grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+          {[
             { label: "Total Tracked", value: `${ownership.totalHolding.toFixed(1)}%` },
             { label: "Top-5 Concentration", value: `${ownership.concentration.toFixed(1)}%` },
             { label: "Investor Types", value: Object.keys(ownership.byType).length },
             { label: "Notable Changes", value: ownership.changes.length },
-          ]}
-        />
+          ].map((item) => (
+            <div key={item.label} className="bg-white px-4 py-3 text-center">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                {item.label}
+              </p>
+              <p className="mt-1 text-lg font-bold font-mono text-slate-900">
+                {item.value}
+              </p>
+            </div>
+          ))}
+        </div>
 
         <SectionHeading>Ownership Structure</SectionHeading>
         <MiniTable
-          columns={["Investor", "Type", "Holding %", "Trend"]}
+          columns={["INVESTOR", "TYPE", "HOLDING %", "TREND"]}
           rows={[...investors]
             .sort((a, b) => b.holdingPct - a.holdingPct)
             .map((inv) => [
@@ -409,7 +363,7 @@ export function ReportsPage() {
 
         <SectionHeading>By Type</SectionHeading>
         <MiniTable
-          columns={["Investor Type", "Holding %"]}
+          columns={["INVESTOR TYPE", "HOLDING %"]}
           rows={Object.entries(ownership.byType).map(([type, pct]) => [
             type,
             `${pct.toFixed(1)}%`,
@@ -419,7 +373,7 @@ export function ReportsPage() {
         <SectionHeading>Notable Changes (6-month)</SectionHeading>
         {ownership.changes.length > 0 ? (
           <MiniTable
-            columns={["Investor", "Change"]}
+            columns={["INVESTOR", "CHANGE"]}
             rows={ownership.changes.map((c) => [
               c.name,
               `${c.change > 0 ? "+" : ""}${c.change.toFixed(1)}%`,
@@ -428,21 +382,30 @@ export function ReportsPage() {
         ) : (
           <p className="text-sm text-slate-500">No significant changes.</p>
         )}
-      </ReportCard>
+      </ReportSection>
 
       {/* ── Effectiveness Report ───────────────────────── */}
-      <ReportCard
+      <ReportSection
         title="Effectiveness Report"
         subtitle="Signal conversion, action outcomes, and team workload"
       >
-        <StatGrid
-          items={[
+        <div className="grid grid-cols-4 gap-px rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
+          {[
             { label: "Total Signals", value: effectiveness.totalSignals },
             { label: "Open Signals", value: effectiveness.openSignals },
             { label: "Actioned", value: effectiveness.actioned },
-            { label: "Conversion Rate", value: `${effectiveness.conversionRate}%`, highlight: "Signal to action" },
-          ]}
-        />
+            { label: "Conversion Rate", value: `${effectiveness.conversionRate}%` },
+          ].map((item) => (
+            <div key={item.label} className="bg-white px-4 py-3 text-center">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                {item.label}
+              </p>
+              <p className="mt-1 text-lg font-bold font-mono text-slate-900">
+                {item.value}
+              </p>
+            </div>
+          ))}
+        </div>
 
         <SectionHeading>Action Outcomes</SectionHeading>
         <div className="rounded-lg border border-slate-200 bg-white px-4 py-3">
@@ -452,9 +415,9 @@ export function ReportsPage() {
               {effectiveness.completedActions} / {effectiveness.totalActions}
             </span>
           </div>
-          <div className="mt-2 h-1.5 w-full rounded-full bg-slate-100">
+          <div className="mt-2 h-2 w-full rounded-full bg-slate-100">
             <div
-              className="h-1.5 rounded-full bg-emerald-500 transition-all"
+              className="h-2 rounded-full bg-emerald-500 transition-all"
               style={{
                 width: `${effectiveness.totalActions > 0 ? (effectiveness.completedActions / effectiveness.totalActions) * 100 : 0}%`,
               }}
@@ -484,16 +447,16 @@ export function ReportsPage() {
             </div>
           ))}
         </div>
-      </ReportCard>
+      </ReportSection>
 
       {/* ── Governance Report ──────────────────────────── */}
-      <ReportCard
+      <ReportSection
         title="Governance Report"
         subtitle="Governance-sensitive investors and voting risk analysis"
       >
         <SectionHeading>Sensitive Investors</SectionHeading>
         <MiniTable
-          columns={["Investor", "Type", "Holding", "Momentum"]}
+          columns={["INVESTOR", "TYPE", "HOLDING", "MOMENTUM"]}
           rows={governance.sensitiveInvestors.map((inv) => [
             inv.name,
             inv.type,
@@ -504,7 +467,7 @@ export function ReportsPage() {
 
         <SectionHeading>Governance Topics</SectionHeading>
         <MiniTable
-          columns={["Topic", "Signals"]}
+          columns={["TOPIC", "SIGNALS"]}
           rows={Object.entries(governance.topics).map(([topic, count]) => [
             topic,
             `${count}`,
@@ -517,33 +480,33 @@ export function ReportsPage() {
             <p className="font-mono text-xl font-bold text-emerald-600">
               {governance.engagementStatus.engaged}
             </p>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">Engaged</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">ENGAGED</p>
           </div>
           <div className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-3 text-center">
             <p className="font-mono text-xl font-bold text-slate-600">
               {governance.engagementStatus.neutral}
             </p>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">Neutral</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">NEUTRAL</p>
           </div>
           <div className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-3 text-center">
             <p className="font-mono text-xl font-bold text-red-600">
               {governance.engagementStatus.atRisk}
             </p>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">At Risk</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mt-1">AT RISK</p>
           </div>
         </div>
 
         {/* Voting risk recommendation */}
-        <div className="rounded-lg bg-slate-800 text-white p-4">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+        <div className="rounded-lg bg-slate-900 text-white p-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
             VOTING RISK ASSESSMENT
           </p>
           <p className="text-sm leading-relaxed">
-            <span className="font-mono font-semibold">{governance.votingRiskCount}</span> governance signals
+            <span className="font-mono font-semibold text-emerald-400">{governance.votingRiskCount}</span> governance signals
             with elevated voting risk identified. Prioritize pre-AGM engagement with at-risk investors.
           </p>
         </div>
-      </ReportCard>
+      </ReportSection>
     </div>
   );
 }

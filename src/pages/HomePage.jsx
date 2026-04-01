@@ -1,13 +1,23 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle,
   ArrowRight,
   Clock,
-  AlertCircle,
-  ChevronRight,
+  Users,
+  Inbox,
+  CalendarDays,
+  Radio,
+  TrendingUp,
+  Shield,
+  FileText,
+  Zap,
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { Badge } from "../components/ui/Badge";
+import { Card } from "../components/ui/Card";
+import { StatCard } from "../components/ui/StatCard";
+import { ConfidenceBadge } from "../components/ui/ConfidenceBadge";
+import { ActionCard } from "../components/ui/ActionCard";
 import {
   signals,
   actions,
@@ -21,56 +31,28 @@ const TODAY = "2026-04-01";
 
 const urgencyOrder = { high: 0, medium: 1, low: 2 };
 
-const urgencyConfig = {
-  high: { label: "HIGH", icon: AlertTriangle, color: "text-red-600", bg: "bg-red-600", border: "border-red-500", leftBorder: "border-l-red-500" },
-  medium: { label: "MEDIUM", icon: Clock, color: "text-amber-600", bg: "bg-amber-500", border: "border-amber-500", leftBorder: "border-l-amber-500" },
-  low: { label: "LOW", icon: null, color: "text-slate-500", bg: "bg-slate-400", border: "border-slate-300", leftBorder: "border-l-slate-300" },
+const urgencyBorderColor = {
+  high: "border-l-red-500",
+  medium: "border-l-amber-500",
+  low: "border-l-slate-300",
 };
 
-const typeLabels = {
-  retention_risk: "TRADING",
-  influence_opportunity: "FUND FLOW",
-  governance_management: "GOVERNANCE",
-  information_gap: "DISCLOSURES",
-  relationship_maintenance: "RELATIONSHIP",
-};
-
-const actionStateLabels = {
-  planned: "Planned",
-  preparing: "Preparing",
-  in_progress: "In Progress",
-  awaiting_logging: "Awaiting Logging",
-  completed: "Completed",
-};
-
-const actionStateDot = {
-  planned: "bg-blue-500",
-  preparing: "bg-amber-500",
-  in_progress: "bg-emerald-500",
-  awaiting_logging: "bg-purple-500",
-  completed: "bg-slate-400",
+const typeIcons = {
+  retention_risk: TrendingUp,
+  influence_opportunity: TrendingUp,
+  governance_management: Shield,
+  information_gap: FileText,
+  relationship_maintenance: Users,
 };
 
 function relativeAge(dateStr) {
-  const diff = Math.floor(
-    (new Date(TODAY) - new Date(dateStr)) / (1000 * 60 * 60 * 24)
-  );
-  if (diff <= 0) return "just now";
-  if (diff === 1) return "1d ago";
-  return `${diff}d ago`;
-}
-
-function truncate(str, len = 80) {
-  if (!str) return "";
-  return str.length > len ? str.slice(0, len) + "\u2026" : str;
-}
-
-function isOverdue(dateStr) {
-  return dateStr < TODAY;
-}
-
-function isDueToday(dateStr) {
-  return dateStr === TODAY;
+  const diffMs = new Date(TODAY) - new Date(dateStr);
+  const diffH = Math.floor(diffMs / (1000 * 60 * 60));
+  if (diffH < 1) return "just now";
+  if (diffH < 24) return `${diffH}H AGO`;
+  const diffD = Math.floor(diffH / 24);
+  if (diffD === 1) return "1D AGO";
+  return `${diffD}D AGO`;
 }
 
 function isDueWithinDays(dateStr, days) {
@@ -81,88 +63,27 @@ function isDueWithinDays(dateStr, days) {
   return due >= today && due <= limit;
 }
 
-// -- Hero Signal Card -----------------------------------------------
+// -- Page -----------------------------------------------------------
 
-function HeroSignalCard({ signal, navigate }) {
-  const inv = getInvestor(signal.investorId);
-  const urg = urgencyConfig[signal.urgency];
-  const isHigh = signal.urgency === "high";
+export function HomePage() {
+  const navigate = useNavigate();
 
-  return (
-    <div
-      className={cn(
-        "rounded-xl border bg-white overflow-hidden shadow-sm",
-        "border-l-[5px]",
-        urg.leftBorder,
-        isHigh ? "border-red-200" : "border-slate-200"
-      )}
-    >
-      {/* Urgency banner for high urgency */}
-      {isHigh && (
-        <div className="bg-red-600 px-8 py-3 flex items-center gap-2">
-          <AlertTriangle size={16} className="text-white" />
-          <span className="text-xs font-bold tracking-widest text-white">
-            HIGH URGENCY SIGNAL &mdash; REQUIRES IMMEDIATE ATTENTION
-          </span>
-        </div>
-      )}
+  // Active signals (not resolved/dismissed)
+  const activeSignals = signals
+    .filter((s) => s.state !== "resolved" && s.state !== "dismissed")
+    .sort((a, b) => {
+      if (urgencyOrder[a.urgency] !== urgencyOrder[b.urgency])
+        return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
+      return new Date(b.detectedAt) - new Date(a.detectedAt);
+    });
 
-      <div className="px-8 py-8">
-        <div className="flex items-start justify-between gap-6">
-          <div className="flex-1 min-w-0">
-            {/* Type label */}
-            <span className="text-[11px] font-medium tracking-[0.12em] text-slate-400">
-              {typeLabels[signal.type]} &middot; {relativeAge(signal.detectedAt)}
-            </span>
+  const heroSignal = activeSignals[0];
+  const remainingSignals = activeSignals.slice(1);
 
-            {/* Headline - 2-3x more prominent */}
-            <h2 className="mt-3 text-2xl font-bold text-slate-900 leading-tight tracking-tight">
-              {signal.headline}
-            </h2>
-
-            {/* Summary */}
-            <p className="mt-3 text-base text-slate-600 leading-relaxed max-w-2xl">
-              {signal.description}
-            </p>
-
-            {/* Investor - prominent */}
-            <div className="mt-6 flex items-center gap-3">
-              <span className="text-base font-semibold text-slate-900">
-                {inv?.name ?? "Unknown"}
-              </span>
-              <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-slate-600 border border-slate-200">
-                TIER {inv?.tier ?? 3}
-              </span>
-              {inv?.holdingPct && (
-                <span className="text-sm text-slate-400">
-                  {inv.holdingPct}% holding
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Action button */}
-        <div className="mt-8">
-          <button
-            onClick={() => navigate(`/signals/${signal.id}`)}
-            className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-800 shadow-sm"
-          >
-            Review now <ArrowRight size={16} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// -- Stats Row with visual urgency ---------------------------------
-
-function StatsRow() {
-  const triageSignals = signals.filter(
+  // Stats
+  const newSignalCount = signals.filter(
     (s) => s.state === "new" || s.state === "reviewing" || s.state === "confirmed"
-  );
-  const newSignals = triageSignals.length;
+  ).length;
 
   const activeActions = actions.filter(
     (a) =>
@@ -172,336 +93,38 @@ function StatsRow() {
       a.state === "awaiting_logging"
   );
 
-  const overdueActions = activeActions.filter(
-    (a) => isOverdue(a.dueDate) && a.state !== "completed"
-  ).length;
-
   const dueThisWeek = activeActions.filter((a) =>
     isDueWithinDays(a.dueDate, 7)
   ).length;
 
-  const activeInvestors = new Set(
-    [...signals.filter((s) => s.state !== "resolved" && s.state !== "dismissed"),
-     ...actions.filter((a) => a.state !== "completed")]
-      .map((item) => item.investorId)
+  const awaitingLogging = actions.filter(
+    (a) => a.state === "awaiting_logging"
+  ).length;
+
+  const activeInvestorCount = new Set(
+    [
+      ...signals.filter((s) => s.state !== "resolved" && s.state !== "dismissed"),
+      ...actions.filter((a) => a.state !== "completed"),
+    ].map((item) => item.investorId)
   ).size;
 
-  const stats = [
-    {
-      label: "NEW SIGNALS",
-      value: newSignals,
-      color: newSignals > 0 ? "text-red-600" : "text-slate-900",
-      dot: newSignals > 0 ? "bg-red-500" : null,
-      ringColor: newSignals > 0 ? "ring-red-100 border-red-200" : "border-slate-200",
-    },
-    {
-      label: "OVERDUE ACTIONS",
-      value: overdueActions,
-      color: overdueActions > 0 ? "text-red-600" : "text-slate-900",
-      dot: overdueActions > 0 ? "bg-red-500" : null,
-      ringColor: overdueActions > 0 ? "ring-red-100 border-red-200" : "border-slate-200",
-    },
-    {
-      label: "DUE THIS WEEK",
-      value: dueThisWeek,
-      color: dueThisWeek > 2 ? "text-amber-600" : "text-slate-900",
-      dot: null,
-      ringColor: dueThisWeek > 2 ? "ring-amber-100 border-amber-200" : "border-slate-200",
-    },
-    {
-      label: "ACTIVE INVESTORS",
-      value: activeInvestors,
-      color: "text-slate-900",
-      dot: null,
-      ringColor: "border-slate-200",
-    },
-  ];
+  // Recommended actions (most urgent first)
+  const recommendedActions = activeActions
+    .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+    .slice(0, 3);
+
+  // Top holders
+  const topHolders = [...investors]
+    .sort((a, b) => b.holdingPct - a.holdingPct)
+    .slice(0, 3);
+  const totalOwnership = investors.reduce((sum, inv) => sum + inv.holdingPct, 0);
+
+  // Hero signal investor
+  const heroInvestor = heroSignal ? getInvestor(heroSignal.investorId) : null;
 
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-      {stats.map((s) => (
-        <div
-          key={s.label}
-          className={cn(
-            "rounded-xl border bg-white px-6 py-5",
-            s.ringColor,
-            s.dot ? "ring-2" : ""
-          )}
-        >
-          <div className="flex items-center gap-2">
-            {s.dot && (
-              <span className={cn("h-2 w-2 rounded-full animate-pulse", s.dot)} />
-            )}
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-slate-400">
-              {s.label}
-            </p>
-          </div>
-          <p className={cn("mt-2 font-mono text-4xl font-bold tracking-tight", s.color)}>
-            {s.value}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// -- Signal Triage Card (compact, urgency differentiated) ----------
-
-function TriageSignalCard({ signal, navigate }) {
-  const inv = getInvestor(signal.investorId);
-  const urg = urgencyConfig[signal.urgency];
-  const UrgIcon = urg.icon;
-  const isHigh = signal.urgency === "high";
-  const isMedium = signal.urgency === "medium";
-
-  return (
-    <button
-      onClick={() => navigate(`/signals/${signal.id}`)}
-      className={cn(
-        "block w-full rounded-lg border bg-white text-left transition-all hover:shadow-sm",
-        "border-l-[4px]",
-        urg.leftBorder,
-        isHigh
-          ? "border-red-200 py-5 px-6"
-          : isMedium
-          ? "border-amber-100 py-3.5 px-5"
-          : "border-slate-200 py-3 px-4"
-      )}
-    >
-      <div className="flex items-start gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span
-              className={cn(
-                "inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-semibold tracking-wide",
-                isHigh
-                  ? "bg-red-50 border border-red-200 text-red-600 text-[11px]"
-                  : isMedium
-                  ? "bg-amber-50 border border-amber-200 text-amber-600 text-[10px]"
-                  : "bg-slate-50 border border-slate-200 text-slate-400 text-[10px]"
-              )}
-            >
-              {UrgIcon && <UrgIcon size={isHigh ? 11 : 10} />}
-              {urg.label}
-            </span>
-            <span className="text-[11px] font-medium tracking-[0.1em] text-slate-400">
-              {typeLabels[signal.type]}
-            </span>
-            <span className="text-[11px] text-slate-300">
-              {relativeAge(signal.detectedAt)}
-            </span>
-          </div>
-
-          <p className={cn(
-            "text-slate-900",
-            isHigh ? "text-base font-bold" : isMedium ? "text-sm font-semibold" : "text-sm font-medium text-slate-700"
-          )}>
-            {signal.headline}
-          </p>
-
-          <p className={cn(
-            "mt-1",
-            isHigh ? "text-sm text-slate-600" : "text-xs text-slate-400"
-          )}>
-            {truncate(signal.description, isHigh ? 120 : 90)}
-          </p>
-        </div>
-
-        <div className="flex-shrink-0 flex items-center gap-2 pt-1">
-          <span className={cn(
-            "font-medium",
-            isHigh ? "text-sm text-slate-800" : "text-xs text-slate-500"
-          )}>
-            {inv?.name ?? "Unknown"}
-          </span>
-          <ChevronRight size={14} className="text-slate-300" />
-        </div>
-      </div>
-    </button>
-  );
-}
-
-// -- Signals Triage Section ----------------------------------------
-
-function SignalsTriageSection({ heroSignalId, navigate }) {
-  const triageSignals = signals
-    .filter(
-      (s) =>
-        s.state !== "resolved" &&
-        s.state !== "dismissed" &&
-        s.id !== heroSignalId
-    )
-    .sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
-
-  if (triageSignals.length === 0) return null;
-
-  return (
-    <section>
-      <div className="mb-4 flex items-center justify-between">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
-          SIGNALS REQUIRING TRIAGE
-        </p>
-        <p className="text-[11px] text-slate-400">
-          {triageSignals.length} REMAINING
-        </p>
-      </div>
-
-      <div className="space-y-2">
-        {triageSignals.map((s) => (
-          <TriageSignalCard key={s.id} signal={s} navigate={navigate} />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-// -- Actions Due Soon Section --------------------------------------
-
-function ActionsDueSoonSection({ navigate }) {
-  const activeStates = ["planned", "preparing", "in_progress", "awaiting_logging"];
-  const sevenDaysOut = new Date(TODAY);
-  sevenDaysOut.setDate(sevenDaysOut.getDate() + 7);
-  const sevenDaysStr = sevenDaysOut.toISOString().split("T")[0];
-
-  const relevantActions = actions
-    .filter(
-      (a) =>
-        activeStates.includes(a.state) &&
-        (isOverdue(a.dueDate) || a.dueDate <= sevenDaysStr)
-    )
-    .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
-
-  const overdueActions = relevantActions.filter((a) => isOverdue(a.dueDate));
-  const todayActions = relevantActions.filter((a) => isDueToday(a.dueDate));
-  const futureActions = relevantActions.filter(
-    (a) => !isOverdue(a.dueDate) && !isDueToday(a.dueDate)
-  );
-
-  if (relevantActions.length === 0) return null;
-
-  function ActionRow({ action, treatment }) {
-    const inv = getInvestor(action.investorId);
-    const isOverdueRow = treatment === "overdue";
-    const isTodayRow = treatment === "today";
-
-    return (
-      <button
-        onClick={() => navigate(`/actions/${action.id}`)}
-        className={cn(
-          "flex w-full items-center gap-4 rounded-lg border px-5 py-3.5 text-left transition-all hover:shadow-sm",
-          isOverdueRow
-            ? "bg-red-50 border-red-200 hover:bg-red-100/80"
-            : isTodayRow
-            ? "bg-amber-50/70 border-amber-200 hover:bg-amber-100/70"
-            : "bg-white border-slate-200 hover:bg-slate-50"
-        )}
-      >
-        <span className={cn("h-2.5 w-2.5 rounded-full flex-shrink-0", actionStateDot[action.state])} />
-
-        <div className="flex-1 min-w-0">
-          <p className={cn(
-            "text-sm font-medium truncate",
-            isOverdueRow ? "text-red-900" : "text-slate-900"
-          )}>
-            {truncate(action.objective, 70)}
-          </p>
-          <p className={cn(
-            "text-xs mt-0.5",
-            isOverdueRow ? "text-red-600/70" : "text-slate-500"
-          )}>
-            {inv?.name ?? "Unknown"} &middot; {action.owner} &middot; {action.channel}
-          </p>
-        </div>
-
-        <div className="flex-shrink-0 text-right">
-          <p className={cn(
-            "font-mono text-xs font-bold",
-            isOverdueRow ? "text-red-600" : isTodayRow ? "text-amber-700" : "text-slate-500"
-          )}>
-            {action.dueDate}
-          </p>
-          {isOverdueRow && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 mt-0.5">
-              <AlertCircle size={10} /> OVERDUE
-            </span>
-          )}
-          {isTodayRow && (
-            <span className="text-[10px] font-bold text-amber-700 mt-0.5">DUE TODAY</span>
-          )}
-        </div>
-      </button>
-    );
-  }
-
-  return (
-    <section>
-      <div className="mb-4 flex items-center justify-between">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
-          ACTIONS DUE SOON
-        </p>
-        <p className="text-[11px] text-slate-400">
-          NEXT 7 DAYS
-        </p>
-      </div>
-
-      <div className="space-y-2">
-        {overdueActions.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-red-600 pl-1 flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-              Overdue
-            </p>
-            {overdueActions.map((a) => (
-              <ActionRow key={a.id} action={a} treatment="overdue" />
-            ))}
-          </div>
-        )}
-
-        {todayActions.length > 0 && (
-          <div className="space-y-2 mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 pl-1">
-              Due Today
-            </p>
-            {todayActions.map((a) => (
-              <ActionRow key={a.id} action={a} treatment="today" />
-            ))}
-          </div>
-        )}
-
-        {futureActions.length > 0 && (
-          <div className="space-y-2 mt-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 pl-1">
-              This Week
-            </p>
-            {futureActions.map((a) => (
-              <ActionRow key={a.id} action={a} treatment="future" />
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
-
-// -- Page -----------------------------------------------------------
-
-export function HomePage() {
-  const navigate = useNavigate();
-
-  // Find highest-urgency untriaged signal for hero card
-  const heroSignal = signals
-    .filter((s) => s.state !== "resolved" && s.state !== "dismissed")
-    .sort((a, b) => {
-      // Sort by urgency first, then by recency
-      if (urgencyOrder[a.urgency] !== urgencyOrder[b.urgency]) {
-        return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
-      }
-      return new Date(b.detectedAt) - new Date(a.detectedAt);
-    })[0];
-
-  return (
-    <div className="space-y-10 p-6 max-w-5xl">
-      {/* Header - situation framing */}
+    <div className="space-y-8 p-6 max-w-5xl">
+      {/* Page header */}
       <div>
         <h1 className="text-xl font-bold text-slate-900 tracking-tight">
           What changed overnight
@@ -511,19 +134,226 @@ export function HomePage() {
         </p>
       </div>
 
-      {/* HERO: Most important signal - 2-3x more prominent */}
+      {/* -- HERO SIGNAL ------------------------------------------------ */}
       {heroSignal && (
-        <HeroSignalCard signal={heroSignal} navigate={navigate} />
+        <div
+          className={cn(
+            "bg-white rounded-lg border border-l-4 overflow-hidden cursor-pointer transition-shadow hover:shadow-md",
+            urgencyBorderColor[heroSignal.urgency]
+          )}
+          onClick={() => navigate(`/signals/${heroSignal.id}`)}
+        >
+          <div className="px-8 py-8">
+            {/* Top row: icon + badges + confidence */}
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-50">
+                  <AlertTriangle size={20} className="text-red-600" />
+                </div>
+                <Badge variant={heroSignal.urgency} kind="urgency" />
+                <Badge variant={heroSignal.type} kind="type" />
+              </div>
+              <ConfidenceBadge mode="label" level={heroSignal.confidence} />
+            </div>
+
+            {/* Headline -- visually 2x bigger */}
+            <h2 className="text-xl font-bold text-slate-900 leading-tight tracking-tight">
+              {heroSignal.headline}
+            </h2>
+
+            {/* Description */}
+            <p className="mt-3 text-base text-slate-600 leading-relaxed max-w-2xl">
+              {heroSignal.description}
+            </p>
+
+            {/* Investor + timestamp */}
+            <div className="mt-6 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-400">Influenced:</span>
+                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-200 text-[10px] font-bold text-slate-600">
+                  {heroInvestor?.name?.charAt(0) ?? "?"}
+                </div>
+                <span className="text-sm font-semibold text-slate-900">
+                  {heroInvestor?.name ?? "Unknown"}
+                </span>
+              </div>
+              <span className="text-xs font-medium text-slate-400 tracking-wider">
+                DETECTED {relativeAge(heroSignal.detectedAt)}
+              </span>
+            </div>
+          </div>
+        </div>
       )}
 
-      {/* Key metrics - numbers that matter are LARGE */}
-      <StatsRow />
+      {/* -- KEY METRICS ROW -------------------------------------------- */}
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatCard
+          label="NEW SIGNALS"
+          value={newSignalCount}
+          annotation={newSignalCount > 0 ? "ACTION NEEDED" : null}
+          annotationColor="red"
+        />
+        <StatCard
+          label="DUE THIS WEEK"
+          value={dueThisWeek}
+          annotation={dueThisWeek > 2 ? "HEAVY WEEK" : null}
+          annotationColor="amber"
+        />
+        <StatCard
+          label="AWAITING LOGGING"
+          value={awaitingLogging}
+          annotation={awaitingLogging > 0 ? "LOG OUTCOMES" : null}
+          annotationColor="amber"
+        />
+        <StatCard
+          label="ACTIVE INVESTORS"
+          value={activeInvestorCount}
+        />
+      </div>
 
-      {/* Remaining signals - urgency differentiated */}
-      <SignalsTriageSection heroSignalId={heroSignal?.id} navigate={navigate} />
+      {/* -- INTELLIGENCE FEED ------------------------------------------ */}
+      {remainingSignals.length > 0 && (
+        <Card variant="section" accentColor="blue">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-base font-bold text-slate-900">Intelligence Feed</h3>
+            <span className="inline-flex items-center bg-blue-50 text-blue-700 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider">
+              {remainingSignals.length} ACTIVE SIGNAL{remainingSignals.length !== 1 ? "S" : ""}
+            </span>
+          </div>
 
-      {/* Actions due soon - grouped by urgency */}
-      <ActionsDueSoonSection navigate={navigate} />
+          <div className="space-y-3">
+            {remainingSignals.map((signal) => {
+              const inv = getInvestor(signal.investorId);
+              const TypeIcon = typeIcons[signal.type] || Radio;
+
+              return (
+                <button
+                  key={signal.id}
+                  onClick={() => navigate(`/signals/${signal.id}`)}
+                  className="flex w-full items-start gap-4 rounded-lg border border-slate-100 bg-white px-4 py-3.5 text-left transition-all hover:shadow-sm hover:border-slate-200"
+                >
+                  {/* Icon circle */}
+                  <div
+                    className={cn(
+                      "flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0",
+                      signal.urgency === "high"
+                        ? "bg-red-50"
+                        : signal.urgency === "medium"
+                        ? "bg-amber-50"
+                        : "bg-slate-100"
+                    )}
+                  >
+                    <TypeIcon
+                      size={16}
+                      className={cn(
+                        signal.urgency === "high"
+                          ? "text-red-600"
+                          : signal.urgency === "medium"
+                          ? "text-amber-600"
+                          : "text-slate-500"
+                      )}
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge variant={signal.type} kind="type" className="text-[9px] px-1.5 py-0.5" />
+                      <span className="text-sm font-semibold text-slate-900 truncate">
+                        {signal.headline}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-slate-400">
+                      <span className="font-medium text-slate-600">{inv?.name ?? "Unknown"}</span>
+                      <span>{relativeAge(signal.detectedAt)}</span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* -- RECOMMENDED ACTIONS ---------------------------------------- */}
+      {recommendedActions.length > 0 && (
+        <section>
+          <div className="mb-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              RECOMMENDED ACTIONS
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {recommendedActions.map((action, idx) => {
+              const inv = getInvestor(action.investorId);
+              return (
+                <ActionCard
+                  key={action.id}
+                  isPrimary={idx === 0}
+                  title={inv?.name ?? "Unknown"}
+                  description={action.objective}
+                  channel={action.channel}
+                  timing={`Due ${action.dueDate}`}
+                  icon={idx === 0 ? Zap : undefined}
+                  onAction={() => navigate(`/actions/${action.id}`)}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* -- TOP HOLDER STATUS (Dark accent card) ----------------------- */}
+      <Card variant="dark" title="TOP HOLDER STATUS">
+        <div className="flex items-baseline gap-3 mb-6">
+          <span className="font-mono text-4xl font-bold text-white">
+            {totalOwnership.toFixed(1)}%
+          </span>
+          <span className="text-sm text-slate-400">aggregate tracked ownership</span>
+        </div>
+
+        <div className="space-y-3">
+          {topHolders.map((holder) => {
+            const trend = holder.holdingTrend;
+            const trendColor =
+              trend === "up"
+                ? "text-emerald-400"
+                : trend === "down"
+                ? "text-red-400"
+                : "text-slate-500";
+            const trendArrow =
+              trend === "up" ? "\u2191" : trend === "down" ? "\u2193" : "\u2192";
+
+            return (
+              <div
+                key={holder.id}
+                className="flex items-center justify-between rounded-lg bg-slate-800 px-4 py-3"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-700 text-[10px] font-bold text-slate-300">
+                    {holder.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{holder.name}</p>
+                    <p className="text-[11px] text-slate-500 uppercase tracking-wider">
+                      {holder.type} &middot; TIER {holder.tier}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-lg font-bold text-white">
+                    {holder.holdingPct}%
+                  </span>
+                  <span className={cn("text-sm font-bold", trendColor)}>
+                    {trendArrow}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
     </div>
   );
 }

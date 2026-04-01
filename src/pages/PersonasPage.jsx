@@ -1,8 +1,11 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { UserCircle } from "lucide-react";
+import { UserCircle, ExternalLink } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
+import { Card } from "../components/ui/Card";
+import { SentimentMeter } from "../components/ui/SentimentMeter";
+import { HealthDots } from "../components/ui/HealthDots";
 import { EmptyState } from "../components/ui/EmptyState";
 import { investors, getSignalsForInvestor } from "../data/mock-data";
 
@@ -32,34 +35,12 @@ const archetypeColors = {
   "Cautious trimmer": "bg-amber-100 text-amber-800 border-amber-300",
 };
 
-const archetypeIcons = {
-  "Active accumulator": "^",
-  "Silent reducer": "!",
-  "Passive tracker": "~",
-  "Governance steward": "#",
-  "Cautious trimmer": "v",
-};
-
 const typeLabels = {
   passive: "Passive",
   active: "Active",
   pension: "Pension",
   sovereign: "Sovereign",
 };
-
-// Card border and bg color based on archetype risk
-function getCardStyle(archetype) {
-  if (archetype === "Silent reducer") {
-    return "border-red-300 bg-red-50/40 shadow-sm shadow-red-100";
-  }
-  if (archetype === "Cautious trimmer") {
-    return "border-amber-300 bg-amber-50/30 shadow-sm shadow-amber-100";
-  }
-  if (archetype === "Active accumulator") {
-    return "border-emerald-200 bg-emerald-50/20";
-  }
-  return "border-slate-200 bg-white";
-}
 
 // ── Behavioral scores derived from data ─────────────────
 function deriveScores(investor) {
@@ -100,35 +81,45 @@ function deriveScores(investor) {
   return { engagement, governance, risk };
 }
 
-function getHoldingPeriod(investor) {
-  const trend = investor.holdingTrend;
-  if (trend === "up") return "Growing (6+ months)";
-  if (trend === "down") return "Reducing";
-  return "Stable (12+ months)";
+function getEngagementLabel(score) {
+  if (score >= 70) return "High";
+  if (score >= 40) return "Medium";
+  return "Low";
 }
 
-function getGovernancePattern(investor) {
-  const govSignals = getSignalsForInvestor(investor.id).filter(
-    (s) => s.type === "governance_management"
-  );
-  if (govSignals.length > 0) return "Active participant";
-  if (investor.type === "sovereign" || investor.type === "pension")
-    return "Policy-driven voter";
-  return "Generally supportive";
+function getEngagementBarColor(score) {
+  if (score >= 70) return "bg-emerald-500";
+  if (score >= 40) return "bg-amber-500";
+  return "bg-red-500";
 }
 
-function getCommunicationStyle(investor) {
-  if (investor.contacts.length >= 2) return "Multi-touchpoint, proactive";
-  if (investor.engagementMomentum === "positive") return "Responsive, open";
-  if (investor.engagementMomentum === "negative") return "Minimal, reactive";
-  return "Periodic, formal";
+function getRiskLevel(score) {
+  if (score >= 60) return "high";
+  if (score >= 35) return "medium";
+  return "low";
 }
 
-function getDecisionStructure(investor) {
-  if (investor.type === "passive") return "Index committee / stewardship team";
-  if (investor.type === "sovereign") return "Responsible investment unit";
-  if (investor.type === "pension") return "Board & governance committee";
-  return "PM-led with analyst input";
+function getLastContact(investor) {
+  let latest = null;
+  for (const c of investor.contacts) {
+    if (!latest || c.lastInteraction > latest) {
+      latest = c.lastInteraction;
+    }
+  }
+  return latest;
+}
+
+function getMeetingThemes(investor) {
+  const allSignals = getSignalsForInvestor(investor.id);
+  const themes = [];
+  if (allSignals.some((s) => s.type === "governance_management")) themes.push("Governance");
+  if (allSignals.some((s) => s.type === "retention_risk")) themes.push("Retention");
+  if (investor.stateParameters?.some((p) => p.label === "Engagement Priority"))
+    themes.push("ESG");
+  if (investor.type === "active") themes.push("Valuation");
+  if (investor.holdingTrend === "up") themes.push("Growth thesis");
+  if (investor.holdingTrend === "down") themes.push("Exit risk");
+  return themes.slice(0, 4);
 }
 
 function getSignalNote(archetype) {
@@ -148,65 +139,6 @@ function getSignalNote(archetype) {
   }
 }
 
-function getProvenanceBadges(investor) {
-  const badges = [];
-  const params = investor.stateParameters || [];
-  const hasObserved = params.some((p) => p.provenance === "observed");
-  const hasInferred = params.some((p) => p.provenance === "inferred");
-  const hasTeam = params.some((p) => p.provenance === "team_assessed");
-  if (hasObserved) badges.push("observed");
-  if (hasInferred) badges.push("inferred");
-  if (hasTeam) badges.push("team_assessed");
-  return badges;
-}
-
-const provenanceLabels = {
-  observed: "Observed",
-  inferred: "Inferred",
-  team_assessed: "Team Assessed",
-};
-
-// ── Behavioral indicator bar ────────────────────────────
-function IndicatorBar({ label, value, color, isRisk = false }) {
-  const isHighRisk = isRisk && value >= 60;
-  return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between">
-        <span className={cn(
-          "text-[11px] font-medium uppercase tracking-[0.1em]",
-          isHighRisk ? "text-red-600 font-bold" : "text-slate-400"
-        )}>
-          {label}
-          {isHighRisk && (
-            <span className="ml-1.5 inline-flex items-center rounded bg-red-100 px-1 py-0.5 text-[9px] font-bold uppercase text-red-700">
-              ALERT
-            </span>
-          )}
-        </span>
-        <span className={cn(
-          "font-mono font-medium",
-          isHighRisk ? "text-lg text-red-600 font-bold" : "text-xs text-slate-700"
-        )}>
-          {value}%
-        </span>
-      </div>
-      <div className={cn(
-        "w-full rounded-full bg-slate-100",
-        isHighRisk ? "h-3.5" : "h-1.5"
-      )}>
-        <div
-          className={cn(
-            "rounded-full transition-all",
-            color,
-            isHighRisk ? "h-3.5" : "h-1.5"
-          )}
-          style={{ width: `${value}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export function PersonasPage() {
   const [archetypeFilter, setArchetypeFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
@@ -219,12 +151,9 @@ export function PersonasPage() {
         ...inv,
         archetype,
         scores,
-        holdingPeriod: getHoldingPeriod(inv),
-        governancePattern: getGovernancePattern(inv),
-        communicationStyle: getCommunicationStyle(inv),
-        decisionStructure: getDecisionStructure(inv),
         signalNote: getSignalNote(archetype),
-        provenanceBadges: getProvenanceBadges(inv),
+        meetingThemes: getMeetingThemes(inv),
+        lastContact: getLastContact(inv),
       };
     });
   }, []);
@@ -239,14 +168,20 @@ export function PersonasPage() {
     if (archetypeFilter)
       result = result.filter((i) => i.archetype === archetypeFilter);
     if (typeFilter) result = result.filter((i) => i.type === typeFilter);
-    // Sort: at-risk first, then growing, then stable
     return result.sort((a, b) => {
       const riskOrder = { "Silent reducer": 0, "Cautious trimmer": 1, "Governance steward": 2, "Passive tracker": 3, "Active accumulator": 4 };
       return (riskOrder[a.archetype] ?? 3) - (riskOrder[b.archetype] ?? 3);
     });
   }, [enriched, archetypeFilter, typeFilter]);
 
-  // Summary counts
+  // Group by section label
+  const strategicSpecialists = filtered.filter(
+    (i) => i.archetype === "Active accumulator" || i.archetype === "Governance steward"
+  );
+  const portfolioManagers = filtered.filter(
+    (i) => i.archetype === "Passive tracker" || i.archetype === "Cautious trimmer" || i.archetype === "Silent reducer"
+  );
+
   const atRiskCount = enriched.filter(
     (i) => i.archetype === "Silent reducer" || i.archetype === "Cautious trimmer"
   ).length;
@@ -257,45 +192,238 @@ export function PersonasPage() {
     ? Math.round(enriched.reduce((s, i) => s + i.scores.risk, 0) / enriched.length)
     : 0;
 
+  // ── Contact Card ──────────────────────────────────────
+  function ContactCard({ inv }) {
+    const isAtRisk = inv.archetype === "Silent reducer" || inv.archetype === "Cautious trimmer";
+    const initials = inv.name
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2);
+
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white p-5 flex flex-col">
+        {/* Top row: avatar + identity */}
+        <div className="flex items-start gap-4 mb-4">
+          <div
+            className={cn(
+              "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold",
+              isAtRisk
+                ? "bg-red-100 text-red-700"
+                : inv.archetype === "Active accumulator"
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-slate-200 text-slate-700"
+            )}
+          >
+            {initials}
+          </div>
+          <div className="flex-1 min-w-0">
+            <Link
+              to={`/investors/${inv.id}`}
+              className="text-sm font-bold text-slate-900 hover:underline"
+            >
+              {inv.name}
+            </Link>
+            <div className="mt-1 flex items-center gap-2 flex-wrap">
+              <span
+                className={cn(
+                  "inline-flex items-center rounded-full border px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]",
+                  archetypeColors[inv.archetype] || "bg-slate-100 text-slate-700 border-slate-200"
+                )}
+              >
+                {inv.archetype}
+              </span>
+              <span className="text-xs text-slate-500">
+                {typeLabels[inv.type]} &middot; <span className="font-mono">{inv.holdingPct}%</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="text-xs text-slate-600 leading-relaxed mb-4">
+          {inv.signalNote}
+        </p>
+
+        {/* Engagement Rate metric bar */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+              ENGAGEMENT RATE
+            </span>
+            <span
+              className={cn(
+                "text-xs font-bold",
+                inv.scores.engagement >= 70
+                  ? "text-emerald-600"
+                  : inv.scores.engagement >= 40
+                  ? "text-amber-600"
+                  : "text-red-600"
+              )}
+            >
+              {getEngagementLabel(inv.scores.engagement)}
+            </span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-slate-100">
+            <div
+              className={cn("h-1.5 rounded-full transition-all", getEngagementBarColor(inv.scores.engagement))}
+              style={{ width: `${inv.scores.engagement}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Risk bar */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className={cn(
+              "text-[11px] font-medium uppercase tracking-[0.1em]",
+              inv.scores.risk >= 60 ? "text-red-600 font-bold" : "text-slate-400"
+            )}>
+              RISK SCORE
+              {inv.scores.risk >= 60 && (
+                <span className="ml-1.5 inline-flex items-center rounded bg-red-100 px-1 py-0.5 text-[9px] font-bold uppercase text-red-700">
+                  ALERT
+                </span>
+              )}
+            </span>
+            <span className={cn(
+              "font-mono text-xs font-bold",
+              inv.scores.risk >= 60 ? "text-red-600" : inv.scores.risk >= 35 ? "text-amber-600" : "text-emerald-600"
+            )}>
+              {inv.scores.risk}%
+            </span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-slate-100">
+            <div
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                inv.scores.risk >= 60
+                  ? "bg-red-500"
+                  : inv.scores.risk >= 35
+                  ? "bg-amber-500"
+                  : "bg-emerald-500"
+              )}
+              style={{ width: `${inv.scores.risk}%` }}
+            />
+          </div>
+        </div>
+
+        <div className="flex-1" />
+
+        {/* Last call footer */}
+        <div className="mt-auto border-t border-slate-100 pt-3 flex items-center justify-between">
+          <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+            LAST CALL: <span className="font-mono text-slate-600">{inv.lastContact || "N/A"}</span>
+          </span>
+          <Link
+            to={`/investors/${inv.id}`}
+            className="text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            <ExternalLink size={14} />
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Sentiment & Risk Card ─────────────────────────────
+  function SentimentCard({ inv }) {
+    const riskLevel = getRiskLevel(inv.scores.risk);
+
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs font-bold text-slate-700">
+            {inv.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+          </div>
+          <div>
+            <Link
+              to={`/investors/${inv.id}`}
+              className="text-sm font-bold text-slate-900 hover:underline"
+            >
+              {inv.name}
+            </Link>
+            <p className="text-xs text-slate-500">{typeLabels[inv.type]}</p>
+          </div>
+        </div>
+
+        <SentimentMeter
+          value={riskLevel}
+          label="Risk Assessment"
+          description={inv.signalNote}
+        />
+
+        {/* Key Meeting Themes as pills */}
+        {inv.meetingThemes.length > 0 && (
+          <div className="mt-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
+              KEY MEETING THEMES
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {inv.meetingThemes.map((theme) => (
+                <span
+                  key={theme}
+                  className={cn(
+                    "inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.05em]",
+                    theme === "Retention" || theme === "Exit risk"
+                      ? "bg-red-50 text-red-700 border border-red-200"
+                      : theme === "Governance"
+                      ? "bg-violet-50 text-violet-700 border border-violet-200"
+                      : theme === "ESG"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : theme === "Growth thesis"
+                      ? "bg-teal-50 text-teal-700 border border-teal-200"
+                      : "bg-slate-100 text-slate-600 border border-slate-200"
+                  )}
+                >
+                  {theme}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">
           Investor Personas
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          How your investors behave, who's at risk, and how to engage each one
+          How your investors behave, who is at risk, and how to engage each one
         </p>
       </div>
 
       {/* Hero persona summary */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="rounded-lg border-2 border-red-200 bg-red-50 p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-red-400">At Risk</p>
-          <p className="mt-1 text-5xl font-mono font-bold text-red-600">{atRiskCount}</p>
-          <p className="mt-1 text-xs text-red-500">Declining or reducing</p>
-        </div>
-        <div className="rounded-lg border border-red-100 bg-white p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Avg Risk Score</p>
-          <p className={cn(
-            "mt-1 text-4xl font-mono font-bold",
-            avgRisk >= 50 ? "text-red-600" : avgRisk >= 35 ? "text-amber-600" : "text-emerald-600"
-          )}>
-            {avgRisk}%
-          </p>
-          <p className="mt-1 text-xs text-slate-500">Across all personas</p>
-        </div>
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-emerald-400">Growing</p>
-          <p className="mt-1 text-4xl font-mono font-bold text-emerald-600">{growingCount}</p>
-          <p className="mt-1 text-xs text-emerald-500">Accumulating position</p>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Total Personas</p>
-          <p className="mt-1 text-3xl font-mono font-bold text-slate-700">{enriched.length}</p>
-          <p className="mt-1 text-xs text-slate-400">Tracked investors</p>
-        </div>
+        <StatCard
+          label="At Risk"
+          value={atRiskCount}
+          annotation="Declining or reducing"
+          annotationColor="red"
+          variant="dark"
+        />
+        <StatCard
+          label="Avg Risk Score"
+          value={`${avgRisk}%`}
+          annotation="Across all personas"
+          annotationColor={avgRisk >= 50 ? "red" : avgRisk >= 35 ? "amber" : "emerald"}
+        />
+        <StatCard
+          label="Growing"
+          value={growingCount}
+          annotation="Accumulating position"
+          annotationColor="emerald"
+        />
+        <StatCard
+          label="Total Personas"
+          value={enriched.length}
+          annotation="Tracked investors"
+        />
       </div>
 
       {/* Filters */}
@@ -329,179 +457,100 @@ export function PersonasPage() {
         </select>
       </div>
 
-      {/* Persona Grid */}
-      {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((inv) => {
-            const isAtRisk = inv.archetype === "Silent reducer" || inv.archetype === "Cautious trimmer";
-            const isGrowing = inv.archetype === "Active accumulator";
-
-            return (
-              <div
-                key={inv.id}
-                className={cn(
-                  "flex flex-col rounded-lg border-2 p-5 transition-all",
-                  getCardStyle(inv.archetype)
-                )}
-              >
-                {/* Archetype Badge - visual anchor */}
-                <div className="mb-4">
-                  <span
-                    className={cn(
-                      "inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-bold tracking-tight",
-                      archetypeColors[inv.archetype] ||
-                        "bg-slate-100 text-slate-700 border-slate-200",
-                      isAtRisk && "ring-2 ring-red-200"
-                    )}
-                  >
-                    <span className="font-mono mr-1.5 text-xs opacity-60">
-                      {archetypeIcons[inv.archetype]}
-                    </span>
-                    {inv.archetype}
-                  </span>
-                </div>
-
-                {/* Header */}
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div>
-                    <Link
-                      to={`/investors/${inv.id}`}
-                      className={cn(
-                        "font-semibold hover:underline",
-                        isAtRisk
-                          ? "text-base text-red-900 hover:text-red-700"
-                          : "text-sm text-slate-900 hover:text-slate-600"
-                      )}
-                    >
-                      {inv.name}
-                    </Link>
-                    <div className="mt-1 flex items-center gap-1.5">
-                      <span className="text-xs text-slate-500">
-                        {typeLabels[inv.type]}
-                      </span>
-                      <span className="text-slate-300">&middot;</span>
-                      <span className="font-mono text-xs text-slate-500">
-                        {inv.holdingPct}%
-                      </span>
-                    </div>
-                  </div>
-                  {/* Risk score badge */}
-                  {inv.scores.risk >= 60 && (
-                    <span className="inline-flex items-center rounded-lg bg-red-600 px-2 py-1 font-mono text-xs font-bold text-white">
-                      {inv.scores.risk}% risk
-                    </span>
-                  )}
-                </div>
-
-                {/* Key Characteristics */}
-                <div className="space-y-2 mb-4">
-                  <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                    Key Characteristics
-                  </h4>
-                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-                    <div>
-                      <dt className="text-slate-400">Holding period</dt>
-                      <dd className={cn(
-                        "font-medium",
-                        inv.holdingPeriod === "Reducing" ? "text-red-600 font-bold" : "text-slate-700"
-                      )}>
-                        {inv.holdingPeriod}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate-400">Governance</dt>
-                      <dd className="font-medium text-slate-700">
-                        {inv.governancePattern}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate-400">Communication</dt>
-                      <dd className={cn(
-                        "font-medium",
-                        inv.communicationStyle.includes("Minimal") ? "text-red-600 font-bold" : "text-slate-700"
-                      )}>
-                        {inv.communicationStyle}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate-400">Decisions</dt>
-                      <dd className="font-medium text-slate-700">
-                        {inv.decisionStructure}
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-
-                {/* Behavioral Indicators */}
-                <div className="space-y-2.5 mb-4">
-                  <h4 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                    Behavioral Indicators
-                  </h4>
-                  <IndicatorBar
-                    label="Risk"
-                    value={inv.scores.risk}
-                    isRisk
-                    color={
-                      inv.scores.risk >= 60
-                        ? "bg-red-500"
-                        : inv.scores.risk >= 35
-                        ? "bg-amber-500"
-                        : "bg-emerald-500"
-                    }
-                  />
-                  <IndicatorBar
-                    label="Engagement"
-                    value={inv.scores.engagement}
-                    color="bg-blue-500"
-                  />
-                  <IndicatorBar
-                    label="Governance"
-                    value={inv.scores.governance}
-                    color="bg-violet-500"
-                  />
-                </div>
-
-                {/* Signal Interpretation */}
-                {inv.signalNote && (
-                  <div className={cn(
-                    "mb-4 rounded-lg p-3",
-                    isAtRisk
-                      ? "bg-red-100 border-2 border-red-200"
-                      : isGrowing
-                      ? "bg-emerald-50 border border-emerald-100"
-                      : "bg-slate-50"
-                  )}>
-                    <p className={cn(
-                      "font-mono text-xs leading-relaxed",
-                      isAtRisk
-                        ? "text-red-800 font-bold"
-                        : "text-slate-600"
-                    )}>
-                      {inv.signalNote}
-                    </p>
-                  </div>
-                )}
-
-                {/* Provenance Badges */}
-                {inv.provenanceBadges.length > 0 && (
-                  <div className="mt-auto flex flex-wrap gap-1.5 pt-3 border-t border-slate-100">
-                    {inv.provenanceBadges.map((p) => (
-                      <Badge key={p} variant={p}>
-                        {provenanceLabels[p]}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      ) : (
+      {filtered.length === 0 ? (
         <EmptyState
           icon={UserCircle}
           title="No personas found"
           description="Try adjusting your filters."
         />
+      ) : (
+        <>
+          {/* ── Strategic Specialists ─────────────────────── */}
+          {strategicSpecialists.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-base font-bold text-slate-900">Strategic Specialists</h2>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
+                  {strategicSpecialists.length}
+                </span>
+              </div>
+              <hr className="border-slate-200 mb-5" />
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                {strategicSpecialists.map((inv) => (
+                  <ContactCard key={inv.id} inv={inv} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Portfolio Managers ─────────────────────────── */}
+          {portfolioManagers.length > 0 && (
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-base font-bold text-slate-900">Portfolio Managers</h2>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-slate-900 px-1.5 font-mono text-[10px] font-bold text-white">
+                  {portfolioManagers.length}
+                </span>
+              </div>
+              <hr className="border-slate-200 mb-5" />
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                {portfolioManagers.map((inv) => (
+                  <ContactCard key={inv.id} inv={inv} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Sentiment & Risk ──────────────────────────── */}
+          <Card variant="section" accentColor="red" title="Sentiment & Risk" subtitle="Risk assessment and key meeting themes per investor">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((inv) => (
+                <SentimentCard key={inv.id} inv={inv} />
+              ))}
+            </div>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}
+
+function StatCard({ label, value, annotation, annotationColor = "slate", variant = "light" }) {
+  const isDark = variant === "dark";
+  const colorMap = {
+    emerald: "text-emerald-600",
+    red: "text-red-600",
+    amber: "text-amber-600",
+    blue: "text-blue-600",
+    slate: "text-slate-500",
+  };
+
+  return (
+    <div
+      className={cn(
+        "rounded-lg p-5 text-center",
+        isDark ? "bg-slate-900" : "border border-slate-200 bg-white"
+      )}
+    >
+      <p className={cn(
+        "text-[11px] font-medium uppercase tracking-[0.1em]",
+        isDark ? "text-slate-400" : "text-slate-400"
+      )}>
+        {label}
+      </p>
+      <p className={cn(
+        "mt-1 font-mono text-4xl font-bold",
+        isDark ? "text-white" : "text-slate-900"
+      )}>
+        {value}
+      </p>
+      {annotation && (
+        <p className={cn(
+          "mt-1 text-xs font-medium",
+          isDark ? "text-slate-400" : (colorMap[annotationColor] ?? colorMap.slate)
+        )}>
+          {annotation}
+        </p>
       )}
     </div>
   );

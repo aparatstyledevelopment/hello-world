@@ -13,7 +13,11 @@ import {
   Radio,
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import { signals, investors, getInvestor } from "../data/mock-data";
+import { Badge } from "../components/ui/Badge";
+import { Card } from "../components/ui/Card";
+import { ConfidenceBadge } from "../components/ui/ConfidenceBadge";
+import { EmptyState } from "../components/ui/EmptyState";
+import { signals, getInvestor } from "../data/mock-data";
 
 const TODAY = "2026-04-01";
 
@@ -21,17 +25,17 @@ const TODAY = "2026-04-01";
 
 const urgencyOrder = { high: 0, medium: 1, low: 2 };
 
-const urgencyConfig = {
-  high: { label: "HIGH", icon: AlertTriangle, color: "text-red-600", bg: "bg-red-50", border: "border-red-200" },
-  medium: { label: "MEDIUM", icon: Clock, color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" },
-  low: { label: "LOW", icon: null, color: "text-slate-500", bg: "bg-slate-50", border: "border-slate-200" },
+const urgencyBorderColor = {
+  high: "border-l-red-500",
+  medium: "border-l-amber-500",
+  low: "border-l-slate-300",
 };
 
 const typeLabels = {
-  retention_risk: "TRADING",
-  influence_opportunity: "FUND FLOW",
+  retention_risk: "RETENTION RISK",
+  influence_opportunity: "INFLUENCE",
   governance_management: "GOVERNANCE",
-  information_gap: "DISCLOSURES",
+  information_gap: "INFO GAP",
   relationship_maintenance: "RELATIONSHIP",
 };
 
@@ -43,59 +47,22 @@ const typeIcons = {
   relationship_maintenance: Users,
 };
 
-const stateLabels = {
-  new: "New",
-  reviewing: "Reviewing",
-  confirmed: "Confirmed",
-  action_created: "Action Created",
-  resolved: "Resolved",
-  dismissed: "Dismissed",
-};
-
 function relativeAge(dateStr) {
-  const diff = Math.floor(
-    (new Date(TODAY) - new Date(dateStr)) / (1000 * 60 * 60 * 24)
-  );
-  if (diff <= 0) return "just now";
-  if (diff === 1) return "1d ago";
-  return `${diff}d ago`;
+  const diffMs = new Date(TODAY) - new Date(dateStr);
+  const diffH = Math.floor(diffMs / (1000 * 60 * 60));
+  if (diffH < 1) return "just now";
+  if (diffH < 24) return `${diffH}h ago`;
+  const diffD = Math.floor(diffH / 24);
+  if (diffD === 1) return "1d ago";
+  return `${diffD}d ago`;
 }
 
-function truncate(str, len = 120) {
+function truncate(str, len = 140) {
   if (!str) return "";
   return str.length > len ? str.slice(0, len) + "\u2026" : str;
 }
 
-// -- Signal strength bars ------------------------------------------
-
-function SignalStrength({ level }) {
-  const bars = level === "high" ? 3 : level === "medium" ? 2 : 1;
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className={cn(
-            "h-3 w-1 rounded-sm",
-            i <= bars ? "bg-slate-700" : "bg-slate-200"
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-// -- Tier pill ------------------------------------------------------
-
-function TierPill({ tier }) {
-  return (
-    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-slate-600 border border-slate-200">
-      TIER {tier}
-    </span>
-  );
-}
-
-// -- Filter Pill ----------------------------------------------------
+// -- Filter Pill ---------------------------------------------------
 
 function FilterPill({ label, active, onClick }) {
   return (
@@ -121,10 +88,6 @@ function SignalPressureSummary({ filteredSignals }) {
   const lowCount = filteredSignals.filter((s) => s.urgency === "low").length;
   const total = filteredSignals.length || 1;
 
-  const highPct = (highCount / total) * 100;
-  const mediumPct = (mediumCount / total) * 100;
-  const lowPct = (lowCount / total) * 100;
-
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-6 py-4 mb-6">
       <div className="flex items-center justify-between mb-3">
@@ -141,19 +104,19 @@ function SignalPressureSummary({ filteredSignals }) {
         {highCount > 0 && (
           <div
             className="bg-red-500 transition-all"
-            style={{ width: `${highPct}%` }}
+            style={{ width: `${(highCount / total) * 100}%` }}
           />
         )}
         {mediumCount > 0 && (
           <div
             className="bg-amber-400 transition-all"
-            style={{ width: `${mediumPct}%` }}
+            style={{ width: `${(mediumCount / total) * 100}%` }}
           />
         )}
         {lowCount > 0 && (
           <div
             className="bg-emerald-400 transition-all"
-            style={{ width: `${lowPct}%` }}
+            style={{ width: `${(lowCount / total) * 100}%` }}
           />
         )}
       </div>
@@ -182,31 +145,15 @@ function SignalPressureSummary({ filteredSignals }) {
   );
 }
 
-// -- Signal Card (expandable) with STRONG urgency differentiation ----
+// -- Expandable Signal Card ----------------------------------------
 
 function SignalCard({ signal, navigate }) {
   const [expanded, setExpanded] = useState(false);
-  const [rawDataOpen, setRawDataOpen] = useState(false);
   const inv = getInvestor(signal.investorId);
-  const urg = urgencyConfig[signal.urgency];
-  const UrgIcon = urg.icon;
   const TypeIcon = typeIcons[signal.type] || Radio;
   const isHigh = signal.urgency === "high";
-  const isMedium = signal.urgency === "medium";
-  const isLow = signal.urgency === "low";
 
-  // Build contextual data
   const whyItMatters = signal.description;
-  const personaContext = inv
-    ? `${inv.name} is a ${inv.type} investor (Tier ${inv.tier}) with a ${inv.holdingPct}% holding. Engagement momentum is ${inv.engagementMomentum}. Relationship owner: ${inv.relationshipOwner}.`
-    : "No investor context available.";
-
-  const likelyImpact =
-    signal.urgency === "high"
-      ? "High potential impact on shareholder base composition and investor relations strategy."
-      : signal.urgency === "medium"
-      ? "Moderate impact expected. Proactive engagement recommended to maintain relationship quality."
-      : "Low immediate impact. Monitor and address within standard engagement cadence.";
 
   const recommendedAction =
     signal.type === "retention_risk"
@@ -222,254 +169,126 @@ function SignalCard({ signal, navigate }) {
   return (
     <div
       className={cn(
-        "rounded-lg border transition-all",
-        isHigh
-          ? "bg-red-50/30 border-red-200 shadow-sm"
-          : isMedium
-          ? "bg-white border-slate-200"
-          : "bg-slate-50/50 border-slate-200/70"
+        "rounded-lg border border-l-4 transition-all overflow-hidden",
+        urgencyBorderColor[signal.urgency],
+        isHigh ? "bg-red-50/20" : "bg-white"
       )}
     >
-      {/* Header row */}
+      {/* Card header */}
       <button
         onClick={() => setExpanded(!expanded)}
         className={cn(
-          "flex w-full items-center gap-3 text-left transition-colors",
-          isHigh
-            ? "px-5 py-4 hover:bg-red-50/50"
-            : isMedium
-            ? "px-4 py-3 hover:bg-slate-50"
-            : "px-4 py-2.5 hover:bg-slate-100/50"
+          "flex w-full items-start gap-4 text-left transition-colors",
+          isHigh ? "px-6 py-5 hover:bg-red-50/40" : "px-5 py-4 hover:bg-slate-50/80"
         )}
       >
-        <div className="flex-shrink-0 text-slate-400">
-          {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-        </div>
-
-        <span
+        {/* Icon circle */}
+        <div
           className={cn(
-            "inline-flex items-center gap-1 rounded font-bold tracking-wide",
-            isHigh
-              ? "bg-red-100 border border-red-300 text-red-700 px-2 py-1 text-sm"
-              : isMedium
-              ? "bg-amber-50 border border-amber-200 text-amber-600 px-1.5 py-0.5 text-[10px]"
-              : "text-slate-400 px-1.5 py-0.5 text-[10px]"
+            "flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0 mt-0.5",
+            isHigh ? "bg-red-100" : signal.urgency === "medium" ? "bg-amber-50" : "bg-slate-100"
           )}
         >
-          {UrgIcon && <UrgIcon size={isHigh ? 13 : 10} />}
-          {urg.label}
-        </span>
+          {isHigh ? (
+            <AlertTriangle size={16} className="text-red-600" />
+          ) : (
+            <TypeIcon
+              size={16}
+              className={cn(
+                signal.urgency === "medium" ? "text-amber-600" : "text-slate-500"
+              )}
+            />
+          )}
+        </div>
 
-        <span className={cn(
-          "inline-flex items-center gap-1 font-medium tracking-[0.1em] text-slate-400",
-          isHigh ? "text-xs" : "text-[11px]"
-        )}>
-          <TypeIcon size={11} />
-          {typeLabels[signal.type]}
-        </span>
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {/* Top row: badges + time + confidence */}
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+            <Badge variant={signal.type} kind="type" className="text-[9px] px-1.5 py-0.5" />
+            <span className="text-[11px] text-slate-400">{relativeAge(signal.detectedAt)}</span>
+            <div className="flex-1" />
+            <ConfidenceBadge mode="percentage" level={signal.confidence} className="text-[10px] px-2 py-0.5" />
+            <span className="text-slate-300">
+              {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            </span>
+          </div>
 
-        <span className={cn("text-slate-400", isLow ? "text-[10px]" : "text-[11px]")}>
-          {relativeAge(signal.detectedAt)}
-        </span>
+          {/* Headline */}
+          <h3 className={cn(
+            "text-slate-900 leading-snug",
+            isHigh ? "text-base font-bold" : "text-sm font-semibold"
+          )}>
+            {signal.headline}
+          </h3>
 
-        <div className="flex-1" />
+          {/* Description preview */}
+          <p className={cn(
+            "mt-1 leading-relaxed",
+            isHigh ? "text-sm text-slate-600" : "text-xs text-slate-500"
+          )}>
+            {truncate(signal.description, isHigh ? 180 : 120)}
+          </p>
 
-        <SignalStrength level={signal.confidence} />
-        <TierPill tier={inv?.tier ?? 3} />
-        <span className={cn(
-          "font-medium text-slate-700",
-          isHigh ? "text-sm" : isLow ? "text-xs text-slate-500" : "text-sm"
-        )}>
-          {inv?.name ?? "Unknown"}
-        </span>
+          {/* Investor + timestamp */}
+          <div className="flex items-center gap-3 mt-2">
+            <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-[8px] font-bold text-slate-600">
+                {inv?.name?.charAt(0) ?? "?"}
+              </div>
+              <span className="text-xs font-medium text-slate-700">{inv?.name ?? "Unknown"}</span>
+            </div>
+          </div>
+        </div>
       </button>
-
-      {/* Title + description */}
-      <div className={cn(
-        "pl-11",
-        isHigh ? "px-5 pb-4" : isMedium ? "px-4 pb-3" : "px-4 pb-2.5"
-      )}>
-        <p className={cn(
-          "text-slate-900",
-          isHigh ? "text-lg font-bold" : isMedium ? "text-base font-semibold" : "text-sm font-medium text-slate-700"
-        )}>
-          {signal.headline}
-        </p>
-        <p className={cn(
-          "mt-0.5 leading-relaxed",
-          isHigh ? "text-sm text-slate-600" : isMedium ? "text-sm text-slate-500" : "text-xs text-slate-400"
-        )}>
-          {truncate(signal.description, isHigh ? 160 : 120)}
-        </p>
-      </div>
 
       {/* Expanded detail */}
       {expanded && (
         <div className={cn(
-          "border-t px-4 py-4 pl-11 space-y-5",
-          isHigh ? "border-red-100" : "border-slate-100"
+          "border-t px-6 py-5 space-y-5",
+          isHigh ? "border-red-100 bg-white" : "border-slate-100 bg-white"
         )}>
-          {/* WHY IT MATTERS */}
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1.5">
-              WHY IT MATTERS
-            </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
-              {whyItMatters}
-            </p>
+          {/* Why this matters */}
+          <div className="border-l-4 border-slate-200 pl-4">
+            <p className="text-sm font-semibold italic text-slate-700 mb-2">Why this matters</p>
+            <p className="text-sm text-slate-600 leading-relaxed">{whyItMatters}</p>
           </div>
 
-          {/* PERSONA CONTEXT */}
+          {/* Recommended action */}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1.5">
-              PERSONA CONTEXT
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-2">
+              RECOMMENDED ACTION
             </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
-              {personaContext}
-            </p>
+            <p className="text-sm text-slate-700 leading-relaxed">{recommendedAction}</p>
           </div>
 
-          {/* LIKELY IMPACT */}
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1.5">
-              LIKELY IMPACT
-            </p>
-            <p className="text-sm text-slate-700 leading-relaxed">
-              {likelyImpact}
-            </p>
-          </div>
-
-          {/* Parameters */}
+          {/* Evidence pills */}
           {signal.parameters && signal.parameters.length > 0 && (
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {signal.parameters.map((p, i) => (
-                <div key={i} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-1.5">
-                  <span className="text-[11px] text-slate-400">{p.label}</span>
-                  <span className="ml-2 font-mono text-xs font-medium text-slate-700">{p.value}</span>
-                </div>
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs"
+                >
+                  <span className="text-slate-400">{p.label}</span>
+                  <span className="font-mono font-medium text-slate-700">{p.value}</span>
+                </span>
               ))}
             </div>
           )}
 
-          {/* RECOMMENDED ACTION (dark box) */}
-          <div className="rounded-lg bg-slate-900 p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
-              RECOMMENDED ACTION
-            </p>
-            <p className="text-sm text-white leading-relaxed">
-              {recommendedAction}
-            </p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/signals/${signal.id}`);
-              }}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2.5 text-xs font-bold text-slate-900 transition-colors hover:bg-slate-100"
-            >
-              Execute <ArrowRight size={12} />
-            </button>
-          </div>
-
-          {/* RAW DATA collapsible */}
-          <div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setRawDataOpen(!rawDataOpen);
-              }}
-              className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-slate-300 hover:text-slate-500 transition-colors"
-            >
-              {rawDataOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-              RAW DATA / SOURCE TRAIL
-            </button>
-            {rawDataOpen && (
-              <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                <pre className="font-mono text-xs text-slate-500 whitespace-pre-wrap">
-{JSON.stringify(
-  {
-    id: signal.id,
-    type: signal.type,
-    urgency: signal.urgency,
-    confidence: signal.confidence,
-    source: signal.source,
-    detectedAt: signal.detectedAt,
-    state: signal.state,
-    investorId: signal.investorId,
-    parameters: signal.parameters,
-  },
-  null,
-  2
-)}
-                </pre>
-              </div>
-            )}
-          </div>
+          {/* CTA */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/signals/${signal.id}`);
+            }}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-slate-800"
+          >
+            View Full Signal <ArrowRight size={12} />
+          </button>
         </div>
       )}
-    </div>
-  );
-}
-
-// -- Pressure Distribution sidebar ----------------------------------
-
-function PressureDistribution({ filteredSignals }) {
-  const categories = Object.entries(typeLabels);
-  const total = filteredSignals.length || 1;
-
-  return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-4">
-        SIGNAL PRESSURE DISTRIBUTION
-      </p>
-      <div className="space-y-3">
-        {categories.map(([key, label]) => {
-          const count = filteredSignals.filter((s) => s.type === key).length;
-          const pct = Math.round((count / total) * 100);
-          const colors = {
-            retention_risk: "bg-red-500",
-            influence_opportunity: "bg-emerald-500",
-            governance_management: "bg-blue-500",
-            information_gap: "bg-amber-500",
-            relationship_maintenance: "bg-violet-500",
-          };
-          return (
-            <div key={key}>
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[11px] font-medium text-slate-600">{label}</span>
-                <span className="font-mono text-[11px] text-slate-400">{count}</span>
-              </div>
-              <div className="h-1.5 rounded-full bg-slate-100">
-                <div
-                  className={cn("h-1.5 rounded-full transition-all", colors[key])}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Urgency breakdown */}
-      <div className="mt-6 pt-4 border-t border-slate-100">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-3">
-          URGENCY BREAKDOWN
-        </p>
-        <div className="space-y-2">
-          {["high", "medium", "low"].map((urg) => {
-            const count = filteredSignals.filter((s) => s.urgency === urg).length;
-            const colors = { high: "bg-red-500", medium: "bg-amber-500", low: "bg-slate-400" };
-            return (
-              <div key={urg} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className={cn("h-2 w-2 rounded-full", colors[urg])} />
-                  <span className="text-[11px] font-medium text-slate-600 uppercase">{urg}</span>
-                </div>
-                <span className="font-mono text-[11px] text-slate-400">{count}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
@@ -484,25 +303,27 @@ export function SignalsPage() {
   // Category filter options
   const categoryOptions = [
     { value: "all", label: "ALL" },
-    { value: "retention_risk", label: "TRADING" },
-    { value: "information_gap", label: "DISCLOSURES" },
-    { value: "influence_opportunity", label: "FUND FLOW" },
+    { value: "retention_risk", label: "RETENTION RISK" },
+    { value: "influence_opportunity", label: "INFLUENCE" },
     { value: "governance_management", label: "GOVERNANCE" },
+    { value: "information_gap", label: "INFO GAP" },
     { value: "relationship_maintenance", label: "RELATIONSHIP" },
   ];
 
   // Priority filter options
   const priorityOptions = [
-    { value: "all", label: "ALL SIGNALS" },
-    { value: "urgent", label: "ONLY URGENT" },
-    { value: "tier1", label: "ONLY TIER 1" },
+    { value: "all", label: "ALL" },
+    { value: "urgent", label: "URGENT" },
+    { value: "tier1", label: "TIER 1" },
   ];
 
-  const filtered = signals
+  const activeSignals = signals.filter(
+    (s) => s.state !== "resolved" && s.state !== "dismissed"
+  );
+
+  const filtered = activeSignals
     .filter((s) => {
-      // Category filter
       if (categoryFilter !== "all" && s.type !== categoryFilter) return false;
-      // Priority filter
       if (priorityFilter === "urgent" && s.urgency !== "high") return false;
       if (priorityFilter === "tier1") {
         const inv = getInvestor(s.investorId);
@@ -513,82 +334,69 @@ export function SignalsPage() {
     .sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 max-w-5xl">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Signals</h1>
-        <p className="mt-0.5 text-sm text-slate-400">
-          Real-time intelligence desk. Ranked interpretation over raw data.
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Signals</h1>
+          <p className="mt-0.5 text-sm text-slate-400">
+            Real-time intelligence desk. Ranked interpretation over raw data.
+          </p>
+        </div>
+        <span className="inline-flex items-center bg-blue-50 text-blue-700 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider">
+          {activeSignals.length} ACTIVE SIGNAL{activeSignals.length !== 1 ? "S" : ""}
+        </span>
+      </div>
+
+      {/* Category filter pills */}
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        {categoryOptions.map((opt) => (
+          <FilterPill
+            key={opt.value}
+            label={opt.label}
+            active={categoryFilter === opt.value}
+            onClick={() => setCategoryFilter(opt.value)}
+          />
+        ))}
+        <div className="w-px h-5 bg-slate-200 mx-1" />
+        {priorityOptions.map((opt) => (
+          <FilterPill
+            key={opt.value}
+            label={opt.label}
+            active={priorityFilter === opt.value}
+            onClick={() => setPriorityFilter(opt.value)}
+          />
+        ))}
+      </div>
+
+      {/* Pressure summary bar */}
+      <SignalPressureSummary filteredSignals={filtered} />
+
+      {/* Signal feed */}
+      <div className="mb-3 flex items-center justify-between">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+          RANKED INTELLIGENCE FEED
+        </p>
+        <p className="text-[11px] text-slate-400">
+          SHOWING {filtered.length} PRIORITIZED SIGNAL{filtered.length !== 1 ? "S" : ""}
         </p>
       </div>
 
-      {/* Filter row */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        {/* Category pills */}
-        <div className="flex flex-wrap items-center gap-2">
-          {categoryOptions.map((opt) => (
-            <FilterPill
-              key={opt.value}
-              label={opt.label}
-              active={categoryFilter === opt.value}
-              onClick={() => setCategoryFilter(opt.value)}
-            />
+      {filtered.length === 0 ? (
+        <Card>
+          <EmptyState
+            icon={Radio}
+            title="No signals match"
+            description="Try adjusting your filters to see more signals."
+          />
+        </Card>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((s) => (
+            <SignalCard key={s.id} signal={s} navigate={navigate} />
           ))}
         </div>
-
-        {/* Priority pills */}
-        <div className="flex items-center gap-2">
-          {priorityOptions.map((opt) => (
-            <FilterPill
-              key={opt.value}
-              label={opt.label}
-              active={priorityFilter === opt.value}
-              onClick={() => setPriorityFilter(opt.value)}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Signal pressure summary bar */}
-      <SignalPressureSummary filteredSignals={filtered} />
-
-      {/* Main layout: feed + sidebar */}
-      <div className="flex gap-6">
-        {/* Feed */}
-        <div className="min-w-0 flex-1">
-          <div className="mb-3 flex items-center justify-between">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
-              RANKED INTELLIGENCE FEED
-            </p>
-            <p className="text-[11px] text-slate-400">
-              SHOWING {filtered.length} PRIORITIZED SIGNALS
-            </p>
-          </div>
-
-          {filtered.length === 0 ? (
-            <div className="rounded-lg border border-slate-200 bg-white p-8 text-center">
-              <Radio size={24} className="mx-auto text-slate-300 mb-2" />
-              <p className="text-sm font-medium text-slate-700">No signals match</p>
-              <p className="mt-1 text-sm text-slate-500">
-                Try adjusting your filters to see more signals.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {filtered.map((s) => (
-                <SignalCard key={s.id} signal={s} navigate={navigate} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Right sidebar */}
-        <aside className="hidden w-72 flex-shrink-0 lg:block">
-          <div className="sticky top-6">
-            <PressureDistribution filteredSignals={filtered} />
-          </div>
-        </aside>
-      </div>
+      )}
     </div>
   );
 }

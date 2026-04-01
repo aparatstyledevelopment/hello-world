@@ -1,156 +1,173 @@
 import { cn } from "../../lib/utils";
 import { AlertTriangle } from "lucide-react";
 
+const basePill =
+  "inline-flex items-center text-[11px] tracking-[0.05em] uppercase font-semibold rounded-md px-2.5 py-1";
+
+// --- Variant style maps ---
+
 const urgencyStyles = {
-  high: "text-red-500",
-  medium: "text-amber-600",
-  low: "text-emerald-600",
+  high: "bg-red-50 text-red-700 border border-red-200",
+  medium: "bg-amber-50 text-amber-700 border border-amber-200",
+  low: "bg-emerald-50 text-emerald-700 border border-emerald-200",
 };
 
-const urgencyIcons = {
-  high: AlertTriangle,
+const urgencyLabels = {
+  high: "HIGH URGENCY",
+  medium: "MEDIUM URGENCY",
+  low: "LOW URGENCY",
 };
 
 const stateStyles = {
-  new: "bg-blue-50 text-blue-700 border-blue-200",
-  reviewing: "bg-amber-50 text-amber-700 border-amber-200",
-  confirmed: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  action_created: "bg-purple-50 text-purple-700 border-purple-200",
-  resolved: "bg-slate-50 text-slate-600 border-slate-200",
-  dismissed: "bg-slate-50 text-slate-500 border-slate-200",
+  new: "bg-blue-50 text-blue-700",
+  reviewing: "bg-amber-50 text-amber-700",
+  confirmed: "bg-emerald-50 text-emerald-700",
+  action_created: "bg-purple-50 text-purple-700",
+  resolved: "bg-slate-100 text-slate-500",
+  dismissed: "bg-slate-50 text-slate-400",
+};
+
+const stateLabels = {
+  new: "NEW",
+  reviewing: "REVIEWING",
+  confirmed: "CONFIRMED",
+  action_created: "ACTION CREATED",
+  resolved: "RESOLVED",
+  dismissed: "DISMISSED",
+};
+
+const typeStyles = {
+  retention_risk: "bg-red-50 text-red-800 border border-red-200",
+  influence_opportunity: "bg-teal-50 text-teal-800 border border-teal-200",
+  governance_management: "bg-slate-100 text-slate-800 border border-slate-200",
+  information_gap: "bg-amber-50 text-amber-800 border border-amber-200",
+  relationship_maintenance: "bg-blue-50 text-blue-800 border border-blue-200",
+};
+
+const typeLabels = {
+  retention_risk: "RETENTION RISK",
+  influence_opportunity: "INFLUENCE OPPORTUNITY",
+  governance_management: "GOVERNANCE",
+  information_gap: "INFORMATION GAP",
+  relationship_maintenance: "RELATIONSHIP",
+};
+
+const tierStyles = {
+  T1: "bg-slate-800 text-white",
+  T2: "bg-slate-200 text-slate-700",
+  T3: "bg-slate-100 text-slate-500",
 };
 
 const trajectoryStyles = {
   stable: "bg-slate-100 text-slate-700",
   increasing: "bg-emerald-50 text-emerald-700",
-  decreasing: "bg-red-50 text-red-700",
+  declining: "bg-red-50 text-red-700",
 };
 
-const typeLabels = {
-  retention_risk: "Retention Risk",
-  influence_opportunity: "Influence Opportunity",
-  governance_management: "Governance",
-  information_gap: "Information Gap",
-  relationship_maintenance: "Relationship",
+const trajectoryLabels = {
+  stable: "STABLE",
+  increasing: "INCREASING",
+  declining: "DECLINING",
 };
 
-const typeStyles = {
-  retention_risk: "bg-red-50 text-red-700 border-red-200",
-  influence_opportunity: "bg-violet-50 text-violet-700 border-violet-200",
-  governance_management: "bg-sky-50 text-sky-700 border-sky-200",
-  information_gap: "bg-amber-50 text-amber-700 border-amber-200",
-  relationship_maintenance: "bg-teal-50 text-teal-700 border-teal-200",
+const sensitivityStyles = {
+  governance: "border border-slate-300 text-slate-700",
+  esg: "border border-emerald-300 text-emerald-700",
+  "esg/proxy": "border border-emerald-300 text-emerald-700",
+  esg_proxy: "border border-emerald-300 text-emerald-700",
+  liquidity: "border border-blue-300 text-blue-700",
+  strategic_change: "bg-red-50 text-red-700 border border-red-200",
 };
 
-const tierStyles = {
-  1: "border-slate-300 text-slate-700 bg-white",
-  2: "border-slate-300 text-slate-500 bg-white",
-  3: "border-slate-200 text-slate-400 bg-white",
+const sensitivityLabels = {
+  governance: "GOVERNANCE",
+  esg: "ESG",
+  "esg/proxy": "ESG/PROXY",
+  esg_proxy: "ESG/PROXY",
+  liquidity: "LIQUIDITY",
+  strategic_change: "STRATEGIC CHANGE",
 };
 
-const provenanceStyles = {
-  observed: "bg-blue-50 text-blue-700 border-blue-200",
-  inferred: "bg-amber-50 text-amber-700 border-amber-200",
-  team_assessed: "bg-emerald-50 text-emerald-700 border-emerald-200",
+const roleStyles = {
+  esg_specialist: "bg-emerald-50 text-emerald-800 border border-emerald-200",
+  "buy-side_analyst": "bg-blue-50 text-blue-800",
+  buyside_analyst: "bg-blue-50 text-blue-800",
+  "proxy/stewardship": "bg-slate-100 text-slate-800",
+  proxy_stewardship: "bg-slate-100 text-slate-800",
+  portfolio_manager: "bg-indigo-50 text-indigo-800 border border-indigo-200",
+  sell_side_analyst: "bg-cyan-50 text-cyan-800 border border-cyan-200",
 };
 
-const freshnessStyles = {
-  stale: "text-red-500",
-  recent: "text-slate-500",
+const roleLabels = {
+  esg_specialist: "ESG SPECIALIST",
+  "buy-side_analyst": "BUY-SIDE ANALYST",
+  buyside_analyst: "BUY-SIDE ANALYST",
+  "proxy/stewardship": "PROXY/STEWARDSHIP",
+  proxy_stewardship: "PROXY/STEWARDSHIP",
+  portfolio_manager: "PORTFOLIO MANAGER",
+  sell_side_analyst: "SELL-SIDE ANALYST",
 };
 
-function resolveVariant(variant) {
-  if (!variant) return { style: "bg-slate-100 text-slate-700 border-slate-200", label: null, kind: "default" };
+function resolveVariant(variant, kind) {
+  if (!variant)
+    return {
+      style: "bg-slate-100 text-slate-700 border border-slate-200",
+      label: null,
+      resolvedKind: "default",
+    };
 
-  // Urgency
-  if (urgencyStyles[variant]) return { style: urgencyStyles[variant], label: null, kind: "urgency" };
+  // Explicit kind resolution
+  if (kind === "urgency" && urgencyStyles[variant])
+    return { style: urgencyStyles[variant], label: urgencyLabels[variant], resolvedKind: "urgency" };
+  if (kind === "state" && stateStyles[variant])
+    return { style: stateStyles[variant], label: stateLabels[variant], resolvedKind: "state" };
+  if (kind === "type" && typeStyles[variant])
+    return { style: typeStyles[variant], label: typeLabels[variant], resolvedKind: "type" };
+  if (kind === "tier" && tierStyles[variant])
+    return { style: tierStyles[variant], label: variant, resolvedKind: "tier" };
+  if (kind === "trajectory" && trajectoryStyles[variant])
+    return { style: trajectoryStyles[variant], label: trajectoryLabels[variant], resolvedKind: "trajectory" };
+  if (kind === "sensitivity" && sensitivityStyles[variant])
+    return { style: sensitivityStyles[variant], label: sensitivityLabels[variant], resolvedKind: "sensitivity" };
+  if (kind === "role" && roleStyles[variant])
+    return { style: roleStyles[variant], label: roleLabels[variant], resolvedKind: "role" };
 
-  // State
-  if (stateStyles[variant]) return { style: stateStyles[variant], label: null, kind: "state" };
+  // Auto-detect by variant value
+  if (urgencyStyles[variant])
+    return { style: urgencyStyles[variant], label: urgencyLabels[variant], resolvedKind: "urgency" };
+  if (stateStyles[variant])
+    return { style: stateStyles[variant], label: stateLabels[variant], resolvedKind: "state" };
+  if (typeStyles[variant])
+    return { style: typeStyles[variant], label: typeLabels[variant], resolvedKind: "type" };
+  if (tierStyles[variant])
+    return { style: tierStyles[variant], label: variant, resolvedKind: "tier" };
+  if (trajectoryStyles[variant])
+    return { style: trajectoryStyles[variant], label: trajectoryLabels[variant], resolvedKind: "trajectory" };
+  if (sensitivityStyles[variant])
+    return { style: sensitivityStyles[variant], label: sensitivityLabels[variant], resolvedKind: "sensitivity" };
+  if (roleStyles[variant])
+    return { style: roleStyles[variant], label: roleLabels[variant], resolvedKind: "role" };
 
-  // Trajectory
-  if (trajectoryStyles[variant]) return { style: trajectoryStyles[variant], label: null, kind: "trajectory" };
+  // Numeric tier fallback (1, 2, 3)
+  const tierKey = `T${variant}`;
+  if (tierStyles[tierKey])
+    return { style: tierStyles[tierKey], label: tierKey, resolvedKind: "tier" };
 
-  // Type
-  if (typeStyles[variant]) return { style: typeStyles[variant], label: typeLabels[variant], kind: "type" };
-
-  // Provenance
-  if (provenanceStyles[variant]) return { style: provenanceStyles[variant], label: null, kind: "provenance" };
-
-  // Freshness
-  if (freshnessStyles[variant]) return { style: freshnessStyles[variant], label: null, kind: "freshness" };
-
-  // Tier
-  const tierNum = Number(variant);
-  if (tierStyles[tierNum]) return { style: tierStyles[tierNum], label: `T${tierNum}`, kind: "tier" };
-
-  return { style: "bg-slate-100 text-slate-700 border-slate-200", label: null, kind: "default" };
+  return {
+    style: "bg-slate-100 text-slate-700 border border-slate-200",
+    label: null,
+    resolvedKind: "default",
+  };
 }
 
-export function Badge({ variant, children, className }) {
-  const { style, label, kind } = resolveVariant(variant);
+export function Badge({ variant, kind, children, className, icon: CustomIcon }) {
+  const { style, label, resolvedKind } = resolveVariant(variant, kind);
 
-  // Urgency badges: text with optional warning icon, no pill background
-  if (kind === "urgency") {
-    const Icon = urgencyIcons[variant];
-    return (
-      <span className={cn("inline-flex items-center gap-1 text-xs font-medium", style, className)}>
-        {Icon && <Icon size={12} />}
-        {children ?? label ?? variant}
-      </span>
-    );
-  }
+  const Icon = CustomIcon || (resolvedKind === "urgency" && variant === "high" ? AlertTriangle : null);
 
-  // Tier badges: small outlined circle pills
-  if (kind === "tier") {
-    return (
-      <span
-        className={cn(
-          "inline-flex items-center justify-center rounded-full border px-1.5 py-0 text-[10px] font-semibold",
-          style,
-          className
-        )}
-      >
-        {children ?? label ?? variant}
-      </span>
-    );
-  }
-
-  // Freshness badges: colored dot + text
-  if (kind === "freshness") {
-    const isStale = variant === "stale";
-    return (
-      <span className={cn("inline-flex items-center gap-1.5 text-xs font-medium", style, className)}>
-        <span className={cn("h-1.5 w-1.5 rounded-full", isStale ? "bg-red-500" : "bg-slate-400")} />
-        {children ?? label ?? variant}
-      </span>
-    );
-  }
-
-  // Trajectory badges: pills without border
-  if (kind === "trajectory") {
-    return (
-      <span
-        className={cn(
-          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium uppercase",
-          style,
-          className
-        )}
-      >
-        {children ?? label ?? variant}
-      </span>
-    );
-  }
-
-  // Default pill badges (state, type, provenance, etc.)
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium",
-        style,
-        className
-      )}
-    >
+    <span className={cn(basePill, style, className)}>
+      {Icon && <Icon size={12} className="mr-1.5 shrink-0" />}
       {children ?? label ?? variant}
     </span>
   );

@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { cn } from "../lib/utils";
 import { StatCard } from "../components/ui/StatCard";
+import { Card } from "../components/ui/Card";
+import { ActionCard } from "../components/ui/ActionCard";
+import { HealthDots } from "../components/ui/HealthDots";
 import { investors } from "../data/mock-data";
 
 // ── Peer benchmark data (inline mock) ───────────────────
@@ -73,9 +76,15 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
           </span>
         )}
       </span>
-      <div className="flex-1 h-1.5 rounded-full bg-slate-100">
+      <div className="flex-1 h-2.5 rounded-full bg-slate-100">
         <div
-          className={cn("h-1.5 rounded-full transition-all", barColor)}
+          className={cn(
+            "h-2.5 rounded-full transition-all",
+            barColor,
+            isOurs && "ring-2 ring-offset-1",
+            isOurs && status === "above" && "ring-emerald-200",
+            isOurs && status === "below" && "ring-red-200"
+          )}
           style={{ width: `${(value / maxValue) * 100}%` }}
         />
       </div>
@@ -97,42 +106,7 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
   );
 }
 
-function StackedBar({ label, segments, isOurs = false }) {
-  const colors = ["bg-sky-400", "bg-violet-400", "bg-indigo-400", "bg-slate-300"];
-  return (
-    <div className="flex items-center gap-3 py-1.5">
-      <span
-        className={cn(
-          "w-44 text-sm truncate",
-          isOurs ? "font-semibold text-slate-900" : "text-slate-600"
-        )}
-      >
-        {label}
-        {isOurs && (
-          <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            YOU
-          </span>
-        )}
-      </span>
-      <div className="flex-1 h-1.5 rounded-full bg-slate-100 flex overflow-hidden">
-        {segments.map((seg, i) => (
-          <div
-            key={i}
-            className={cn("h-1.5 first:rounded-l-full last:rounded-r-full", colors[i])}
-            style={{ width: `${seg}%` }}
-            title={`${seg}%`}
-          />
-        ))}
-      </div>
-      <span className="w-10 text-right font-mono text-xs text-slate-500">
-        {segments[0]}%
-      </span>
-    </div>
-  );
-}
-
 export function BenchmarkingPage() {
-  // Derive "our" metrics from mock data
   const ourMetrics = useMemo(() => {
     const totalHolding = investors.reduce((s, i) => s + i.holdingPct, 0);
     const byType = { passive: 0, active: 0, sovereign: 0, pension: 0 };
@@ -177,7 +151,6 @@ export function BenchmarkingPage() {
 
   const allEntries = [{ ...ourMetrics, isOurs: true }, ...peers.map((p) => ({ ...p, isOurs: false }))];
 
-  // Determine above/below for each metric
   const engagementStatus = sectorMedian
     ? ourMetrics.engagementIntensity >= sectorMedian.engagementIntensity ? "above" : "below"
     : "neutral";
@@ -185,10 +158,8 @@ export function BenchmarkingPage() {
     ? ourMetrics.shareholderStability >= sectorMedian.shareholderStability ? "above" : "below"
     : "neutral";
 
-  // Count how many metrics are below
   const belowCount = [engagementStatus, stabilityStatus].filter((s) => s === "below").length;
 
-  // Auto-generated insights -- problems first, then strengths
   const insights = useMemo(() => {
     const negatives = [];
     const positives = [];
@@ -235,9 +206,8 @@ export function BenchmarkingPage() {
       });
     }
 
-    // Problems first, then neutrals, then strengths
     return [...negatives, ...neutrals, ...positives];
-  }, [ourMetrics]);
+  }, [ourMetrics, sectorMedian]);
 
   const insightDotColor = {
     positive: "bg-emerald-500",
@@ -246,7 +216,7 @@ export function BenchmarkingPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-slate-900">Peer Benchmarking</h1>
@@ -255,190 +225,136 @@ export function BenchmarkingPage() {
         </p>
       </div>
 
-      {/* Summary Stats with above/below coloring */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className={cn(
-          "rounded-lg border-2 p-5 text-center",
-          engagementStatus === "above"
-            ? "border-emerald-200 bg-emerald-50"
-            : "border-red-200 bg-red-50"
-        )}>
-          <p className={cn(
-            "text-[11px] font-medium uppercase tracking-[0.1em]",
+      {/* ── Dark Concentration-style Card ─────────────────── */}
+      <div className="rounded-lg bg-slate-900 p-6">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+          PEER POSITION INDEX
+        </p>
+        <div className="mt-3 flex items-baseline gap-4">
+          <span className="font-mono text-5xl font-bold text-white">
+            {ourMetrics.engagementIntensity}%
+          </span>
+          <span className={cn(
+            "text-sm font-medium",
             engagementStatus === "above" ? "text-emerald-400" : "text-red-400"
           )}>
-            Engagement Intensity
-          </p>
-          <p className={cn(
-            "mt-1 text-5xl font-mono font-bold",
-            engagementStatus === "above" ? "text-emerald-600" : "text-red-600"
-          )}>
-            {ourMetrics.engagementIntensity}%
-          </p>
-          <p className={cn(
-            "mt-1 text-xs font-semibold",
-            engagementStatus === "above" ? "text-emerald-600" : "text-red-600"
-          )}>
-            {engagementStatus === "above" ? "Above" : "Below"} sector median ({sectorMedian?.engagementIntensity}%)
-          </p>
+            Engagement intensity
+          </span>
         </div>
-
-        <div className={cn(
-          "rounded-lg border-2 p-5 text-center",
-          stabilityStatus === "above"
-            ? "border-emerald-200 bg-emerald-50"
-            : "border-red-200 bg-red-50"
-        )}>
-          <p className={cn(
-            "text-[11px] font-medium uppercase tracking-[0.1em]",
-            stabilityStatus === "above" ? "text-emerald-400" : "text-red-400"
-          )}>
-            Shareholder Stability
-          </p>
-          <p className={cn(
-            "mt-1 text-5xl font-mono font-bold",
-            stabilityStatus === "above" ? "text-emerald-600" : "text-red-600"
-          )}>
-            {ourMetrics.shareholderStability}%
-          </p>
-          <p className={cn(
-            "mt-1 text-xs font-semibold",
-            stabilityStatus === "above" ? "text-emerald-600" : "text-red-600"
-          )}>
-            {stabilityStatus === "above" ? "Above" : "Below"} sector median ({sectorMedian?.shareholderStability}%)
-          </p>
+        <div className="mt-4 h-2.5 w-full rounded-full bg-slate-700">
+          <div
+            className={cn(
+              "h-2.5 rounded-full transition-all",
+              engagementStatus === "above" ? "bg-emerald-500" : "bg-red-500"
+            )}
+            style={{ width: `${ourMetrics.engagementIntensity}%` }}
+          />
         </div>
-
-        <div className={cn(
-          "rounded-lg border-2 p-5 text-center",
-          belowCount > 0
-            ? "border-red-200 bg-red-50"
-            : "border-emerald-200 bg-emerald-50"
-        )}>
-          <p className={cn(
-            "text-[11px] font-medium uppercase tracking-[0.1em]",
-            belowCount > 0 ? "text-red-400" : "text-emerald-400"
-          )}>
-            Areas to Improve
-          </p>
-          <p className={cn(
-            "mt-1 text-5xl font-mono font-bold",
-            belowCount > 0 ? "text-red-600" : "text-emerald-600"
-          )}>
-            {belowCount}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">Below sector average</p>
-        </div>
-
-        <div className="rounded-lg border border-slate-200 bg-white p-5 text-center">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">Peers Tracked</p>
-          <p className="mt-1 text-4xl font-mono font-bold text-slate-700">{peers.length}</p>
-          <p className="mt-1 text-xs text-slate-400">Including sector median</p>
-        </div>
+        <p className="mt-2 text-xs text-slate-400">
+          {engagementStatus === "above" ? (
+            <>
+              <span className="font-mono font-semibold text-emerald-400">Above</span> sector median ({sectorMedian?.engagementIntensity}%) — strong relative positioning
+            </>
+          ) : (
+            <>
+              <span className="font-mono font-semibold text-red-400">Below</span> sector median ({sectorMedian?.engagementIntensity}%) — improvement opportunity identified
+            </>
+          )}
+        </p>
       </div>
 
-      {/* Ownership Overlap Table */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
-        <div className="mb-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Ownership Overlap
-          </h3>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Common institutional investors shared with peers
-          </p>
-        </div>
+      {/* ── Summary Stats ─────────────────────────────────── */}
+      <div className="grid grid-cols-4 gap-4">
+        <StatCard
+          label="Engagement Intensity"
+          value={`${ourMetrics.engagementIntensity}%`}
+          annotation={`${engagementStatus === "above" ? "Above" : "Below"} sector median (${sectorMedian?.engagementIntensity}%)`}
+          annotationColor={engagementStatus === "above" ? "emerald" : "red"}
+        />
+        <StatCard
+          label="Shareholder Stability"
+          value={`${ourMetrics.shareholderStability}%`}
+          annotation={`${stabilityStatus === "above" ? "Above" : "Below"} sector median (${sectorMedian?.shareholderStability}%)`}
+          annotationColor={stabilityStatus === "above" ? "emerald" : "red"}
+        />
+        <StatCard
+          label="Areas to Improve"
+          value={belowCount}
+          annotation="Below sector average"
+          annotationColor={belowCount > 0 ? "red" : "emerald"}
+        />
+        <StatCard
+          label="Peers Tracked"
+          value={peers.length}
+          annotation="Including sector median"
+        />
+      </div>
+
+      {/* ── Two-column Comparison Table ───────────────────── */}
+      <Card variant="section" accentColor="blue" title="Ownership Overlap" subtitle="Common institutional investors shared with peers">
         <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                  Company
-                </th>
-                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                  Overlap %
-                </th>
-                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                  Engagement Intensity
-                </th>
-                <th className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-                  Stability
-                </th>
+                {["COMPANY", "OVERLAP %", "ENGAGEMENT INTENSITY", "STABILITY"].map((col) => (
+                  <th key={col} className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                    {col}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {allEntries.map((entry) => {
-                const isBelow = entry.isOurs && (engagementStatus === "below" || stabilityStatus === "below");
-                return (
-                  <tr
-                    key={entry.name}
-                    className={cn(
-                      entry.isOurs
-                        ? isBelow
-                          ? "bg-red-50/50"
-                          : "bg-emerald-50/50"
-                        : ""
+              {allEntries.map((entry) => (
+                <tr
+                  key={entry.name}
+                  className={cn(
+                    entry.isOurs && "bg-slate-900 text-white"
+                  )}
+                >
+                  <td className={cn("px-4 py-2.5", entry.isOurs ? "font-bold text-white" : "text-slate-700")}>
+                    {entry.name}
+                    {entry.isOurs && (
+                      <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-emerald-400">
+                        YOU
+                      </span>
                     )}
-                  >
-                    <td
-                      className={cn(
-                        "px-4 py-2.5",
-                        entry.isOurs
-                          ? "font-bold text-slate-900"
-                          : "text-slate-700"
-                      )}
-                    >
-                      {entry.name}
-                      {entry.isOurs && (
-                        <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400">
-                          YOU
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-2.5 font-mono text-slate-700">
-                      {entry.ownershipOverlap}%
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className={cn(
-                        "font-mono",
-                        entry.isOurs
-                          ? engagementStatus === "above"
-                            ? "text-emerald-600 font-bold"
-                            : "text-red-600 font-bold"
-                          : "text-slate-700"
-                      )}>
-                        {entry.engagementIntensity}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className={cn(
-                        "font-mono",
-                        entry.isOurs
-                          ? stabilityStatus === "above"
-                            ? "text-emerald-600 font-bold"
-                            : "text-red-600 font-bold"
-                          : "text-slate-700"
-                      )}>
-                        {entry.shareholderStability}%
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
+                  </td>
+                  <td className={cn("px-4 py-2.5 font-mono", entry.isOurs ? "text-slate-300" : "text-slate-700")}>
+                    {entry.ownershipOverlap}%
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span className={cn(
+                      "font-mono",
+                      entry.isOurs
+                        ? engagementStatus === "above"
+                          ? "text-emerald-400 font-bold"
+                          : "text-red-400 font-bold"
+                        : "text-slate-700"
+                    )}>
+                      {entry.engagementIntensity}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span className={cn(
+                      "font-mono",
+                      entry.isOurs
+                        ? stabilityStatus === "above"
+                          ? "text-emerald-400 font-bold"
+                          : "text-red-400 font-bold"
+                        : "text-slate-700"
+                    )}>
+                      {entry.shareholderStability}%
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
 
-      {/* Engagement Intensity Bars */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
-        <div className="mb-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Engagement Intensity
-          </h3>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Score reflecting interaction frequency and quality
-          </p>
-        </div>
+      {/* ── Engagement Intensity Bars ─────────────────────── */}
+      <Card variant="section" accentColor="emerald" title="Engagement Intensity" subtitle="Score reflecting interaction frequency and quality">
         <div className="space-y-1">
           {allEntries
             .sort((a, b) => b.engagementIntensity - a.engagementIntensity)
@@ -452,18 +368,10 @@ export function BenchmarkingPage() {
               />
             ))}
         </div>
-      </div>
+      </Card>
 
-      {/* Shareholder Stability Bars */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
-        <div className="mb-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Shareholder Stability
-          </h3>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Percentage of shareholders with stable or growing positions
-          </p>
-        </div>
+      {/* ── Shareholder Stability Bars ────────────────────── */}
+      <Card variant="section" accentColor="violet" title="Shareholder Stability" subtitle="Percentage of shareholders with stable or growing positions">
         <div className="space-y-1">
           {allEntries
             .sort((a, b) => b.shareholderStability - a.shareholderStability)
@@ -477,18 +385,10 @@ export function BenchmarkingPage() {
               />
             ))}
         </div>
-      </div>
+      </Card>
 
-      {/* Ownership Structure - Stacked Bars */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
-        <div className="mb-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Ownership Structure
-          </h3>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Breakdown by investor type
-          </p>
-        </div>
+      {/* ── Ownership Structure - Stacked Bars ────────────── */}
+      <Card variant="section" accentColor="indigo" title="Ownership Structure" subtitle="Breakdown by investor type">
         <div className="mb-3 flex gap-4 text-xs text-slate-500">
           <span className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-sm bg-sky-400" /> Passive
@@ -503,33 +403,46 @@ export function BenchmarkingPage() {
             <span className="h-2.5 w-2.5 rounded-sm bg-slate-300" /> Other
           </span>
         </div>
-        <div className="space-y-1">
-          {allEntries.map((entry) => (
-            <StackedBar
-              key={entry.name}
-              label={entry.name}
-              segments={[
-                entry.passivePct,
-                entry.activePct,
-                entry.sovereignPct,
-                entry.otherPct,
-              ]}
-              isOurs={entry.isOurs}
-            />
-          ))}
+        <div className="space-y-2">
+          {allEntries.map((entry) => {
+            const segments = [entry.passivePct, entry.activePct, entry.sovereignPct, entry.otherPct];
+            const colors = ["bg-sky-400", "bg-violet-400", "bg-indigo-400", "bg-slate-300"];
+            return (
+              <div key={entry.name} className="flex items-center gap-3 py-1.5">
+                <span
+                  className={cn(
+                    "w-44 text-sm truncate",
+                    entry.isOurs ? "font-semibold text-slate-900" : "text-slate-600"
+                  )}
+                >
+                  {entry.name}
+                  {entry.isOurs && (
+                    <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                      YOU
+                    </span>
+                  )}
+                </span>
+                <div className="flex-1 h-2.5 rounded-full bg-slate-100 flex overflow-hidden">
+                  {segments.map((seg, i) => (
+                    <div
+                      key={i}
+                      className={cn("h-2.5 first:rounded-l-full last:rounded-r-full", colors[i])}
+                      style={{ width: `${seg}%` }}
+                      title={`${seg}%`}
+                    />
+                  ))}
+                </div>
+                <span className="w-10 text-right font-mono text-xs text-slate-500">
+                  {segments[0]}%
+                </span>
+              </div>
+            );
+          })}
         </div>
-      </div>
+      </Card>
 
-      {/* Key Insights - problems first */}
-      <div className="rounded-lg border border-slate-200 bg-white p-5">
-        <div className="mb-4">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-            Key Insights
-          </h3>
-          <p className="mt-0.5 text-xs text-slate-500">
-            Auto-generated peer analysis (issues first)
-          </p>
-        </div>
+      {/* ── Key Insights (problems first) ─────────────────── */}
+      <Card variant="section" accentColor="amber" title="Key Insights" subtitle="Auto-generated peer analysis (issues first)">
         <ul className="space-y-3">
           {insights.map((insight, i) => (
             <li
@@ -554,10 +467,10 @@ export function BenchmarkingPage() {
             </li>
           ))}
         </ul>
-      </div>
+      </Card>
 
-      {/* Recommendation */}
-      <div className="rounded-lg bg-slate-800 text-white p-5">
+      {/* ── Recommendation ────────────────────────────────── */}
+      <div className="rounded-lg bg-slate-900 text-white p-6">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-2">
           RECOMMENDATION
         </p>
