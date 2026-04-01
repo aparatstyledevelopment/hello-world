@@ -61,10 +61,10 @@ export function LogInteractionModal({ open, onClose }) {
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-slate-900">Log Interaction</h2>
+          <h2 className="text-lg font-bold text-black">Log Interaction</h2>
           <button
             onClick={resetAndClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
           >
             <X size={18} />
           </button>
@@ -73,7 +73,7 @@ export function LogInteractionModal({ open, onClose }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Investor */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
               Investor
             </label>
             <select
@@ -82,7 +82,7 @@ export function LogInteractionModal({ open, onClose }) {
                 setInvestorId(e.target.value);
                 setContactId("");
               }}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
               required
             >
               <option value="">Select investor...</option>
@@ -96,13 +96,13 @@ export function LogInteractionModal({ open, onClose }) {
 
           {/* Contact */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
               Contact
             </label>
             <select
               value={contactId}
               onChange={(e) => setContactId(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
               disabled={!investorId}
               required
             >
@@ -119,13 +119,13 @@ export function LogInteractionModal({ open, onClose }) {
 
           {/* Type */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
               Type
             </label>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
               required
             >
               <option value="">Select type...</option>
@@ -139,42 +139,42 @@ export function LogInteractionModal({ open, onClose }) {
 
           {/* Date */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
               Date
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
               required
             />
           </div>
 
           {/* Summary */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
               Summary
             </label>
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
               rows={3}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
               placeholder="Brief summary of the interaction..."
             />
           </div>
 
           {/* Key Takeaways */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
               Key Takeaways
             </label>
             <textarea
               value={takeaways}
               onChange={(e) => setTakeaways(e.target.value)}
               rows={2}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
               placeholder="Key takeaways or insights..."
             />
           </div>
@@ -186,9 +186,9 @@ export function LogInteractionModal({ open, onClose }) {
                 type="checkbox"
                 checked={followUp}
                 onChange={(e) => setFollowUp(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-300"
+                className="h-4 w-4 rounded border-gray-300 text-black focus:ring-gray-300"
               />
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
+              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
                 Follow-up needed?
               </span>
             </label>
@@ -196,14 +196,14 @@ export function LogInteractionModal({ open, onClose }) {
 
           {followUp && (
             <div>
-              <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400 mb-1">
+              <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
                 Follow-up Description
               </label>
               <input
                 type="text"
                 value={followUpDesc}
                 onChange={(e) => setFollowUpDesc(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
                 placeholder="Describe the follow-up action..."
               />
             </div>
@@ -214,13 +214,13 @@ export function LogInteractionModal({ open, onClose }) {
             <button
               type="button"
               onClick={resetAndClose}
-              className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors"
+              className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
             >
               Log Interaction
             </button>
