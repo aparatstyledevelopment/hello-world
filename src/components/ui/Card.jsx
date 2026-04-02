@@ -1,12 +1,12 @@
 import { cn } from "../../lib/utils";
 
 const variantStyles = {
-  default: "bg-white border border-gray-200 rounded-lg p-5",
-  dark: "bg-black text-white rounded-lg p-5",
-  section: "bg-white border border-gray-200 rounded-lg p-5",
-  fact: "bg-gray-50 border border-gray-200 rounded-lg p-5",
-  inference: "bg-gray-50 border border-gray-200 rounded-lg p-5",
-  recommendation: "bg-gray-50 border border-gray-200 rounded-lg p-5",
+  default: "bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-sm",
+  dark: "bg-zinc-900 text-white rounded-2xl p-5 shadow-sm",
+  section: "bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-sm",
+  fact: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5",
+  inference: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5",
+  recommendation: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5",
 };
 
 export function Card({
@@ -36,15 +36,15 @@ export function Card({
         >
           <div className="flex items-center gap-2">
             {isSection && accentColor && (
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-black" />
+              <span className="inline-block w-1 h-4 rounded-full bg-zinc-900" />
             )}
             <div>
               {title && (
                 <h3
                   className={cn(
                     isSection
-                      ? "text-base font-bold text-black"
-                      : "text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400"
+                      ? "text-[15px] font-semibold text-zinc-900"
+                      : "text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400"
                   )}
                 >
                   {title}
@@ -54,7 +54,7 @@ export function Card({
                 <p
                   className={cn(
                     "mt-0.5 text-xs",
-                    variant === "dark" ? "text-gray-400" : "text-gray-500"
+                    variant === "dark" ? "text-zinc-400" : "text-zinc-500"
                   )}
                 >
                   {subtitle}

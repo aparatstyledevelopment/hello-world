@@ -108,8 +108,8 @@ function deriveIrSentiment(inv) {
 }
 
 const trajectoryStyles = {
-  STABLE: "bg-gray-100 text-gray-700",
-  INCREASING: "bg-gray-100 text-gray-700",
+  STABLE: "bg-zinc-100 text-zinc-700",
+  INCREASING: "bg-zinc-100 text-zinc-700",
   DECREASING: "bg-red-50 text-red-700",
 };
 
@@ -136,19 +136,19 @@ const tabConfig = [
 
 // ── Overview Tab ─────────────────────────────────────────
 const timelineDotColors = {
-  meeting: "bg-black",
-  call: "bg-gray-700",
-  email: "bg-gray-400",
-  signal: "bg-gray-400",
-  filing: "bg-gray-600",
+  meeting: "bg-zinc-900",
+  call: "bg-zinc-700",
+  email: "bg-zinc-400",
+  signal: "bg-zinc-400",
+  filing: "bg-zinc-600",
 };
 
 const timelineBadgeStyles = {
-  meeting: "bg-gray-100 text-gray-700",
-  call: "bg-gray-100 text-gray-700",
-  email: "bg-gray-100 text-gray-600",
-  signal: "bg-gray-100 text-gray-700",
-  filing: "bg-gray-100 text-gray-700",
+  meeting: "bg-zinc-100 text-zinc-700",
+  call: "bg-zinc-100 text-zinc-700",
+  email: "bg-zinc-100 text-zinc-600",
+  signal: "bg-zinc-100 text-zinc-700",
+  filing: "bg-zinc-100 text-zinc-700",
 };
 
 function OverviewTab({ investor, signals }) {
@@ -207,8 +207,8 @@ function OverviewTab({ investor, signals }) {
             annotation="Based on current holdings"
             annotationColor="slate"
           />
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
               MAR STATUS
             </p>
             <div className="mt-3 flex items-center gap-2">
@@ -216,13 +216,13 @@ function OverviewTab({ investor, signals }) {
                 className={cn(
                   "h-2.5 w-2.5 rounded-full",
                   marStatus.color === "amber"
-                    ? "bg-gray-400"
+                    ? "bg-zinc-400"
                     : marStatus.color === "blue"
-                    ? "bg-gray-700"
-                    : "bg-gray-400"
+                    ? "bg-zinc-700"
+                    : "bg-zinc-400"
                 )}
               />
-              <span className="font-mono text-lg font-bold text-black">
+              <span className="font-mono text-lg font-bold text-zinc-900">
                 {marStatus.label}
               </span>
             </div>
@@ -232,14 +232,14 @@ function OverviewTab({ investor, signals }) {
 
       {/* STATE & SENTIMENT - right column */}
       <div className="w-full md:w-[420px] flex-shrink-0">
-        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
           STATE & SENTIMENT
         </h3>
         <div className="grid grid-cols-2 gap-3">
           {/* Conviction */}
-          <div className="rounded-lg border border-gray-200 bg-white p-4 overflow-hidden">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4 overflow-hidden">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                 CONVICTION
               </p>
               <Badge
@@ -260,33 +260,33 @@ function OverviewTab({ investor, signals }) {
           </div>
 
           {/* Sentiment */}
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                 SENTIMENT
               </p>
               <span
                 className={cn(
                   "inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]",
                   sentiment === "Positive"
-                    ? "bg-gray-100 text-gray-700"
+                    ? "bg-zinc-100 text-zinc-700"
                     : sentiment === "Negative"
                     ? "bg-red-50 text-red-700"
-                    : "bg-gray-100 text-gray-600"
+                    : "bg-zinc-100 text-zinc-600"
                 )}
               >
                 {sentiment.toUpperCase()}
               </span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               {getStateParam(investor, "Sentiment")?.value || "No sentiment data"}
             </p>
           </div>
 
           {/* Freshness */}
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                 FRESHNESS
               </p>
               <span
@@ -294,19 +294,19 @@ function OverviewTab({ investor, signals }) {
                   "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]",
                   freshness === "Stale"
                     ? "bg-red-50 text-red-700"
-                    : "bg-gray-100 text-gray-700"
+                    : "bg-zinc-100 text-zinc-700"
                 )}
               >
                 <span
                   className={cn(
                     "h-1.5 w-1.5 rounded-full",
-                    freshness === "Stale" ? "bg-red-500" : "bg-black"
+                    freshness === "Stale" ? "bg-red-500" : "bg-zinc-900"
                   )}
                 />
                 {freshness.toUpperCase()}
               </span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               {freshness === "Stale"
                 ? "Last contact over 30 days ago"
                 : "Recent engagement within 30 days"}
@@ -314,25 +314,25 @@ function OverviewTab({ investor, signals }) {
           </div>
 
           {/* Engagement */}
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+              <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                 ENGAGEMENT
               </p>
               <span
                 className={cn(
                   "inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]",
                   engagement === "High"
-                    ? "bg-gray-100 text-gray-700"
+                    ? "bg-zinc-100 text-zinc-700"
                     : engagement === "Low"
                     ? "bg-red-50 text-red-700"
-                    : "bg-gray-100 text-gray-700"
+                    : "bg-zinc-100 text-zinc-700"
                 )}
               >
                 {engagement.toUpperCase()}
               </span>
             </div>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-500">
               Momentum: {investor.engagementMomentum}
             </p>
           </div>
@@ -341,32 +341,32 @@ function OverviewTab({ investor, signals }) {
       </div>
 
       {/* IR Sentiment Card (compact dark) */}
-      <div className="rounded-lg bg-black p-4 flex items-center gap-6">
+      <div className="rounded-2xl bg-zinc-900 p-4 flex items-center gap-6">
         <div className="flex items-baseline gap-2">
           <span className="font-mono text-2xl font-bold text-white">
             {irSentiment.score}/10
           </span>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.05em] text-gray-400">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.05em] text-zinc-400">
             {irSentiment.status}
           </span>
         </div>
         <div className="flex-1 flex items-center gap-6">
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase tracking-[0.1em] text-gray-500">Quality</span>
-              <span className="text-[10px] font-mono text-gray-400">{irSentiment.quality}%</span>
+              <span className="text-[10px] uppercase tracking-[0.1em] text-zinc-500">Quality</span>
+              <span className="text-[10px] font-mono text-zinc-400">{irSentiment.quality}%</span>
             </div>
-            <div className="h-1.5 rounded-full bg-gray-800">
+            <div className="h-1.5 rounded-full bg-zinc-800">
               <div className="h-1.5 rounded-full bg-white transition-all" style={{ width: `${irSentiment.quality}%` }} />
             </div>
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase tracking-[0.1em] text-gray-500">Trust</span>
-              <span className="text-[10px] font-mono text-gray-400">{irSentiment.trust}%</span>
+              <span className="text-[10px] uppercase tracking-[0.1em] text-zinc-500">Trust</span>
+              <span className="text-[10px] font-mono text-zinc-400">{irSentiment.trust}%</span>
             </div>
-            <div className="h-1.5 rounded-full bg-gray-800">
-              <div className="h-1.5 rounded-full bg-gray-400 transition-all" style={{ width: `${irSentiment.trust}%` }} />
+            <div className="h-1.5 rounded-full bg-zinc-800">
+              <div className="h-1.5 rounded-full bg-zinc-400 transition-all" style={{ width: `${irSentiment.trust}%` }} />
             </div>
           </div>
         </div>
@@ -374,12 +374,12 @@ function OverviewTab({ investor, signals }) {
 
       {/* RECENT SIGNALS */}
       <div>
-        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
           RECENT SIGNALS
         </h3>
         {openSignals.length === 0 ? (
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-sm text-gray-400">No active signals for this investor.</p>
+          <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+            <p className="text-sm text-zinc-400">No active signals for this investor.</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -387,16 +387,16 @@ function OverviewTab({ investor, signals }) {
               <Link
                 key={sig.id}
                 to={`/signals/${sig.id}`}
-                className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:bg-gray-50"
+                className="flex items-start gap-3 rounded-2xl border border-zinc-200 bg-white p-4 transition-colors hover:bg-zinc-50"
               >
-                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100">
-                  <Bell size={12} className="text-gray-600" />
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-100">
+                  <Bell size={12} className="text-zinc-600" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-800">{sig.headline}</p>
+                  <p className="text-sm font-medium text-zinc-800">{sig.headline}</p>
                   <div className="mt-1.5 flex items-center gap-2">
                     <Badge variant={sig.urgency} kind="urgency" />
-                    <span className="text-[11px] text-gray-400">{sig.detectedAt}</span>
+                    <span className="text-[11px] text-zinc-400">{sig.detectedAt}</span>
                   </div>
                 </div>
               </Link>
@@ -411,19 +411,19 @@ function OverviewTab({ investor, signals }) {
         return timeline.length > 0 ? (
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+              <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                 ENGAGEMENT TIMELINE
               </h3>
               <Link
                 to={`/investors/${investor.id}/timeline`}
-                className="text-xs font-semibold uppercase tracking-wider text-gray-600 hover:text-gray-800 transition-colors"
+                className="text-xs font-semibold uppercase tracking-wider text-zinc-600 hover:text-zinc-800 transition-colors"
               >
                 VIEW FULL TIMELINE &rarr;
               </Link>
             </div>
             <div className="relative pl-6">
               {/* Vertical line */}
-              <div className="absolute left-[5px] top-1.5 bottom-1.5 w-0.5 bg-gray-200" />
+              <div className="absolute left-[5px] top-1.5 bottom-1.5 w-0.5 bg-zinc-200" />
 
               <div className="space-y-2">
                 {timeline.map((evt) => (
@@ -432,23 +432,23 @@ function OverviewTab({ investor, signals }) {
                     <div
                       className={cn(
                         "absolute -left-6 top-4 h-3 w-3 rounded-full ring-2 ring-white",
-                        timelineDotColors[evt.type] || "bg-gray-400"
+                        timelineDotColors[evt.type] || "bg-zinc-400"
                       )}
                     />
                     {/* Content card */}
-                    <div className="rounded-lg border border-gray-200 bg-white p-4 hover:border-gray-300 transition-colors">
+                    <div className="rounded-2xl border border-zinc-200 bg-white p-4 hover:border-zinc-300 transition-colors">
                       <div className="flex items-center justify-between mb-1.5">
                         <span
                           className={cn(
                             "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                            timelineBadgeStyles[evt.type] || "bg-gray-100 text-gray-600"
+                            timelineBadgeStyles[evt.type] || "bg-zinc-100 text-zinc-600"
                           )}
                         >
                           {evt.type}
                         </span>
-                        <span className="text-xs text-gray-400">{evt.date}</span>
+                        <span className="text-xs text-zinc-400">{evt.date}</span>
                       </div>
-                      <p className="text-sm text-gray-700">{evt.description}</p>
+                      <p className="text-sm text-zinc-700">{evt.description}</p>
                     </div>
                   </div>
                 ))}
@@ -461,31 +461,31 @@ function OverviewTab({ investor, signals }) {
       {/* INTELLIGENCE ENGINE */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
             INTELLIGENCE ENGINE
           </h3>
-          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-600">
-            <span className="h-1.5 w-1.5 rounded-full bg-black animate-pulse" />
+          <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-zinc-900 animate-pulse" />
             LIVE
           </span>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4">
           <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100">
-              <Zap size={12} className="text-gray-600" />
+            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-100">
+              <Zap size={12} className="text-zinc-600" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-800">Key State Parameters</p>
+              <p className="text-sm font-medium text-zinc-800">Key State Parameters</p>
               <div className="mt-3 space-y-2">
                 {investor.stateParameters.map((param, idx) => (
                   <div key={idx} className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500">{param.label}</span>
+                    <span className="text-zinc-500">{param.label}</span>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-700">{param.value}</span>
+                      <span className="font-medium text-zinc-700">{param.value}</span>
                       <span
                         className={cn(
                           "h-1.5 w-1.5 rounded-full",
-                          param.freshness === "fresh" ? "bg-black" : "bg-gray-400"
+                          param.freshness === "fresh" ? "bg-zinc-900" : "bg-zinc-400"
                         )}
                         title={param.freshness}
                       />
@@ -517,15 +517,15 @@ function OverviewTab({ investor, signals }) {
         function ContactCard({ contact }) {
           const days = daysSince(contact.lastInteraction);
           return (
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
+            <div className="rounded-2xl border border-zinc-200 bg-white p-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-200 text-xs font-bold text-gray-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-zinc-200 text-xs font-bold text-zinc-600">
                   {contact.name.split(" ").map((w) => w[0]).join("").toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold text-black text-sm">{contact.name}</p>
-                  <p className="text-xs text-gray-500">{contact.role}</p>
-                  <span className={cn("text-xs mt-1 block", days !== null && days > 30 ? "font-semibold text-red-500" : "text-gray-500")}>
+                  <p className="font-bold text-zinc-900 text-sm">{contact.name}</p>
+                  <p className="text-xs text-zinc-500">{contact.role}</p>
+                  <span className={cn("text-xs mt-1 block", days !== null && days > 30 ? "font-semibold text-red-500" : "text-zinc-500")}>
                     {days !== null ? `${days}d ago` : "No interaction"}
                   </span>
                 </div>
@@ -536,7 +536,7 @@ function OverviewTab({ investor, signals }) {
 
         return (
           <div>
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
               KEY CONTACTS
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -602,7 +602,7 @@ function EngagementTab({ investorId, investor }) {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Main Timeline */}
       <div className="col-span-2">
-        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
           ENGAGEMENT HISTORY
         </h3>
 
@@ -615,8 +615,8 @@ function EngagementTab({ investorId, investor }) {
               className={cn(
                 "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                 filter === opt
-                  ? "border-black bg-black text-white"
-                  : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"
+                  ? "border-black bg-zinc-900 text-white"
+                  : "border-zinc-200 bg-white text-zinc-500 hover:bg-zinc-50"
               )}
             >
               {opt === "all" ? "All" : opt.charAt(0).toUpperCase() + opt.slice(1)}
@@ -655,49 +655,49 @@ function EngagementTab({ investorId, investor }) {
         <Card title="Narrative Consistency Monitor">
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Engagement Frequency</span>
-              <span className="font-mono font-bold text-black">{events.length} events</span>
+              <span className="text-zinc-500">Engagement Frequency</span>
+              <span className="font-mono font-bold text-zinc-900">{events.length} events</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Days Since Contact</span>
+              <span className="text-zinc-500">Days Since Contact</span>
               <span
                 className={cn(
                   "font-mono font-bold",
                   daysSinceContact && daysSinceContact > 30
                     ? "text-red-600"
-                    : "text-black"
+                    : "text-zinc-900"
                 )}
               >
                 {daysSinceContact !== null ? `${daysSinceContact}d` : "N/A"}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Open Signals</span>
+              <span className="text-zinc-500">Open Signals</span>
               <span
                 className={cn(
                   "font-mono font-bold",
-                  openSignalCount > 0 ? "text-gray-600" : "text-black"
+                  openSignalCount > 0 ? "text-zinc-600" : "text-zinc-900"
                 )}
               >
                 {openSignalCount}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Relationship Owner</span>
-              <span className="font-medium text-gray-700">
+              <span className="text-zinc-500">Relationship Owner</span>
+              <span className="font-medium text-zinc-700">
                 {investor.relationshipOwner}
               </span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Momentum</span>
+              <span className="text-zinc-500">Momentum</span>
               <span
                 className={cn(
                   "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
                   investor.engagementMomentum === "positive"
-                    ? "bg-gray-100 text-gray-700"
+                    ? "bg-zinc-100 text-zinc-700"
                     : investor.engagementMomentum === "negative"
                     ? "bg-red-50 text-red-700"
-                    : "bg-gray-100 text-gray-700"
+                    : "bg-zinc-100 text-zinc-700"
                 )}
               >
                 {investor.engagementMomentum}
@@ -723,7 +723,7 @@ function EngagementTab({ investorId, investor }) {
 
             {/* Key Meeting Themes */}
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-500 mb-2">
+              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-zinc-500 mb-2">
                 KEY MEETING THEMES
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -731,13 +731,13 @@ function EngagementTab({ investorId, investor }) {
                   meetingThemes.map((theme) => (
                     <span
                       key={theme}
-                      className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-600"
+                      className="inline-flex items-center rounded-md bg-zinc-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-600"
                     >
                       {theme}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-gray-400">No meetings recorded</span>
+                  <span className="text-xs text-zinc-400">No meetings recorded</span>
                 )}
               </div>
             </div>
@@ -788,7 +788,7 @@ export function InvestorDetailPage() {
       {/* Back link */}
       <Link
         to="/investors"
-        className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+        className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-zinc-400 hover:text-zinc-600 transition-colors"
       >
         <span>&larr;</span>
         <span>BACK TO INVESTORS</span>
@@ -798,17 +798,17 @@ export function InvestorDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-black">{investor.name}</h1>
+            <h1 className="text-2xl font-bold text-zinc-900">{investor.name}</h1>
             <Badge variant={investor.tier} kind="tier" />
           </div>
-          <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+          <div className="mt-2 flex items-center gap-2 text-sm text-zinc-500">
             <span>
               Ownership:{" "}
-              <span className="font-mono font-medium text-gray-700">
+              <span className="font-mono font-medium text-zinc-700">
                 {investor.holdingPct}%
               </span>
             </span>
-            <span className="text-gray-300">&middot;</span>
+            <span className="text-zinc-300">&middot;</span>
             <span>
               Trajectory:{" "}
               <span
@@ -826,21 +826,21 @@ export function InvestorDetailPage() {
 
       {/* Recommendation banner */}
       {(needsReengagement || hasHighUrgencySignal) && (
-        <div className="flex items-center justify-between rounded-lg bg-gray-800 p-4">
+        <div className="flex items-center justify-between rounded-2xl bg-zinc-800 p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-400/20">
-              <AlertTriangle size={16} className="text-gray-400" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-400/20">
+              <AlertTriangle size={16} className="text-zinc-400" />
             </div>
             <div>
               <p className="text-sm font-medium text-white">{recommendationText}</p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-xs text-zinc-400 mt-0.5">
                 {hasHighUrgencySignal
                   ? `${openSignals.filter((s) => s.urgency === "high").length} high-urgency signal(s) require attention`
                   : "Last meaningful contact was over 30 days ago"}
               </p>
             </div>
           </div>
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-xs font-medium text-black shadow-sm transition-colors hover:bg-gray-100">
+          <button className="inline-flex items-center gap-1.5 rounded-2xl bg-white px-4 py-2 text-xs font-medium text-zinc-900 shadow-sm transition-colors hover:bg-zinc-100">
             <Send size={14} />
             Draft Outreach
           </button>
@@ -848,7 +848,7 @@ export function InvestorDetailPage() {
       )}
 
       {/* Tab navigation */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-zinc-200">
         <div className="flex gap-6">
           {tabConfig.map((tab) => {
             const Icon = tab.icon;
@@ -859,14 +859,14 @@ export function InvestorDetailPage() {
                 className={cn(
                   "relative flex items-center gap-2 pb-3 text-xs font-medium transition-colors",
                   activeTab === tab.key
-                    ? "text-black"
-                    : "text-gray-400 hover:text-gray-600"
+                    ? "text-zinc-900"
+                    : "text-zinc-400 hover:text-zinc-600"
                 )}
               >
                 <Icon size={14} />
                 {tab.label}
                 {activeTab === tab.key && (
-                  <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-black" />
+                  <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-zinc-900" />
                 )}
               </button>
             );

@@ -53,36 +53,36 @@ const peers = [
 function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status }) {
   const barColor = isOurs
     ? status === "above"
-      ? "bg-black"
+      ? "bg-zinc-900"
       : status === "below"
       ? "bg-red-500"
-      : "bg-black"
-    : "bg-gray-300";
+      : "bg-zinc-900"
+    : "bg-zinc-300";
   return (
     <div className="flex items-center gap-3 py-1.5">
       <span
         className={cn(
           "w-44 text-sm truncate",
-          isOurs ? "font-semibold text-black" : "text-gray-600"
+          isOurs ? "font-semibold text-zinc-900" : "text-zinc-600"
         )}
       >
         {label}
         {isOurs && (
           <span className={cn(
             "ml-1.5 text-[10px] font-bold uppercase tracking-[0.1em]",
-            status === "above" ? "text-gray-700" : status === "below" ? "text-red-600" : "text-gray-400"
+            status === "above" ? "text-zinc-700" : status === "below" ? "text-red-600" : "text-zinc-400"
           )}>
             YOU
           </span>
         )}
       </span>
-      <div className="flex-1 h-2.5 rounded-full bg-gray-100">
+      <div className="flex-1 h-2.5 rounded-full bg-zinc-100">
         <div
           className={cn(
             "h-2.5 rounded-full transition-all",
             barColor,
             isOurs && "ring-2 ring-offset-1",
-            isOurs && status === "above" && "ring-gray-300",
+            isOurs && status === "above" && "ring-zinc-300",
             isOurs && status === "below" && "ring-red-200"
           )}
           style={{ width: `${(value / maxValue) * 100}%` }}
@@ -94,8 +94,8 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
           isOurs
             ? status === "below"
               ? "text-red-600 font-bold"
-              : "text-black font-bold"
-            : "text-gray-500"
+              : "text-zinc-900 font-bold"
+            : "text-zinc-500"
         )}
       >
         {value}
@@ -208,24 +208,24 @@ export function BenchmarkingPage() {
   }, [ourMetrics, sectorMedian]);
 
   const insightDotColor = {
-    positive: "bg-black",
+    positive: "bg-zinc-900",
     negative: "bg-red-500",
-    neutral: "bg-gray-400",
+    neutral: "bg-zinc-400",
   };
 
   return (
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-black">Peer Benchmarking</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-zinc-900">Peer Benchmarking</h1>
+        <p className="mt-1 text-sm text-zinc-500">
           How you compare, where you excel, and where to improve
         </p>
       </div>
 
       {/* ── Dark Concentration-style Card ─────────────────── */}
-      <div className="rounded-lg bg-black p-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+      <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm border border-zinc-200/60">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
           PEER POSITION INDEX
         </p>
         <div className="mt-3 flex items-baseline gap-4">
@@ -234,12 +234,12 @@ export function BenchmarkingPage() {
           </span>
           <span className={cn(
             "text-sm font-medium",
-            engagementStatus === "above" ? "text-gray-300" : "text-red-400"
+            engagementStatus === "above" ? "text-zinc-300" : "text-red-400"
           )}>
             Engagement intensity
           </span>
         </div>
-        <div className="mt-4 h-2.5 w-full rounded-full bg-gray-700">
+        <div className="mt-4 h-2.5 w-full rounded-full bg-zinc-700">
           <div
             className={cn(
               "h-2.5 rounded-full transition-all",
@@ -248,7 +248,7 @@ export function BenchmarkingPage() {
             style={{ width: `${ourMetrics.engagementIntensity}%` }}
           />
         </div>
-        <p className="mt-2 text-xs text-gray-400">
+        <p className="mt-2 text-xs text-zinc-400">
           {engagementStatus === "above" ? (
             <>
               <span className="font-mono font-semibold text-white">Above</span> sector median ({sectorMedian?.engagementIntensity}%) — strong relative positioning
@@ -290,34 +290,34 @@ export function BenchmarkingPage() {
 
       {/* ── Two-column Comparison Table ───────────────────── */}
       <Card variant="section" accentColor="gray" title="Ownership Overlap" subtitle="Common institutional investors shared with peers">
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <div className="overflow-x-auto rounded-xl border border-zinc-200/60 shadow-sm">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
+              <tr className="border-b border-zinc-200 bg-zinc-50">
                 {["COMPANY", "OVERLAP %", "ENGAGEMENT INTENSITY", "STABILITY"].map((col) => (
-                  <th key={col} className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+                  <th key={col} className="px-4 py-2.5 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                     {col}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-zinc-100">
               {allEntries.map((entry) => (
                 <tr
                   key={entry.name}
                   className={cn(
-                    entry.isOurs && "bg-black text-white"
+                    entry.isOurs && "bg-zinc-900 text-white"
                   )}
                 >
-                  <td className={cn("px-4 py-2.5", entry.isOurs ? "font-bold text-white" : "text-gray-700")}>
+                  <td className={cn("px-4 py-2.5", entry.isOurs ? "font-bold text-white" : "text-zinc-700")}>
                     {entry.name}
                     {entry.isOurs && (
-                      <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-gray-400">
+                      <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.1em] text-zinc-400">
                         YOU
                       </span>
                     )}
                   </td>
-                  <td className={cn("px-4 py-2.5 font-mono", entry.isOurs ? "text-gray-300" : "text-gray-700")}>
+                  <td className={cn("px-4 py-2.5 font-mono", entry.isOurs ? "text-zinc-300" : "text-zinc-700")}>
                     {entry.ownershipOverlap}%
                   </td>
                   <td className="px-4 py-2.5">
@@ -325,9 +325,9 @@ export function BenchmarkingPage() {
                       "font-mono",
                       entry.isOurs
                         ? engagementStatus === "above"
-                          ? "text-gray-300 font-bold"
+                          ? "text-zinc-300 font-bold"
                           : "text-red-400 font-bold"
-                        : "text-gray-700"
+                        : "text-zinc-700"
                     )}>
                       {entry.engagementIntensity}
                     </span>
@@ -337,9 +337,9 @@ export function BenchmarkingPage() {
                       "font-mono",
                       entry.isOurs
                         ? stabilityStatus === "above"
-                          ? "text-gray-300 font-bold"
+                          ? "text-zinc-300 font-bold"
                           : "text-red-400 font-bold"
-                        : "text-gray-700"
+                        : "text-zinc-700"
                     )}>
                       {entry.shareholderStability}%
                     </span>
@@ -388,40 +388,40 @@ export function BenchmarkingPage() {
 
       {/* ── Ownership Structure - Stacked Bars ────────────── */}
       <Card variant="section" accentColor="gray" title="Ownership Structure" subtitle="Breakdown by investor type">
-        <div className="mb-3 flex gap-4 text-xs text-gray-500">
+        <div className="mb-3 flex gap-4 text-xs text-zinc-500">
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-black" /> Passive
+            <span className="h-2.5 w-2.5 rounded-sm bg-zinc-900" /> Passive
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-gray-500" /> Active
+            <span className="h-2.5 w-2.5 rounded-sm bg-zinc-500" /> Active
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-gray-400" /> Sovereign
+            <span className="h-2.5 w-2.5 rounded-sm bg-zinc-400" /> Sovereign
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-sm bg-gray-300" /> Other
+            <span className="h-2.5 w-2.5 rounded-sm bg-zinc-300" /> Other
           </span>
         </div>
         <div className="space-y-2">
           {allEntries.map((entry) => {
             const segments = [entry.passivePct, entry.activePct, entry.sovereignPct, entry.otherPct];
-            const colors = ["bg-black", "bg-gray-500", "bg-gray-400", "bg-gray-300"];
+            const colors = ["bg-zinc-900", "bg-zinc-500", "bg-zinc-400", "bg-zinc-300"];
             return (
               <div key={entry.name} className="flex items-center gap-3 py-1.5">
                 <span
                   className={cn(
                     "w-44 text-sm truncate",
-                    entry.isOurs ? "font-semibold text-black" : "text-gray-600"
+                    entry.isOurs ? "font-semibold text-zinc-900" : "text-zinc-600"
                   )}
                 >
                   {entry.name}
                   {entry.isOurs && (
-                    <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">
+                    <span className="ml-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                       YOU
                     </span>
                   )}
                 </span>
-                <div className="flex-1 h-2.5 rounded-full bg-gray-100 flex overflow-hidden">
+                <div className="flex-1 h-2.5 rounded-full bg-zinc-100 flex overflow-hidden">
                   {segments.map((seg, i) => (
                     <div
                       key={i}
@@ -431,7 +431,7 @@ export function BenchmarkingPage() {
                     />
                   ))}
                 </div>
-                <span className="w-10 text-right font-mono text-xs text-gray-500">
+                <span className="w-10 text-right font-mono text-xs text-zinc-500">
                   {segments[0]}%
                 </span>
               </div>
@@ -447,12 +447,12 @@ export function BenchmarkingPage() {
             <li
               key={i}
               className={cn(
-                "flex gap-3 text-sm rounded-lg px-3 py-2.5",
+                "flex gap-3 text-sm rounded-xl px-3 py-2.5",
                 insight.status === "negative"
                   ? "bg-red-50 text-red-800 font-medium"
                   : insight.status === "positive"
-                  ? "text-gray-600"
-                  : "text-gray-600"
+                  ? "text-zinc-600"
+                  : "text-zinc-600"
               )}
             >
               <span
@@ -469,8 +469,8 @@ export function BenchmarkingPage() {
       </Card>
 
       {/* ── Recommendation ────────────────────────────────── */}
-      <div className="rounded-lg bg-black text-white p-5">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-2">
+      <div className="rounded-2xl bg-zinc-900 text-white p-5 shadow-sm border border-zinc-200/60">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-2">
           RECOMMENDATION
         </p>
         <p className="text-sm leading-relaxed">

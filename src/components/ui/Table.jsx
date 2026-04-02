@@ -13,18 +13,18 @@ export function Table({
   return (
     <div
       className={cn(
-        "overflow-x-auto rounded-lg border border-gray-200 bg-white",
+        "overflow-x-auto rounded-2xl border border-zinc-200/60 bg-white shadow-sm",
         className
       )}
     >
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50/50">
+          <tr className="border-b border-zinc-100 bg-zinc-50/50">
             {columns.map((col) => (
               <th
                 key={col.key}
                 className={cn(
-                  "px-4 text-left text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400",
+                  "px-4 text-left text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400",
                   compact ? "py-2.5" : "py-3.5",
                   col.align === "right" && "text-right",
                   col.align === "center" && "text-center",
@@ -37,7 +37,7 @@ export function Table({
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-zinc-50">
           {data.map((row, idx) => {
             const isEmphasis = emphasisRows && row._emphasis;
 
@@ -46,7 +46,7 @@ export function Table({
                 key={row.id ?? idx}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
                 className={cn(
-                  "transition-colors hover:bg-gray-50",
+                  "transition-colors hover:bg-zinc-50/50",
                   onRowClick && "cursor-pointer",
                   isEmphasis && "bg-red-50/30",
                   row._muted && "opacity-60",
@@ -63,8 +63,8 @@ export function Table({
                       col.align === "right" && "text-right",
                       col.align === "center" && "text-center",
                       col.primary
-                        ? "font-semibold text-black"
-                        : "text-gray-600",
+                        ? "font-semibold text-zinc-900"
+                        : "text-zinc-600",
                       col.className
                     )}
                   >
@@ -72,10 +72,10 @@ export function Table({
                       renderCell(row, col)
                     ) : col.primary && row[col.subtitleKey] ? (
                       <div>
-                        <div className="font-semibold text-black">
+                        <div className="font-semibold text-zinc-900">
                           {row[col.key]}
                         </div>
-                        <div className="mt-0.5 text-xs font-normal text-gray-400">
+                        <div className="mt-0.5 text-xs font-normal text-zinc-400">
                           {row[col.subtitleKey]}
                         </div>
                       </div>
@@ -91,7 +91,7 @@ export function Table({
             <tr>
               <td
                 colSpan={columns.length}
-                className="px-4 py-12 text-center text-sm text-gray-400"
+                className="px-4 py-12 text-center text-sm text-zinc-400"
               >
                 No data available
               </td>

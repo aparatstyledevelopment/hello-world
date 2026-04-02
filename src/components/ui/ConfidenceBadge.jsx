@@ -2,9 +2,9 @@ import { cn } from "../../lib/utils";
 import { CheckCircle } from "lucide-react";
 
 const levelColors = {
-  high: { text: "text-black", icon: "text-black", bg: "bg-gray-100" },
-  medium: { text: "text-gray-600", icon: "text-gray-500", bg: "bg-gray-100" },
-  low: { text: "text-red-700", icon: "text-red-500", bg: "bg-red-50" },
+  high: { text: "text-emerald-700", icon: "text-emerald-500", bg: "bg-emerald-50" },
+  medium: { text: "text-amber-700", icon: "text-amber-500", bg: "bg-amber-50" },
+  low: { text: "text-red-600", icon: "text-red-400", bg: "bg-red-50" },
 };
 
 export function ConfidenceBadge({
@@ -21,7 +21,7 @@ export function ConfidenceBadge({
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-[11px] font-semibold tracking-[0.05em] uppercase",
+          "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold tracking-[0.04em] uppercase",
           colors.bg,
           colors.text,
           className
@@ -36,7 +36,7 @@ export function ConfidenceBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 text-[11px] tracking-[0.1em] uppercase text-gray-400 font-medium",
+        "inline-flex items-center gap-1 text-[11px] tracking-[0.08em] uppercase text-zinc-400 font-medium",
         className
       )}
     >

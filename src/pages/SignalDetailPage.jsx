@@ -39,9 +39,9 @@ const TODAY = "2026-04-01";
 // -- Helpers -------------------------------------------------------
 
 const urgencyConfig = {
-  high: { label: "HIGH", color: "text-terminal-red", bg: "bg-terminal-red/10", border: "border-terminal-red/30", dot: "bg-terminal-red" },
-  medium: { label: "MEDIUM", color: "text-terminal-amber", bg: "bg-terminal-amber/10", border: "border-terminal-amber/20", dot: "bg-terminal-amber" },
-  low: { label: "LOW", color: "text-terminal-text-dim", bg: "bg-terminal-surface-alt", border: "border-terminal-border", dot: "bg-terminal-text-dim" },
+  high: { label: "HIGH", color: "text-red-500", bg: "bg-red-50", border: "border-red-200/30", dot: "bg-red-500" },
+  medium: { label: "MEDIUM", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200/20", dot: "bg-amber-500" },
+  low: { label: "LOW", color: "text-zinc-400", bg: "bg-zinc-50", border: "border-zinc-200", dot: "bg-terminal-text-dim" },
 };
 
 const typeLabels = {
@@ -53,11 +53,11 @@ const typeLabels = {
 };
 
 const typeColors = {
-  retention_risk: "text-terminal-red",
-  influence_opportunity: "text-terminal-cyan",
-  governance_management: "text-terminal-amber",
-  information_gap: "text-terminal-text",
-  relationship_maintenance: "text-terminal-green",
+  retention_risk: "text-red-500",
+  influence_opportunity: "text-blue-500",
+  governance_management: "text-amber-600",
+  information_gap: "text-zinc-700",
+  relationship_maintenance: "text-emerald-600",
 };
 
 const sourceIcons = {
@@ -92,15 +92,15 @@ function getConfidencePct(level) {
 
 function TerminalBadge({ children, variant = "default", className }) {
   const styles = {
-    default: "border-terminal-border text-terminal-text-dim",
-    amber: "border-terminal-amber/40 text-terminal-amber bg-terminal-amber/5",
-    red: "border-terminal-red/40 text-terminal-red bg-terminal-red/5",
-    cyan: "border-terminal-cyan/40 text-terminal-cyan bg-terminal-cyan/5",
-    green: "border-terminal-green/40 text-terminal-green bg-terminal-green/5",
+    default: "border-zinc-200 text-zinc-500 bg-zinc-50",
+    amber: "border-amber-200 text-amber-700 bg-amber-50",
+    red: "border-red-200 text-red-600 bg-red-50",
+    cyan: "border-blue-200 text-blue-600 bg-blue-50",
+    green: "border-emerald-200 text-emerald-700 bg-emerald-50",
   };
   return (
     <span className={cn(
-      "inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-[10px] font-semibold tracking-[0.12em] uppercase border font-mono",
+      "inline-flex items-center gap-1.5 rounded-lg px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.08em] uppercase border",
       styles[variant] || styles.default,
       className
     )}>
@@ -111,7 +111,7 @@ function TerminalBadge({ children, variant = "default", className }) {
 
 function TerminalSectionLabel({ children, className }) {
   return (
-    <p className={cn("terminal-label mb-3", className)}>
+    <p className={cn("text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-3", className)}>
       {children}
     </p>
   );
@@ -119,12 +119,12 @@ function TerminalSectionLabel({ children, className }) {
 
 function TerminalDataRow({ label, value, accent = false, mono = true }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-terminal-border/50 last:border-b-0">
-      <span className="text-[10px] tracking-[0.1em] uppercase text-terminal-text-dim font-mono">{label}</span>
+    <div className="flex items-center justify-between py-2 border-b border-zinc-200/50 last:border-b-0">
+      <span className="text-[10px] tracking-[0.1em] uppercase text-zinc-400 font-mono">{label}</span>
       <span className={cn(
         "text-sm font-semibold",
         mono && "font-mono",
-        accent ? "text-terminal-amber" : "text-terminal-text"
+        accent ? "text-amber-600" : "text-zinc-700"
       )}>
         {value}
       </span>
@@ -141,14 +141,14 @@ export function SignalDetailPage() {
 
   if (!signal) {
     return (
-      <div className="terminal-page p-4 md:p-6">
-        <div className="terminal-card p-8 text-center">
-          <Radio size={32} className="text-terminal-text-dim mx-auto mb-4" />
-          <p className="text-terminal-text font-mono text-sm mb-2">SIGNAL NOT FOUND</p>
-          <p className="text-terminal-text-dim font-mono text-xs mb-4">No signal with ID "{id}" exists in the system.</p>
+      <div className="p-4 md:p-6">
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-8 text-center">
+          <Radio size={32} className="text-zinc-400 mx-auto mb-4" />
+          <p className="text-zinc-700 font-mono text-sm mb-2">SIGNAL NOT FOUND</p>
+          <p className="text-zinc-400 font-mono text-xs mb-4">No signal with ID "{id}" exists in the system.</p>
           <button
             onClick={() => navigate("/signals")}
-            className="font-mono text-xs text-terminal-amber hover:text-terminal-amber-dim transition-colors uppercase tracking-wider"
+            className="font-mono text-xs text-amber-600 hover:text-amber-700 transition-colors uppercase tracking-wider"
           >
             &larr; Back to signals
           </button>
@@ -244,34 +244,33 @@ export function SignalDetailPage() {
     neutral: "STABLE",
   };
   const trendColor = {
-    up: "text-terminal-green",
-    down: "text-terminal-red",
-    neutral: "text-terminal-text-dim",
+    up: "text-emerald-600",
+    down: "text-red-500",
+    neutral: "text-zinc-400",
   };
 
   const signalAge = Math.floor((new Date("2026-04-01") - new Date(signal.detectedAt)) / (1000 * 60 * 60 * 24));
 
   return (
-    <div className="terminal-page">
-      <div className="terminal-scanlines fixed inset-0 z-0" />
-      <div className="relative z-10 p-4 md:p-6">
+    <div className="p-4 md:p-6">
+      <div>
 
         {/* ── TOP BAR ──────────────────────────────────────── */}
         <div className="flex items-center justify-between mb-5">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-terminal-text-dim transition-colors hover:text-terminal-amber uppercase tracking-wider"
+            className="inline-flex items-center gap-1.5 text-[11px] font-mono font-medium text-zinc-400 transition-colors hover:text-amber-700 uppercase tracking-wider"
           >
             <ArrowLeft size={14} />
             Back
           </button>
-          <div className="flex items-center gap-3 text-[10px] font-mono text-terminal-text-muted uppercase tracking-wider">
+          <div className="flex items-center gap-3 text-[10px] font-mono text-zinc-300 uppercase tracking-wider">
             <span>SIG/{signal.id}</span>
             <span className="text-terminal-border">|</span>
             <span>{formatDateCompact(signal.detectedAt)}</span>
             <span className="text-terminal-border">|</span>
             <span className="flex items-center gap-1">
-              <span className={cn("inline-block w-1.5 h-1.5 rounded-full terminal-pulse", urg.dot)} />
+              <span className={cn("inline-block w-1.5 h-1.5 rounded-full gentle-pulse", urg.dot)} />
               LIVE
             </span>
           </div>
@@ -279,8 +278,8 @@ export function SignalDetailPage() {
 
         {/* ── HEADER STRIP ──────────────────────────────────── */}
         <div className={cn(
-          "terminal-card p-4 mb-4",
-          isHigh && "terminal-glow-red border-terminal-red/20"
+          "rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4 mb-4",
+          isHigh && " border-red-200/20"
         )}>
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
@@ -300,20 +299,20 @@ export function SignalDetailPage() {
               </div>
 
               {/* Title */}
-              <h1 className="text-xl md:text-2xl font-bold text-terminal-text leading-tight tracking-tight font-mono">
+              <h1 className="text-xl md:text-2xl font-bold text-zinc-700 leading-tight tracking-tight font-mono">
                 {signal.headline}
               </h1>
 
               {/* Investor line */}
               <div className="flex items-center gap-3 mt-3">
-                <div className="flex items-center justify-center w-7 h-7 rounded bg-terminal-surface-alt border border-terminal-border text-[10px] font-bold text-terminal-amber font-mono">
+                <div className="flex items-center justify-center w-7 h-7 rounded bg-zinc-50 border border-zinc-200 text-[10px] font-bold text-amber-600 font-mono">
                   {investor?.name?.charAt(0) ?? "?"}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-terminal-text font-mono">
+                  <span className="text-sm font-semibold text-zinc-700 font-mono">
                     {investor?.name ?? "Unknown"}
                   </span>
-                  <span className="text-[10px] text-terminal-text-dim font-mono uppercase tracking-wider">
+                  <span className="text-[10px] text-zinc-400 font-mono uppercase tracking-wider">
                     {investor?.type ?? "investor"} · T{investor?.tier ?? "?"}
                   </span>
                 </div>
@@ -322,13 +321,13 @@ export function SignalDetailPage() {
 
             {/* Right side quick stats */}
             <div className="hidden md:flex flex-col items-end gap-1 text-right">
-              <div className="text-[10px] text-terminal-text-dim font-mono tracking-wider uppercase">Holding</div>
-              <div className="text-2xl font-bold text-terminal-amber font-mono terminal-value">
+              <div className="text-[10px] text-zinc-400 font-mono tracking-wider uppercase">Holding</div>
+              <div className="text-2xl font-bold text-amber-600 font-mono font-mono">
                 {investor?.holdingPct ?? "—"}%
               </div>
               <div className={cn(
                 "text-[10px] font-mono font-semibold tracking-wider uppercase",
-                trendColor[investor?.holdingTrend] ?? "text-terminal-text-dim"
+                trendColor[investor?.holdingTrend] ?? "text-zinc-400"
               )}>
                 {trendLabel[investor?.holdingTrend] ?? "—"}
               </div>
@@ -350,49 +349,49 @@ export function SignalDetailPage() {
                 { label: "SIGNAL AGE", value: `${signalAge}D`, icon: Clock },
                 { label: "STATUS", value: signal.state?.toUpperCase() || "ACTIVE", icon: Activity },
               ].map((m) => (
-                <div key={m.label} className="terminal-card p-3">
+                <div key={m.label} className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <m.icon size={12} className="text-terminal-text-dim" />
-                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] uppercase text-terminal-text-dim">{m.label}</span>
+                    <m.icon size={12} className="text-zinc-400" />
+                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] uppercase text-zinc-400">{m.label}</span>
                   </div>
-                  <p className="text-sm font-bold text-terminal-text font-mono terminal-value">{m.value}</p>
+                  <p className="text-sm font-bold text-zinc-700 font-mono font-mono">{m.value}</p>
                 </div>
               ))}
             </div>
 
             {/* Analysis Panel */}
-            <div className="terminal-card p-4">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
               <TerminalSectionLabel>ANALYSIS</TerminalSectionLabel>
               <div className="space-y-4">
                 {/* Why this matters */}
                 <div>
-                  <p className="text-[10px] font-mono font-semibold tracking-[0.12em] uppercase text-terminal-amber mb-2">
+                  <p className="text-[10px] font-mono font-semibold tracking-[0.12em] uppercase text-amber-600 mb-2">
                     WHY THIS MATTERS
                   </p>
-                  <p className="text-[13px] text-terminal-text leading-relaxed font-mono">
+                  <p className="text-[13px] text-zinc-700 leading-relaxed font-mono">
                     {whyItMatters}
                   </p>
                 </div>
 
-                <div className="terminal-divider" />
+                <div className="border-t border-zinc-100" />
 
                 {/* Likely impact */}
                 <div>
                   <p className={cn(
                     "text-[10px] font-mono font-semibold tracking-[0.12em] uppercase mb-2",
-                    isHigh ? "text-terminal-red" : "text-terminal-text-dim"
+                    isHigh ? "text-red-500" : "text-zinc-400"
                   )}>
                     LIKELY IMPACT
                   </p>
                   <div className={cn(
                     "rounded px-3 py-2.5 border",
                     isHigh
-                      ? "border-terminal-red/20 bg-terminal-red/5"
-                      : "border-terminal-border bg-terminal-surface-alt"
+                      ? "border-red-200/20 bg-red-50"
+                      : "border-zinc-200 bg-zinc-50"
                   )}>
                     <p className={cn(
                       "text-[13px] leading-relaxed font-mono",
-                      isHigh ? "text-terminal-red" : "text-terminal-text"
+                      isHigh ? "text-red-500" : "text-zinc-700"
                     )}>
                       {likelyImpact}
                     </p>
@@ -402,7 +401,7 @@ export function SignalDetailPage() {
             </div>
 
             {/* Recommended Actions */}
-            <div className="terminal-card p-4">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
               <TerminalSectionLabel>RECOMMENDED ACTIONS</TerminalSectionLabel>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {actionCards.map((ac, idx) => (
@@ -411,26 +410,26 @@ export function SignalDetailPage() {
                     className={cn(
                       "rounded border p-4 flex flex-col",
                       ac.isPrimary
-                        ? "border-terminal-amber/30 bg-terminal-amber/5 terminal-glow-amber"
-                        : "border-terminal-border bg-terminal-surface-alt"
+                        ? "border-amber-200/30 bg-amber-50 "
+                        : "border-zinc-200 bg-zinc-50"
                     )}
                   >
                     {ac.isPrimary && (
-                      <span className="self-start bg-terminal-amber text-black rounded text-[9px] tracking-[0.12em] uppercase font-bold px-2 py-0.5 mb-3 font-mono">
+                      <span className="self-start bg-zinc-900 text-white rounded text-[9px] tracking-[0.12em] uppercase font-bold px-2 py-0.5 mb-3 font-mono">
                         NEXT BEST ACTION
                       </span>
                     )}
-                    <h4 className="text-sm font-bold text-terminal-text font-mono">{ac.title}</h4>
-                    <p className="text-[11px] text-terminal-text-dim mt-1.5 leading-relaxed font-mono">{ac.description}</p>
+                    <h4 className="text-sm font-bold text-zinc-700 font-mono">{ac.title}</h4>
+                    <p className="text-[11px] text-zinc-400 mt-1.5 leading-relaxed font-mono">{ac.description}</p>
 
-                    <div className="mt-3 pt-3 border-t border-terminal-border/50 space-y-2">
+                    <div className="mt-3 pt-3 border-t border-zinc-200/50 space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-mono tracking-[0.1em] text-terminal-text-muted uppercase">CHANNEL</span>
-                        <span className="text-[11px] font-mono font-semibold text-terminal-text">{ac.channel}</span>
+                        <span className="text-[9px] font-mono tracking-[0.1em] text-zinc-300 uppercase">CHANNEL</span>
+                        <span className="text-[11px] font-mono font-semibold text-zinc-700">{ac.channel}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-mono tracking-[0.1em] text-terminal-text-muted uppercase">TIMING</span>
-                        <span className="text-[11px] font-mono font-semibold text-terminal-text">{ac.timing}</span>
+                        <span className="text-[9px] font-mono tracking-[0.1em] text-zinc-300 uppercase">TIMING</span>
+                        <span className="text-[11px] font-mono font-semibold text-zinc-700">{ac.timing}</span>
                       </div>
                     </div>
 
@@ -447,8 +446,8 @@ export function SignalDetailPage() {
                       className={cn(
                         "mt-3 w-full rounded px-3 py-2 text-[10px] font-mono font-bold uppercase tracking-[0.12em] transition-all",
                         ac.isPrimary
-                          ? "bg-terminal-amber text-black hover:bg-terminal-amber-dim"
-                          : "bg-terminal-surface border border-terminal-border text-terminal-text-dim hover:text-terminal-text hover:border-terminal-border-bright"
+                          ? "bg-zinc-900 text-white hover:bg-zinc-800"
+                          : "bg-white border border-zinc-200 text-zinc-400 hover:text-zinc-600 hover:border-zinc-300"
                       )}
                     >
                       CREATE ACTION
@@ -459,64 +458,64 @@ export function SignalDetailPage() {
             </div>
 
             {/* Evidence & Raw Data */}
-            <div className="terminal-card p-4">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
               <TerminalSectionLabel>EVIDENCE &amp; RAW DATA</TerminalSectionLabel>
 
               {/* Source & Detection row */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                <div className="rounded border border-terminal-border bg-terminal-surface-alt p-3">
+                <div className="rounded border border-zinc-200 bg-zinc-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <SourceIcon size={12} className="text-terminal-text-dim" />
-                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">SOURCE</span>
+                    <SourceIcon size={12} className="text-zinc-400" />
+                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">SOURCE</span>
                   </div>
-                  <p className="text-sm font-semibold text-terminal-text font-mono">{signal.source}</p>
-                  <p className="text-[10px] text-terminal-text-muted font-mono mt-1">Detected {formatDate(signal.detectedAt)}</p>
+                  <p className="text-sm font-semibold text-zinc-700 font-mono">{signal.source}</p>
+                  <p className="text-[10px] text-zinc-300 font-mono mt-1">Detected {formatDate(signal.detectedAt)}</p>
                 </div>
-                <div className="rounded border border-terminal-border bg-terminal-surface-alt p-3">
+                <div className="rounded border border-zinc-200 bg-zinc-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <BarChart3 size={12} className="text-terminal-text-dim" />
-                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">CONFIDENCE</span>
+                    <BarChart3 size={12} className="text-zinc-400" />
+                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">CONFIDENCE</span>
                   </div>
-                  <p className="text-sm font-semibold text-terminal-text font-mono capitalize">{signal.confidence}</p>
-                  <div className="mt-2 h-1.5 rounded-full bg-terminal-border">
+                  <p className="text-sm font-semibold text-zinc-700 font-mono capitalize">{signal.confidence}</p>
+                  <div className="mt-2 h-1.5 rounded-full bg-zinc-200">
                     <div
                       className={cn(
                         "h-1.5 rounded-full transition-all",
-                        signal.confidence === "high" ? "bg-terminal-green" : signal.confidence === "medium" ? "bg-terminal-amber" : "bg-terminal-red"
+                        signal.confidence === "high" ? "bg-emerald-500" : signal.confidence === "medium" ? "bg-amber-500" : "bg-red-500"
                       )}
                       style={{ width: `${confidencePct}%` }}
                     />
                   </div>
                 </div>
-                <div className="rounded border border-terminal-border bg-terminal-surface-alt p-3">
+                <div className="rounded border border-zinc-200 bg-zinc-50 p-3">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <Clock size={12} className="text-terminal-text-dim" />
-                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">SIGNAL AGE</span>
+                    <Clock size={12} className="text-zinc-400" />
+                    <span className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">SIGNAL AGE</span>
                   </div>
-                  <p className="text-sm font-semibold text-terminal-text font-mono">{signalAge} days</p>
-                  <p className="text-[10px] text-terminal-text-muted font-mono mt-1">Since first detection</p>
+                  <p className="text-sm font-semibold text-zinc-700 font-mono">{signalAge} days</p>
+                  <p className="text-[10px] text-zinc-300 font-mono mt-1">Since first detection</p>
                 </div>
               </div>
 
               {/* Parameters table */}
               {signal.parameters && signal.parameters.length > 0 && (
-                <div className="rounded border border-terminal-border overflow-hidden">
-                  <div className="px-3 py-2 bg-terminal-surface-alt border-b border-terminal-border">
-                    <p className="text-[9px] font-mono font-bold tracking-[0.15em] text-terminal-text-dim uppercase">RAW DATA POINTS</p>
+                <div className="rounded border border-zinc-200 overflow-hidden">
+                  <div className="px-3 py-2 bg-zinc-50 border-b border-zinc-200">
+                    <p className="text-[9px] font-mono font-bold tracking-[0.15em] text-zinc-400 uppercase">RAW DATA POINTS</p>
                   </div>
                   <div className="divide-y divide-terminal-border/50">
                     {signal.parameters.map((p, i) => (
-                      <div key={i} className="px-3 py-2.5 flex items-center justify-between bg-terminal-surface hover:bg-terminal-surface-alt transition-colors">
+                      <div key={i} className="px-3 py-2.5 flex items-center justify-between bg-white hover:bg-zinc-50 transition-colors">
                         <div className="flex items-center gap-2.5">
-                          <div className="flex items-center justify-center w-6 h-6 rounded bg-terminal-surface-alt border border-terminal-border">
-                            <BarChart3 size={11} className="text-terminal-text-dim" />
+                          <div className="flex items-center justify-center w-6 h-6 rounded bg-zinc-50 border border-zinc-200">
+                            <BarChart3 size={11} className="text-zinc-400" />
                           </div>
                           <div>
-                            <p className="text-[12px] font-mono font-medium text-terminal-text">{p.label}</p>
-                            <p className="text-[9px] font-mono text-terminal-text-muted uppercase tracking-wider">{p.provenance} data</p>
+                            <p className="text-[12px] font-mono font-medium text-zinc-700">{p.label}</p>
+                            <p className="text-[9px] font-mono text-zinc-300 uppercase tracking-wider">{p.provenance} data</p>
                           </div>
                         </div>
-                        <span className="font-mono text-base font-bold text-terminal-amber bg-terminal-amber/5 border border-terminal-amber/20 px-2.5 py-1 rounded">
+                        <span className="font-mono text-base font-bold text-amber-600 bg-amber-50 border border-amber-200/20 px-2.5 py-1 rounded">
                           {p.value}
                         </span>
                       </div>
@@ -527,9 +526,9 @@ export function SignalDetailPage() {
 
               {/* Holding trend chart for retention_risk */}
               {signal.type === "retention_risk" && investor?.holdingHistory && (
-                <div className="mt-4 rounded border border-terminal-border bg-terminal-surface p-4">
+                <div className="mt-4 rounded border border-zinc-200 bg-white p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[9px] font-mono font-bold tracking-[0.15em] text-terminal-text-dim uppercase">HOLDING TREND</p>
+                    <p className="text-[9px] font-mono font-bold tracking-[0.15em] text-zinc-400 uppercase">HOLDING TREND</p>
                     <TerminalBadge variant={investor.holdingTrend === "down" ? "red" : investor.holdingTrend === "up" ? "green" : "default"}>
                       {investor.holdingTrend === "down" ? "DECLINING" : investor.holdingTrend === "up" ? "INCREASING" : "STABLE"}
                     </TerminalBadge>
@@ -545,18 +544,18 @@ export function SignalDetailPage() {
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
                           <span className={cn(
                             "text-[10px] font-mono",
-                            isLast ? "font-bold text-terminal-amber" : "text-terminal-text-muted"
+                            isLast ? "font-bold text-amber-600" : "text-zinc-300"
                           )}>
                             {val}%
                           </span>
                           <div
                             className={cn(
                               "w-full rounded-sm terminal-bar",
-                              isLast ? "bg-terminal-red terminal-bar-danger" : "bg-terminal-border-bright"
+                              isLast ? "bg-red-500 " : "bg-zinc-200"
                             )}
                             style={{ height: `${barHeight}px` }}
                           />
-                          <span className="text-[9px] font-mono text-terminal-text-muted">Q{i + 1}</span>
+                          <span className="text-[9px] font-mono text-zinc-300">Q{i + 1}</span>
                         </div>
                       );
                     })}
@@ -566,9 +565,9 @@ export function SignalDetailPage() {
 
               {/* Accumulation trend for influence_opportunity */}
               {signal.type === "influence_opportunity" && investor?.holdingHistory && (
-                <div className="mt-4 rounded border border-terminal-border bg-terminal-surface p-4">
+                <div className="mt-4 rounded border border-zinc-200 bg-white p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[9px] font-mono font-bold tracking-[0.15em] text-terminal-text-dim uppercase">ACCUMULATION TREND</p>
+                    <p className="text-[9px] font-mono font-bold tracking-[0.15em] text-zinc-400 uppercase">ACCUMULATION TREND</p>
                     <TerminalBadge variant="green">INCREASING</TerminalBadge>
                   </div>
                   <div className="flex items-end gap-2 pt-2">
@@ -582,18 +581,18 @@ export function SignalDetailPage() {
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
                           <span className={cn(
                             "text-[10px] font-mono",
-                            isLast ? "font-bold text-terminal-amber" : "text-terminal-text-muted"
+                            isLast ? "font-bold text-amber-600" : "text-zinc-300"
                           )}>
                             {val}%
                           </span>
                           <div
                             className={cn(
                               "w-full rounded-sm terminal-bar",
-                              isLast ? "bg-terminal-amber terminal-bar-active" : "bg-terminal-border-bright"
+                              isLast ? "bg-amber-500 " : "bg-zinc-200"
                             )}
                             style={{ height: `${barHeight}px` }}
                           />
-                          <span className="text-[9px] font-mono text-terminal-text-muted">Q{i + 1}</span>
+                          <span className="text-[9px] font-mono text-zinc-300">Q{i + 1}</span>
                         </div>
                       );
                     })}
@@ -608,24 +607,24 @@ export function SignalDetailPage() {
             <div className="sticky top-6 space-y-3">
 
               {/* Evidence Panel */}
-              <div className="terminal-card p-4">
+              <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
                 <TerminalSectionLabel>EVIDENCE</TerminalSectionLabel>
                 <div className="space-y-2.5">
                   <div className="flex items-start gap-2.5">
-                    <SourceIcon size={13} className="text-terminal-amber mt-0.5 flex-shrink-0" />
+                    <SourceIcon size={13} className="text-amber-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-[11px] font-mono font-semibold text-terminal-text">{signal.source}</p>
-                      <p className="text-[10px] font-mono text-terminal-text-muted">{formatDate(signal.detectedAt)}</p>
+                      <p className="text-[11px] font-mono font-semibold text-zinc-700">{signal.source}</p>
+                      <p className="text-[10px] font-mono text-zinc-300">{formatDate(signal.detectedAt)}</p>
                     </div>
                   </div>
                   {signal.parameters?.map((p, i) => (
                     <div key={i} className="flex items-start gap-2.5">
-                      <BarChart3 size={13} className="text-terminal-text-dim mt-0.5 flex-shrink-0" />
+                      <BarChart3 size={13} className="text-zinc-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-[11px] font-mono font-semibold text-terminal-text">
-                          {p.label}: <span className="text-terminal-amber">{p.value}</span>
+                        <p className="text-[11px] font-mono font-semibold text-zinc-700">
+                          {p.label}: <span className="text-amber-600">{p.value}</span>
                         </p>
-                        <p className="text-[10px] font-mono text-terminal-text-muted capitalize">{p.provenance}</p>
+                        <p className="text-[10px] font-mono text-zinc-300 capitalize">{p.provenance}</p>
                       </div>
                     </div>
                   ))}
@@ -635,31 +634,31 @@ export function SignalDetailPage() {
               {/* CTA */}
               <button
                 onClick={() => navigate(`/actions/new?signal=${signal.id}`)}
-                className="w-full inline-flex items-center justify-center gap-2 rounded bg-terminal-amber px-5 py-3 text-[11px] font-mono font-bold text-black uppercase tracking-[0.12em] transition-all hover:bg-terminal-amber-dim shadow-[0_0_16px_rgba(255,149,0,0.15)]"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 py-3 text-[11px] font-medium text-white uppercase tracking-[0.08em] transition-all hover:bg-zinc-800 shadow-sm"
               >
                 <Zap size={14} />
                 Triage Action
               </button>
 
-              <button className="w-full inline-flex items-center justify-center gap-2 rounded border border-terminal-border bg-terminal-surface px-5 py-2.5 text-[11px] font-mono font-medium text-terminal-text-dim uppercase tracking-[0.1em] transition-all hover:border-terminal-border-bright hover:text-terminal-text">
+              <button className="w-full inline-flex items-center justify-center gap-2 rounded border border-zinc-200 bg-white px-5 py-2.5 text-[11px] font-mono font-medium text-zinc-400 uppercase tracking-[0.1em] transition-all hover:border-zinc-300 hover:text-zinc-600">
                 <MoreHorizontal size={14} />
                 More
               </button>
 
               {/* Investor Snapshot */}
               {investor && (
-                <div className="terminal-card p-4">
+                <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
                   <TerminalSectionLabel>INVESTOR SNAPSHOT</TerminalSectionLabel>
-                  <p className="text-sm font-bold text-terminal-text font-mono">{investor.name}</p>
+                  <p className="text-sm font-bold text-zinc-700 font-mono">{investor.name}</p>
                   <div className="mt-1.5 flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-terminal-text-dim uppercase tracking-wider">
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
                       {investor.type}
                     </span>
                     <span className={cn(
                       "inline-flex items-center rounded px-1.5 py-0 text-[9px] font-mono font-bold tracking-wider border",
-                      investor.tier === 1 || investor.tier === "T1" ? "border-terminal-amber/40 text-terminal-amber bg-terminal-amber/5"
-                        : investor.tier === 2 || investor.tier === "T2" ? "border-terminal-border-bright text-terminal-text"
-                        : "border-terminal-border text-terminal-text-dim"
+                      investor.tier === 1 || investor.tier === "T1" ? "border-amber-200/40 text-amber-600 bg-amber-50"
+                        : investor.tier === 2 || investor.tier === "T2" ? "border-zinc-300 text-zinc-700"
+                        : "border-zinc-200 text-zinc-400"
                     )}>
                       T{String(investor.tier).replace("T", "")}
                     </span>
@@ -667,11 +666,11 @@ export function SignalDetailPage() {
 
                   <div className="mt-4 grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">HOLDING</p>
-                      <p className="mt-0.5 font-mono text-lg font-bold text-terminal-amber terminal-value">{investor.holdingPct}%</p>
+                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">HOLDING</p>
+                      <p className="mt-0.5 font-mono text-lg font-bold text-amber-600 font-mono">{investor.holdingPct}%</p>
                     </div>
                     <div>
-                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">TRAJECTORY</p>
+                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">TRAJECTORY</p>
                       <p className="mt-1">
                         <TerminalBadge variant={investor.holdingTrend === "down" ? "red" : investor.holdingTrend === "up" ? "green" : "default"}>
                           {trendLabel[investor.holdingTrend]}
@@ -679,23 +678,23 @@ export function SignalDetailPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">MOMENTUM</p>
-                      <p className="mt-0.5 text-[12px] font-mono capitalize text-terminal-text">{investor.engagementMomentum}</p>
+                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">MOMENTUM</p>
+                      <p className="mt-0.5 text-[12px] font-mono capitalize text-zinc-700">{investor.engagementMomentum}</p>
                     </div>
                     <div>
-                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase">OWNER</p>
-                      <p className="mt-0.5 text-[12px] font-mono text-terminal-text">{investor.relationshipOwner}</p>
+                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase">OWNER</p>
+                      <p className="mt-0.5 text-[12px] font-mono text-zinc-700">{investor.relationshipOwner}</p>
                     </div>
                   </div>
 
                   {investor.contacts && investor.contacts.length > 0 && (
-                    <div className="mt-4 pt-3 border-t border-terminal-border">
-                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-terminal-text-dim uppercase mb-2">KEY CONTACTS</p>
+                    <div className="mt-4 pt-3 border-t border-zinc-200">
+                      <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase mb-2">KEY CONTACTS</p>
                       <div className="space-y-1.5">
                         {investor.contacts.map((c) => (
-                          <div key={c.id} className="text-[11px] font-mono text-terminal-text">
-                            <span className="font-medium text-terminal-text">{c.name}</span>
-                            {c.role && <span className="text-terminal-text-dim"> / {c.role}</span>}
+                          <div key={c.id} className="text-[11px] font-mono text-zinc-700">
+                            <span className="font-medium text-zinc-700">{c.name}</span>
+                            {c.role && <span className="text-zinc-400"> / {c.role}</span>}
                           </div>
                         ))}
                       </div>
@@ -706,7 +705,7 @@ export function SignalDetailPage() {
 
               {/* Related Signals */}
               {relatedSignals.length > 0 && (
-                <div className="terminal-card p-4">
+                <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
                   <TerminalSectionLabel>RELATED SIGNALS</TerminalSectionLabel>
                   <div className="space-y-2">
                     {relatedSignals.map((s) => {
@@ -715,16 +714,16 @@ export function SignalDetailPage() {
                         <button
                           key={s.id}
                           onClick={() => navigate(`/signals/${s.id}`)}
-                          className="block w-full rounded border border-terminal-border p-2.5 text-left transition-all hover:border-terminal-border-bright hover:bg-terminal-surface-alt group"
+                          className="block w-full rounded border border-zinc-200 p-2.5 text-left transition-all hover:border-zinc-300 hover:bg-zinc-50 group"
                         >
                           <div className="flex items-center gap-2 mb-1">
                             <span className={cn("inline-block w-1.5 h-1.5 rounded-full", sUrg.dot)} />
-                            <span className="text-[9px] font-mono font-semibold tracking-[0.1em] uppercase text-terminal-text-dim">
+                            <span className="text-[9px] font-mono font-semibold tracking-[0.1em] uppercase text-zinc-400">
                               {typeLabels[s.type]}
                             </span>
-                            <ChevronRight size={10} className="ml-auto text-terminal-text-muted group-hover:text-terminal-amber transition-colors" />
+                            <ChevronRight size={10} className="ml-auto text-zinc-300 group-hover:text-amber-700 transition-colors" />
                           </div>
-                          <p className="text-[11px] font-mono text-terminal-text line-clamp-2">{s.headline}</p>
+                          <p className="text-[11px] font-mono text-zinc-700 line-clamp-2">{s.headline}</p>
                         </button>
                       );
                     })}

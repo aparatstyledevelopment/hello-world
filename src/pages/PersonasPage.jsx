@@ -28,11 +28,11 @@ function deriveArchetype(investor) {
 }
 
 const archetypeColors = {
-  "Active accumulator": "bg-gray-200 text-black border-gray-300",
+  "Active accumulator": "bg-zinc-200 text-zinc-900 border-zinc-300",
   "Silent reducer": "bg-red-100 text-red-800 border-red-300",
-  "Passive tracker": "bg-gray-100 text-gray-700 border-gray-200",
-  "Governance steward": "bg-gray-200 text-gray-800 border-gray-300",
-  "Cautious trimmer": "bg-gray-100 text-gray-700 border-gray-200",
+  "Passive tracker": "bg-zinc-100 text-zinc-700 border-zinc-200",
+  "Governance steward": "bg-zinc-200 text-zinc-800 border-zinc-300",
+  "Cautious trimmer": "bg-zinc-100 text-zinc-700 border-zinc-200",
 };
 
 const typeLabels = {
@@ -88,8 +88,8 @@ function getEngagementLabel(score) {
 }
 
 function getEngagementBarColor(score) {
-  if (score >= 70) return "bg-black";
-  if (score >= 40) return "bg-gray-400";
+  if (score >= 70) return "bg-zinc-900";
+  if (score >= 40) return "bg-zinc-400";
   return "bg-red-500";
 }
 
@@ -202,17 +202,15 @@ export function PersonasPage() {
       .slice(0, 2);
 
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-5 flex flex-col">
+      <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-5 flex flex-col">
         {/* Top row: avatar + identity */}
         <div className="flex items-start gap-4 mb-4">
           <div
             className={cn(
-              "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold",
+              "flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-sm font-bold",
               isAtRisk
-                ? "bg-red-100 text-red-700"
-                : inv.archetype === "Active accumulator"
-                ? "bg-gray-200 text-gray-700"
-                : "bg-gray-200 text-gray-700"
+                ? "bg-red-50 text-red-600"
+                : "bg-zinc-100 text-zinc-700"
             )}
           >
             {initials}
@@ -220,20 +218,20 @@ export function PersonasPage() {
           <div className="flex-1 min-w-0">
             <Link
               to={`/investors/${inv.id}`}
-              className="text-sm font-bold text-black hover:underline"
+              className="text-sm font-bold text-zinc-900 hover:underline"
             >
               {inv.name}
             </Link>
             <div className="mt-1 flex items-center gap-2 flex-wrap">
               <span
                 className={cn(
-                  "inline-flex items-center rounded-full border px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]",
-                  archetypeColors[inv.archetype] || "bg-gray-100 text-gray-700 border-gray-200"
+                  "inline-flex items-center rounded-xl border px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]",
+                  archetypeColors[inv.archetype] || "bg-zinc-100 text-zinc-700 border-zinc-200"
                 )}
               >
                 {inv.archetype}
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-zinc-500">
                 {typeLabels[inv.type]} &middot; <span className="font-mono">{inv.holdingPct}%</span>
               </span>
             </div>
@@ -241,30 +239,30 @@ export function PersonasPage() {
         </div>
 
         {/* Description */}
-        <p className="text-xs text-gray-600 leading-relaxed mb-4">
+        <p className="text-xs text-zinc-600 leading-relaxed mb-4">
           {inv.signalNote}
         </p>
 
         {/* Engagement Rate metric bar */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+            <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
               ENGAGEMENT RATE
             </span>
             <span
               className={cn(
                 "text-xs font-bold",
                 inv.scores.engagement >= 70
-                  ? "text-black"
+                  ? "text-zinc-900"
                   : inv.scores.engagement >= 40
-                  ? "text-gray-500"
+                  ? "text-zinc-500"
                   : "text-red-600"
               )}
             >
               {getEngagementLabel(inv.scores.engagement)}
             </span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-gray-100">
+          <div className="h-1.5 w-full rounded-full bg-zinc-100">
             <div
               className={cn("h-1.5 rounded-full transition-all", getEngagementBarColor(inv.scores.engagement))}
               style={{ width: `${inv.scores.engagement}%` }}
@@ -276,32 +274,32 @@ export function PersonasPage() {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
             <span className={cn(
-              "text-[11px] font-medium uppercase tracking-[0.1em]",
-              inv.scores.risk >= 60 ? "text-red-600 font-bold" : "text-gray-400"
+              "text-[11px] font-medium uppercase tracking-[0.08em]",
+              inv.scores.risk >= 60 ? "text-red-600 font-bold" : "text-zinc-400"
             )}>
               RISK SCORE
               {inv.scores.risk >= 60 && (
-                <span className="ml-1.5 inline-flex items-center rounded bg-red-100 px-1 py-0.5 text-[9px] font-bold uppercase text-red-700">
+                <span className="ml-1.5 inline-flex items-center rounded-lg bg-red-50 px-1 py-0.5 text-[9px] font-bold uppercase text-red-600">
                   ALERT
                 </span>
               )}
             </span>
             <span className={cn(
               "font-mono text-xs font-bold",
-              inv.scores.risk >= 60 ? "text-red-600" : inv.scores.risk >= 35 ? "text-gray-500" : "text-black"
+              inv.scores.risk >= 60 ? "text-red-600" : inv.scores.risk >= 35 ? "text-zinc-500" : "text-zinc-900"
             )}>
               {inv.scores.risk}%
             </span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-gray-100">
+          <div className="h-1.5 w-full rounded-full bg-zinc-100">
             <div
               className={cn(
                 "h-1.5 rounded-full transition-all",
                 inv.scores.risk >= 60
                   ? "bg-red-500"
                   : inv.scores.risk >= 35
-                  ? "bg-gray-400"
-                  : "bg-black"
+                  ? "bg-zinc-400"
+                  : "bg-zinc-900"
               )}
               style={{ width: `${inv.scores.risk}%` }}
             />
@@ -311,13 +309,13 @@ export function PersonasPage() {
         <div className="flex-1" />
 
         {/* Last call footer */}
-        <div className="mt-auto border-t border-gray-100 pt-3 flex items-center justify-between">
-          <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
-            LAST CALL: <span className="font-mono text-gray-600">{inv.lastContact || "N/A"}</span>
+        <div className="mt-auto border-t border-zinc-100 pt-3 flex items-center justify-between">
+          <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
+            LAST CALL: <span className="font-mono text-zinc-600">{inv.lastContact || "N/A"}</span>
           </span>
           <Link
             to={`/investors/${inv.id}`}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-zinc-400 hover:text-zinc-600 transition-colors"
           >
             <ExternalLink size={14} />
           </Link>
@@ -331,19 +329,19 @@ export function PersonasPage() {
     const riskLevel = getRiskLevel(inv.scores.risk);
 
     return (
-      <div className="rounded-lg border border-gray-200 bg-white p-5">
+      <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-5">
         <div className="flex items-start gap-3 mb-4">
-          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100 text-xs font-bold text-gray-700">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-xs font-bold text-zinc-700">
             {inv.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
           </div>
           <div>
             <Link
               to={`/investors/${inv.id}`}
-              className="text-sm font-bold text-black hover:underline"
+              className="text-sm font-bold text-zinc-900 hover:underline"
             >
               {inv.name}
             </Link>
-            <p className="text-xs text-gray-500">{typeLabels[inv.type]}</p>
+            <p className="text-xs text-zinc-500">{typeLabels[inv.type]}</p>
           </div>
         </div>
 
@@ -356,7 +354,7 @@ export function PersonasPage() {
         {/* Key Meeting Themes as pills */}
         {inv.meetingThemes.length > 0 && (
           <div className="mt-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-2">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-2">
               KEY MEETING THEMES
             </p>
             <div className="flex flex-wrap gap-1.5">
@@ -364,10 +362,10 @@ export function PersonasPage() {
                 <span
                   key={theme}
                   className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.05em]",
+                    "inline-flex items-center rounded-xl px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.05em]",
                     theme === "Retention" || theme === "Exit risk"
                       ? "bg-red-50 text-red-700 border border-red-200"
-                      : "bg-gray-100 text-gray-600 border border-gray-200"
+                      : "bg-zinc-100 text-zinc-600 border border-zinc-200"
                   )}
                 >
                   {theme}
@@ -384,10 +382,10 @@ export function PersonasPage() {
     <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-black">
+        <h1 className="text-3xl font-bold text-zinc-900">
           Investor Personas
         </h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-zinc-500">
           How your investors behave, who is at risk, and how to engage each one
         </p>
       </div>
@@ -405,13 +403,13 @@ export function PersonasPage() {
           label="Avg Risk Score"
           value={`${avgRisk}%`}
           annotation="Across all personas"
-          annotationColor={avgRisk >= 50 ? "red" : "gray"}
+          annotationColor={avgRisk >= 50 ? "red" : "zinc"}
         />
         <StatCard
           label="Growing"
           value={growingCount}
           annotation="Accumulating position"
-          annotationColor="gray"
+          annotationColor="zinc"
         />
         <StatCard
           label="Total Personas"
@@ -422,13 +420,13 @@ export function PersonasPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+        <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
           Filters
         </span>
         <select
           value={archetypeFilter}
           onChange={(e) => setArchetypeFilter(e.target.value)}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-400"
         >
           <option value="">All Archetypes</option>
           {archetypes.map((a) => (
@@ -440,7 +438,7 @@ export function PersonasPage() {
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          className="rounded-xl border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-400"
         >
           <option value="">All Types</option>
           {Object.entries(typeLabels).map(([k, v]) => (
@@ -463,12 +461,12 @@ export function PersonasPage() {
           {strategicSpecialists.length > 0 && (
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-base font-bold text-black">Strategic Specialists</h2>
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1.5 font-mono text-[10px] font-bold text-white">
+                <h2 className="text-base font-bold text-zinc-900">Strategic Specialists</h2>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-zinc-900 px-1.5 font-mono text-[10px] font-bold text-white">
                   {strategicSpecialists.length}
                 </span>
               </div>
-              <hr className="border-gray-200 mb-5" />
+              <hr className="border-zinc-200 mb-5" />
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                 {strategicSpecialists.map((inv) => (
                   <ContactCard key={inv.id} inv={inv} />
@@ -481,12 +479,12 @@ export function PersonasPage() {
           {portfolioManagers.length > 0 && (
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <h2 className="text-base font-bold text-black">Portfolio Managers</h2>
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1.5 font-mono text-[10px] font-bold text-white">
+                <h2 className="text-base font-bold text-zinc-900">Portfolio Managers</h2>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-zinc-900 px-1.5 font-mono text-[10px] font-bold text-white">
                   {portfolioManagers.length}
                 </span>
               </div>
-              <hr className="border-gray-200 mb-5" />
+              <hr className="border-zinc-200 mb-5" />
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
                 {portfolioManagers.map((inv) => (
                   <ContactCard key={inv.id} inv={inv} />
@@ -509,36 +507,36 @@ export function PersonasPage() {
   );
 }
 
-function StatCard({ label, value, annotation, annotationColor = "gray", variant = "light" }) {
+function StatCard({ label, value, annotation, annotationColor = "zinc", variant = "light" }) {
   const isDark = variant === "dark";
   const colorMap = {
     red: "text-red-600",
-    gray: "text-gray-500",
+    zinc: "text-zinc-500",
   };
 
   return (
     <div
       className={cn(
-        "rounded-lg p-5 text-center",
-        isDark ? "bg-black" : "border border-gray-200 bg-white"
+        "rounded-2xl p-5 text-center",
+        isDark ? "bg-zinc-900 shadow-sm" : "border border-zinc-200/60 bg-white shadow-sm"
       )}
     >
       <p className={cn(
-        "text-[11px] font-medium uppercase tracking-[0.1em]",
-        isDark ? "text-gray-400" : "text-gray-400"
+        "text-[11px] font-medium uppercase tracking-[0.08em]",
+        isDark ? "text-zinc-400" : "text-zinc-400"
       )}>
         {label}
       </p>
       <p className={cn(
         "mt-1 font-mono text-4xl font-bold",
-        isDark ? "text-white" : "text-black"
+        isDark ? "text-white" : "text-zinc-900"
       )}>
         {value}
       </p>
       {annotation && (
         <p className={cn(
           "mt-1 text-xs font-medium",
-          isDark ? "text-gray-400" : (colorMap[annotationColor] ?? colorMap.gray)
+          isDark ? "text-zinc-400" : (colorMap[annotationColor] ?? colorMap.zinc)
         )}>
           {annotation}
         </p>

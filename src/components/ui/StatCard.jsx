@@ -1,11 +1,12 @@
 import { cn } from "../../lib/utils";
 
 const annotationColors = {
-  emerald: "text-gray-600",
-  red: "text-red-600",
-  amber: "text-gray-600",
-  blue: "text-gray-600",
-  slate: "text-gray-500",
+  emerald: "text-emerald-600",
+  red: "text-red-500",
+  amber: "text-amber-600",
+  blue: "text-blue-600",
+  slate: "text-zinc-500",
+  gray: "text-zinc-500",
 };
 
 export function StatCard({
@@ -22,13 +23,16 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-lg p-4",
-        isDark ? "bg-black text-white" : "border border-gray-200 bg-white",
+        "rounded-2xl p-4",
+        isDark ? "bg-zinc-900 text-white shadow-sm" : "border border-zinc-200/60 bg-white shadow-sm",
         className
       )}
     >
       {label && (
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+        <p className={cn(
+          "text-[11px] font-medium uppercase tracking-[0.08em]",
+          isDark ? "text-zinc-400" : "text-zinc-400"
+        )}>
           {label}
         </p>
       )}
@@ -36,14 +40,14 @@ export function StatCard({
       <div className="mt-1.5 flex items-baseline gap-3">
         <span
           className={cn(
-            "font-mono text-3xl font-bold",
-            isDark ? "text-white" : "text-black"
+            "font-mono text-3xl font-bold tracking-tight",
+            isDark ? "text-white" : "text-zinc-900"
           )}
         >
           {value}
         </span>
         {threshold && (
-          <span className="rounded-md bg-gray-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em] text-gray-600">
+          <span className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-zinc-500">
             {threshold}
           </span>
         )}
@@ -54,7 +58,7 @@ export function StatCard({
           className={cn(
             "mt-2 text-xs font-medium",
             isDark
-              ? "text-gray-400"
+              ? "text-zinc-400"
               : annotationColors[annotationColor] ?? annotationColors.slate
           )}
         >
