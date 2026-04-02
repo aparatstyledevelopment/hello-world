@@ -257,7 +257,7 @@ export function ReportsPage() {
                     {interactionsByType.map((_, i) => (<Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} strokeWidth={0} />))}
                   </Pie>
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: "#374151" }} />
+                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: "#3f3f46" }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -265,12 +265,12 @@ export function ReportsPage() {
 
           {/* Coverage gaps detail */}
           {engagement.coverageGaps.length > 0 && (
-            <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-4">
+            <div className="rounded-2xl border border-zinc-200/60 bg-zinc-50 p-4 shadow-sm">
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-700 mb-2">COVERAGE GAP DETAIL</p>
               <p className="text-xs text-zinc-500 mb-3">These investors have received minimal engagement and may require proactive outreach to prevent relationship decay.</p>
               <div className="space-y-2">
                 {engagement.coverageGaps.map((inv) => (
-                  <div key={inv.id} className="flex items-center justify-between rounded-2xl bg-white border border-zinc-200 px-4 py-2.5">
+                  <div key={inv.id} className="flex items-center justify-between rounded-2xl bg-white border border-zinc-200/60 px-4 py-2.5 shadow-sm">
                     <div>
                       <p className="text-sm font-medium text-zinc-800">{inv.name}</p>
                       <p className="text-xs text-zinc-400">{inv.type} &middot; Tier {inv.tier}</p>
@@ -351,7 +351,7 @@ export function ReportsPage() {
                     <Cell fill="#f4f4f5" strokeWidth={0} />
                   </Pie>
                   <text x="50%" y="62%" textAnchor="middle" dominantBaseline="middle" className="text-2xl font-bold" fill="#09090b">{signalAccuracyPct}%</text>
-                  <text x="50%" y="78%" textAnchor="middle" dominantBaseline="middle" className="text-xs" fill="#9ca3af">confirmed</text>
+                  <text x="50%" y="78%" textAnchor="middle" dominantBaseline="middle" className="text-xs" fill="#a1a1aa">confirmed</text>
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -419,7 +419,7 @@ export function ReportsPage() {
           </div>
 
           {/* Investor breakdown */}
-          <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden">
+          <div className="rounded-2xl border border-zinc-200/60 bg-white overflow-hidden shadow-sm">
             <div className="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">INVESTOR POSITION DETAILS</p>
             </div>
@@ -502,7 +502,7 @@ export function ReportsPage() {
                   <Tooltip content={<CustomTooltip />} />
                   <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="Completed" fill="#09090b" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="Open" fill="#d1d5db" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Open" fill="#d4d4d8" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
