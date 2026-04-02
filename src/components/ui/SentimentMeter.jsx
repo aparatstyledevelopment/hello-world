@@ -12,26 +12,26 @@ export function SentimentMeter({ value = "low", label, description }) {
   return (
     <div className="space-y-2">
       {label && (
-        <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-500">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400">
           {label}
         </p>
       )}
 
       <div className="relative">
         <div
-          className="h-2.5 rounded-full"
+          className="h-2 rounded-full"
           style={{
-            background: "linear-gradient(to right, #e5e7eb, #9ca3af, #dc2626)",
+            background: "linear-gradient(to right, #d4d4d8, #a1a1aa, #ef4444)",
           }}
         />
-        <div className="absolute top-0 h-2.5" style={{ left: position }}>
-          <div className="w-0.5 h-full bg-black rounded-full -translate-x-1/2" />
+        <div className="absolute top-0 h-2" style={{ left: position }}>
+          <div className="w-1 h-full bg-zinc-900 rounded-full -translate-x-1/2 shadow-sm" />
         </div>
       </div>
 
       <div className="relative">
         <span
-          className="absolute text-xs font-bold uppercase text-black -translate-x-1/2"
+          className="absolute text-xs font-bold uppercase text-zinc-700 -translate-x-1/2"
           style={{ left: position }}
         >
           {value}
@@ -39,7 +39,7 @@ export function SentimentMeter({ value = "low", label, description }) {
       </div>
 
       {description && (
-        <p className="text-sm text-gray-500 pt-4">{description}</p>
+        <p className="text-sm text-zinc-500 pt-4 leading-relaxed">{description}</p>
       )}
     </div>
   );

@@ -145,17 +145,17 @@ const categoryIcons = {
 };
 
 const categoryBadgeColors = {
-  Ownership: "bg-gray-100 text-gray-700 border border-gray-200",
-  Peer: "bg-gray-100 text-gray-700 border border-gray-200",
-  "Fund flows": "bg-gray-100 text-gray-700 border border-gray-200",
-  Regulatory: "bg-gray-100 text-gray-700 border border-gray-200",
-  Media: "bg-gray-100 text-gray-600 border border-gray-200",
+  Ownership: "bg-blue-50 text-blue-700 border border-blue-200",
+  Peer: "bg-violet-50 text-violet-700 border border-violet-200",
+  "Fund flows": "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  Regulatory: "bg-amber-50 text-amber-700 border border-amber-200",
+  Media: "bg-zinc-100 text-zinc-600 border border-zinc-200",
 };
 
 const priorityColors = {
-  high: "bg-red-50 text-red-700 border border-red-200",
-  medium: "bg-gray-100 text-gray-700 border border-gray-200",
-  low: "bg-gray-100 text-gray-500 border border-gray-200",
+  high: "bg-red-50 text-red-600 border border-red-200",
+  medium: "bg-zinc-100 text-zinc-600 border border-zinc-200",
+  low: "bg-zinc-50 text-zinc-400 border border-zinc-200",
 };
 
 // ── Top buyers / sellers for Q4 ────────────────────────
@@ -201,8 +201,8 @@ export function MarketPage() {
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-black">Market Intelligence</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-3xl font-bold text-zinc-900">Market Intelligence</h1>
+        <p className="mt-1 text-sm text-zinc-500">
           Ownership shifts, peer activity, and market signals that matter to your investors
         </p>
       </div>
@@ -210,21 +210,21 @@ export function MarketPage() {
       {/* ── Concentration + Shareholder Base Row ─────────── */}
       <div className="flex flex-col md:flex-row gap-4">
         {/* Dark Concentration Index Card */}
-        <div className="rounded-lg bg-black p-5 md:w-80 md:flex-shrink-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+        <div className="rounded-2xl bg-zinc-900 p-5 md:w-80 md:flex-shrink-0 shadow-sm">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
             CONCENTRATION INDEX
           </p>
           <div className="mt-3 flex items-baseline gap-4">
             <span className="font-mono text-5xl font-bold text-white">42.8%</span>
-            <span className="text-sm font-medium text-gray-400">Top-5 holder share</span>
+            <span className="text-sm font-medium text-zinc-400">Top-5 holder share</span>
           </div>
-          <div className="mt-4 h-2.5 w-full rounded-full bg-gray-700">
+          <div className="mt-4 h-2.5 w-full rounded-full bg-zinc-700">
             <div
               className="h-2.5 rounded-full bg-white transition-all"
               style={{ width: "42.8%" }}
             />
           </div>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-zinc-400">
             Shifted <span className="font-mono font-semibold text-white">+1.2%</span> vs. prior quarter
             — concentration tightening among top institutional holders
           </p>
@@ -232,27 +232,27 @@ export function MarketPage() {
 
         {/* Shareholder Base Highlights */}
         <div className="flex-1 min-w-0">
-        <Card variant="section" accentColor="gray" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
+        <Card variant="section" accentColor="zinc" title="Shareholder Base Highlights" subtitle="Largest movers in Q4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* Top 5 Buyers */}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-3">
               TOP 5 BUYERS (Q4)
             </p>
             <div className="space-y-2">
               {topBuyers.map((b) => (
-                <div key={b.name} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
+                <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-2">
                   <div className="flex items-center gap-2">
-                    <TrendingUp size={14} className="text-gray-500" />
+                    <TrendingUp size={14} className="text-emerald-400" />
                     {b.id ? (
-                      <Link to={`/investors/${b.id}`} className="text-sm font-medium text-gray-800 hover:underline">
+                      <Link to={`/investors/${b.id}`} className="text-sm font-medium text-zinc-800 hover:underline">
                         {b.name}
                       </Link>
                     ) : (
-                      <span className="text-sm font-medium text-gray-800">{b.name}</span>
+                      <span className="text-sm font-medium text-zinc-800">{b.name}</span>
                     )}
                   </div>
-                  <span className="font-mono text-sm font-bold text-black">{b.change}</span>
+                  <span className="font-mono text-sm font-bold text-zinc-900">{b.change}</span>
                 </div>
               ))}
             </div>
@@ -260,20 +260,20 @@ export function MarketPage() {
 
           {/* Top 5 Sellers */}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-3">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-3">
               TOP 5 SELLERS (Q4)
             </p>
             <div className="space-y-2">
               {topSellers.map((s) => (
-                <div key={s.name} className="flex items-center justify-between rounded-lg bg-red-50/50 px-3 py-2">
+                <div key={s.name} className="flex items-center justify-between rounded-xl bg-red-50/50 px-3 py-2">
                   <div className="flex items-center gap-2">
-                    <TrendingDown size={14} className="text-red-500" />
+                    <TrendingDown size={14} className="text-red-400" />
                     {s.id ? (
-                      <Link to={`/investors/${s.id}`} className="text-sm font-medium text-gray-800 hover:underline">
+                      <Link to={`/investors/${s.id}`} className="text-sm font-medium text-zinc-800 hover:underline">
                         {s.name}
                       </Link>
                     ) : (
-                      <span className="text-sm font-medium text-gray-800">{s.name}</span>
+                      <span className="text-sm font-medium text-zinc-800">{s.name}</span>
                     )}
                   </div>
                   <span className="font-mono text-sm font-bold text-red-600">{s.change}</span>
@@ -290,8 +290,8 @@ export function MarketPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-base font-bold text-black">Intelligence Feed</h2>
-            <p className="text-xs text-gray-500 mt-0.5">Market events relevant to your shareholder base</p>
+            <h2 className="text-base font-bold text-zinc-900">Intelligence Feed</h2>
+            <p className="text-xs text-zinc-500 mt-0.5">Market events relevant to your shareholder base</p>
           </div>
         </div>
 
@@ -302,10 +302,10 @@ export function MarketPage() {
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={cn(
-                "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+                "rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-colors",
                 activeCategory === cat
-                  ? "border-black bg-black text-white"
-                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+                  ? "border-zinc-900 bg-zinc-900 text-white"
+                  : "border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
               )}
             >
               {cat}
@@ -323,16 +323,16 @@ export function MarketPage() {
               return (
                 <div
                   key={item.id}
-                  className="rounded-lg border border-gray-200 bg-white p-5"
+                  className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-5"
                 >
                   <div className="flex items-start gap-4">
                     {/* Icon circle */}
                     <div
                       className={cn(
-                        "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
+                        "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl",
                         item.relevance === "high"
-                          ? "bg-red-100"
-                          : "bg-gray-100"
+                          ? "bg-red-50"
+                          : "bg-zinc-100"
                       )}
                     >
                       <CatIcon
@@ -340,7 +340,7 @@ export function MarketPage() {
                         className={cn(
                           item.relevance === "high"
                             ? "text-red-600"
-                            : "text-gray-500"
+                            : "text-zinc-500"
                         )}
                       />
                     </div>
@@ -348,27 +348,27 @@ export function MarketPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <h3 className="text-sm font-semibold text-black">{item.title}</h3>
-                        <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]", priorityColors[item.relevance])}>
+                        <h3 className="text-sm font-semibold text-zinc-900">{item.title}</h3>
+                        <span className={cn("inline-flex items-center rounded-xl px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.05em]", priorityColors[item.relevance])}>
                           {item.relevance}
                         </span>
                       </div>
 
-                      <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                      <p className="text-sm text-zinc-600 leading-relaxed mb-3">
                         {item.description}
                       </p>
 
                       <div className="flex items-center gap-4 flex-wrap">
-                        <span className={cn("inline-flex items-center rounded-md px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]", categoryBadgeColors[item.category])}>
+                        <span className={cn("inline-flex items-center rounded-xl px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]", categoryBadgeColors[item.category])}>
                           {item.category}
                         </span>
 
                         {hasAffected && (
                           <div className="flex items-center gap-1.5">
-                            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-black px-1.5 font-mono text-[10px] font-bold text-white">
+                            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-zinc-900 px-1.5 font-mono text-[10px] font-bold text-white">
                               {item.affectedInvestorIds.length}
                             </span>
-                            <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
+                            <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
                               YOUR INVESTORS
                             </span>
                             {item.affectedInvestorIds.map((id) => {
@@ -377,7 +377,7 @@ export function MarketPage() {
                                 <Link
                                   key={id}
                                   to={`/investors/${id}`}
-                                  className="text-xs font-semibold text-gray-700 hover:text-black hover:underline"
+                                  className="text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:underline"
                                 >
                                   {inv.name}
                                 </Link>
@@ -386,10 +386,10 @@ export function MarketPage() {
                           </div>
                         )}
 
-                        <div className="flex items-center gap-1 text-xs text-gray-400 ml-auto">
+                        <div className="flex items-center gap-1 text-xs text-zinc-400 ml-auto">
                           <ExternalLink size={11} />
                           <span>{item.source}</span>
-                          <span className="text-gray-300 mx-1">&middot;</span>
+                          <span className="text-zinc-300 mx-1">&middot;</span>
                           <span className="font-mono">{item.date}</span>
                         </div>
                       </div>
@@ -409,27 +409,27 @@ export function MarketPage() {
       </div>
 
       {/* ── Key Engagement Metrics ────────────────────────── */}
-      <Card variant="section" accentColor="gray" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
+      <Card variant="section" accentColor="zinc" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">HIGH RELEVANCE ITEMS</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">HIGH RELEVANCE ITEMS</p>
             <p className="mt-1.5 font-mono text-3xl font-bold text-red-600">{stats.high}</p>
-            <p className="mt-0.5 text-xs text-gray-500">Require attention</p>
+            <p className="mt-0.5 text-xs text-zinc-500">Require attention</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">INVESTORS AFFECTED</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-black">{stats.uniqueInvestors}</p>
-            <p className="mt-0.5 text-xs text-gray-500">Across all items</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">INVESTORS AFFECTED</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
+            <p className="mt-0.5 text-xs text-zinc-500">Across all items</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">THIS WEEK</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-black">{stats.thisWeek}</p>
-            <p className="mt-0.5 text-xs text-gray-500">New items</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">THIS WEEK</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
+            <p className="mt-0.5 text-xs text-zinc-500">New items</p>
           </div>
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">AFFECTING YOUR BASE</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-black">{stats.withInvestors}</p>
-            <p className="mt-0.5 text-xs text-gray-500">of {stats.total} total</p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">AFFECTING YOUR BASE</p>
+            <p className="mt-1.5 font-mono text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
+            <p className="mt-0.5 text-xs text-zinc-500">of {stats.total} total</p>
           </div>
         </div>
       </Card>

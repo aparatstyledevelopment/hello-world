@@ -1,6 +1,6 @@
 import { cn } from "../../lib/utils";
 
-export function Sparkline({ data = [], width = 80, height = 24, color = "#000000", className }) {
+export function Sparkline({ data = [], width = 80, height = 24, color = "#09090b", className }) {
   if (!data.length) return null;
 
   const min = Math.min(...data);
@@ -36,7 +36,7 @@ export function Sparkline({ data = [], width = 80, height = 24, color = "#000000
     >
       <defs>
         <linearGradient id={`sparkGrad-${color}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.15" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.12" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>

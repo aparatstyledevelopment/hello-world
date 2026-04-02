@@ -32,9 +32,9 @@ const TODAY = "2026-04-01";
 const urgencyOrder = { high: 0, medium: 1, low: 2 };
 
 const urgencyChipStyle = {
-  high: "bg-red-50 text-red-700 border border-red-200",
-  medium: "bg-gray-100 text-gray-700 border border-gray-200",
-  low: "bg-gray-100 text-gray-700 border border-gray-200",
+  high: "bg-red-50 text-red-600 border border-red-200",
+  medium: "bg-zinc-100 text-zinc-700 border border-zinc-200",
+  low: "bg-zinc-100 text-zinc-700 border border-zinc-200",
 };
 
 const typeIcons = {
@@ -126,10 +126,10 @@ export function HomePage() {
     <div className="space-y-4 p-4 md:p-6">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-bold text-black tracking-tight">
+        <h1 className="text-xl font-bold text-zinc-900 tracking-tight">
           What changed overnight
         </h1>
-        <p className="mt-1 text-sm text-gray-400">
+        <p className="mt-1 text-sm text-zinc-500">
           Situation, insight, and action for {TODAY}.
         </p>
       </div>
@@ -138,7 +138,7 @@ export function HomePage() {
       {heroSignal && (
         <div
           className={cn(
-            "bg-white rounded-lg border border-gray-200 overflow-hidden cursor-pointer transition-shadow hover:shadow-md hover:border-gray-300"
+            "rounded-2xl border border-zinc-200/60 bg-white shadow-sm overflow-hidden cursor-pointer transition-shadow hover:shadow-md hover:border-zinc-300"
           )}
           onClick={() => navigate(`/signals/${heroSignal.id}`)}
         >
@@ -147,7 +147,7 @@ export function HomePage() {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-50">
-                  <AlertTriangle size={20} className="text-red-600" />
+                  <AlertTriangle size={20} className="text-red-500" />
                 </div>
                 <span className={cn("rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide", urgencyChipStyle[heroSignal.urgency])}>
                   {heroSignal.urgency === "high" ? "HIGH URGENCY" : heroSignal.urgency === "medium" ? "MEDIUM" : "LOW"}
@@ -158,27 +158,27 @@ export function HomePage() {
             </div>
 
             {/* Headline -- visually 2x bigger */}
-            <h2 className="text-xl font-bold text-black leading-tight tracking-tight">
+            <h2 className="text-xl font-bold text-zinc-900 leading-tight tracking-tight">
               {heroSignal.headline}
             </h2>
 
             {/* Description */}
-            <p className="mt-2 text-sm text-gray-600 leading-relaxed max-w-2xl">
+            <p className="mt-2 text-sm text-zinc-600 leading-relaxed max-w-2xl">
               {heroSignal.description}
             </p>
 
             {/* Investor + timestamp */}
             <div className="mt-3 flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">Influenced:</span>
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gray-200 text-[10px] font-bold text-gray-600">
+                <span className="text-sm text-zinc-400">Influenced:</span>
+                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-zinc-200 text-[10px] font-bold text-zinc-600">
                   {heroInvestor?.name?.charAt(0) ?? "?"}
                 </div>
-                <span className="text-sm font-semibold text-black">
+                <span className="text-sm font-semibold text-zinc-900">
                   {heroInvestor?.name ?? "Unknown"}
                 </span>
               </div>
-              <span className="text-xs font-medium text-gray-400 tracking-wider">
+              <span className="text-xs font-medium text-zinc-400 tracking-wider">
                 DETECTED {relativeAge(heroSignal.detectedAt)}
               </span>
             </div>
@@ -217,8 +217,8 @@ export function HomePage() {
       {remainingSignals.length > 0 && (
         <Card variant="section" accentColor="blue" className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-base font-bold text-black">Intelligence Feed</h3>
-            <span className="inline-flex items-center bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-[11px] font-semibold tracking-wider">
+            <h3 className="text-base font-bold text-zinc-900 tracking-tight">Intelligence Feed</h3>
+            <span className="inline-flex items-center bg-zinc-100 text-zinc-700 rounded-xl px-3 py-1 text-[11px] font-semibold tracking-wider">
               {remainingSignals.length} ACTIVE SIGNAL{remainingSignals.length !== 1 ? "S" : ""}
             </span>
           </div>
@@ -232,7 +232,7 @@ export function HomePage() {
                 <button
                   key={signal.id}
                   onClick={() => navigate(`/signals/${signal.id}`)}
-                  className="flex w-full items-start gap-4 rounded-lg border border-gray-100 bg-white px-4 py-3.5 text-left transition-all hover:shadow-sm hover:border-gray-200"
+                  className="flex w-full items-start gap-4 rounded-2xl border border-zinc-200/60 bg-white shadow-sm px-4 py-3.5 text-left transition-all hover:shadow-md hover:border-zinc-300"
                 >
                   {/* Icon circle */}
                   <div
@@ -241,18 +241,18 @@ export function HomePage() {
                       signal.urgency === "high"
                         ? "bg-red-50"
                         : signal.urgency === "medium"
-                        ? "bg-gray-100"
-                        : "bg-gray-100"
+                        ? "bg-zinc-100"
+                        : "bg-zinc-100"
                     )}
                   >
                     <TypeIcon
                       size={16}
                       className={cn(
                         signal.urgency === "high"
-                          ? "text-red-600"
+                          ? "text-red-500"
                           : signal.urgency === "medium"
-                          ? "text-gray-600"
-                          : "text-gray-500"
+                          ? "text-zinc-600"
+                          : "text-zinc-500"
                       )}
                     />
                   </div>
@@ -261,12 +261,12 @@ export function HomePage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <Badge variant={signal.type} kind="type" className="text-[9px] px-1.5 py-0.5" />
-                      <span className="text-sm font-semibold text-black truncate">
+                      <span className="text-sm font-semibold text-zinc-900 truncate">
                         {signal.headline}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-gray-400">
-                      <span className="font-medium text-gray-600">{inv?.name ?? "Unknown"}</span>
+                    <div className="flex items-center gap-3 text-xs text-zinc-400">
+                      <span className="font-medium text-zinc-600">{inv?.name ?? "Unknown"}</span>
                       <span>{relativeAge(signal.detectedAt)}</span>
                     </div>
                   </div>
@@ -283,7 +283,7 @@ export function HomePage() {
           <span className="font-mono text-3xl font-bold text-white">
             {totalOwnership.toFixed(1)}%
           </span>
-          <span className="text-xs text-gray-400">tracked</span>
+          <span className="text-xs text-zinc-400">tracked</span>
         </div>
 
         <div className="space-y-2">
@@ -291,25 +291,25 @@ export function HomePage() {
             const trend = holder.holdingTrend;
             const trendColor =
               trend === "up"
-                ? "text-gray-400"
+                ? "text-emerald-500"
                 : trend === "down"
                 ? "text-red-400"
-                : "text-gray-500";
+                : "text-zinc-500";
             const trendArrow =
               trend === "up" ? "\u2191" : trend === "down" ? "\u2193" : "\u2192";
 
             return (
               <div
                 key={holder.id}
-                className="flex items-center justify-between rounded-lg bg-gray-800 px-3 py-2.5"
+                className="flex items-center justify-between rounded-xl bg-zinc-800 px-3 py-2.5"
               >
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gray-700 text-[10px] font-bold text-gray-300">
+                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-zinc-700 text-[10px] font-bold text-zinc-300">
                     {holder.name.charAt(0)}
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-white">{holder.name}</p>
-                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-wider">
                       {holder.type} &middot; T{holder.tier}
                     </p>
                   </div>
@@ -333,7 +333,7 @@ export function HomePage() {
       {recommendedActions.length > 0 && (
         <section>
           <div className="mb-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400">
+            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
               RECOMMENDED ACTIONS
             </p>
           </div>
@@ -360,28 +360,28 @@ export function HomePage() {
 
       {/* -- OWNERSHIP OVERVIEW ----------------------------------------- */}
       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-        <div className="rounded-lg border border-gray-200 bg-white p-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Tracked</p>
-          <p className="mt-1 font-mono text-lg font-bold text-black">{investors.length}</p>
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tracked</p>
+          <p className="mt-1 font-mono text-lg font-bold text-zinc-900">{investors.length}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Ownership</p>
-          <p className="mt-1 font-mono text-lg font-bold text-black">{totalOwnership.toFixed(1)}%</p>
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Ownership</p>
+          <p className="mt-1 font-mono text-lg font-bold text-zinc-900">{totalOwnership.toFixed(1)}%</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Tier 1</p>
-          <p className="mt-1 font-mono text-lg font-bold text-black">{investors.filter(i => i.tier === 1).length}</p>
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tier 1</p>
+          <p className="mt-1 font-mono text-lg font-bold text-zinc-900">{investors.filter(i => i.tier === 1).length}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Signals</p>
-          <p className="mt-1 font-mono text-lg font-bold text-gray-600">{newSignalCount}</p>
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Signals</p>
+          <p className="mt-1 font-mono text-lg font-bold text-zinc-600">{newSignalCount}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Positive</p>
-          <p className="mt-1 font-mono text-lg font-bold text-gray-600">{investors.filter(i => i.engagementMomentum === "positive").length}</p>
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Positive</p>
+          <p className="mt-1 font-mono text-lg font-bold text-emerald-600">{investors.filter(i => i.engagementMomentum === "positive").length}</p>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-3">
-          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Negative</p>
+        <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
+          <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Negative</p>
           <p className="mt-1 font-mono text-lg font-bold text-red-600">{investors.filter(i => i.engagementMomentum === "negative").length}</p>
         </div>
       </div>

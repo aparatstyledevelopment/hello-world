@@ -1,189 +1,118 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #f9fafb;
-  --color-primary-100: #f3f4f6;
-  --color-primary-200: #e5e7eb;
-  --color-primary-300: #d1d5db;
-  --color-primary-400: #9ca3af;
-  --color-primary-500: #6b7280;
-  --color-primary-600: #000000;
-  --color-primary-700: #000000;
-  --color-primary-800: #000000;
-  --color-primary-900: #000000;
-  --color-primary-950: #000000;
+  /* ── Primary Scale (Black-based) ──────────────────────── */
+  --color-primary-50: #fafafa;
+  --color-primary-100: #f4f4f5;
+  --color-primary-200: #e4e4e7;
+  --color-primary-300: #d4d4d8;
+  --color-primary-400: #a1a1aa;
+  --color-primary-500: #71717a;
+  --color-primary-600: #52525b;
+  --color-primary-700: #3f3f46;
+  --color-primary-800: #27272a;
+  --color-primary-900: #18181b;
+  --color-primary-950: #09090b;
 
-  --color-sidebar: #000000;
-  --color-sidebar-hover: #1f2937;
-  --color-sidebar-active: #1f2937;
-
+  /* ── Surfaces ─────────────────────────────────────────── */
   --color-surface: #ffffff;
+  --color-surface-secondary: #fafafa;
+  --color-surface-elevated: #ffffff;
 
-  /* Bloomberg Terminal Palette */
-  --color-terminal-bg: #0a0a0a;
-  --color-terminal-surface: #111111;
-  --color-terminal-surface-alt: #161616;
-  --color-terminal-border: #1e1e1e;
-  --color-terminal-border-bright: #2a2a2a;
-  --color-terminal-amber: #FF9500;
-  --color-terminal-amber-dim: #CC7700;
-  --color-terminal-cyan: #00D4FF;
-  --color-terminal-green: #00E676;
-  --color-terminal-red: #FF3B30;
-  --color-terminal-red-dim: #991B1B;
-  --color-terminal-text: #E0E0E0;
-  --color-terminal-text-dim: #6B6B6B;
-  --color-terminal-text-muted: #3D3D3D;
+  /* ── Sidebar ──────────────────────────────────────────── */
+  --color-sidebar: #09090b;
+  --color-sidebar-hover: #18181b;
+  --color-sidebar-active: #27272a;
+
+  /* ── Accent Colors ────────────────────────────────────── */
+  --color-accent-emerald: #10b981;
+  --color-accent-amber: #f59e0b;
+  --color-accent-red: #ef4444;
+  --color-accent-blue: #3b82f6;
+  --color-accent-violet: #8b5cf6;
 }
 
-/* Smooth scrolling */
-html { scroll-behavior: smooth; }
+/* ── Base ───────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-/* Custom scrollbar */
+body {
+  background-color: #fafafa;
+  color: #09090b;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
 
-/* Terminal scrollbar */
-.terminal-page ::-webkit-scrollbar-thumb { background: #2a2a2a; }
-.terminal-page ::-webkit-scrollbar-thumb:hover { background: #3d3d3d; }
-
-/* Focus visible for accessibility */
+/* ── Focus ──────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #000000;
+  outline: 2px solid #09090b;
   outline-offset: 2px;
 }
 
-.terminal-page :focus-visible {
-  outline: 2px solid #FF9500;
-  outline-offset: 2px;
-}
+/* ── Design System Utilities ────────────────────────────── */
 
-/* Section labels - design system standard */
 .section-label {
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: #a1a1aa;
 }
 
-/* Mono data values */
 .data-value {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Evidence/raw data blocks */
 .evidence-block {
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  background-color: #fafafa;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.75rem;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.75rem;
   padding: 0.75rem;
 }
 
-/* Mobile responsive tables */
+/* ── Recommendation Banner ──────────────────────────────── */
+.recommendation-banner {
+  background-color: #09090b;
+  color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+
+/* ── Mobile responsive tables ───────────────────────────── */
 @media (max-width: 768px) {
   table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
-/* Recommendation banners */
-.recommendation-banner {
-  background-color: #000000;
-  color: #ffffff;
-  border-radius: 0.5rem;
-  padding: 1rem 1.25rem;
+/* ── Card Hover Effect ──────────────────────────────────── */
+.card-hover {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: #d4d4d8;
 }
 
-/* ── Bloomberg Terminal Styles ──────────────────────────── */
-
-.terminal-page {
-  background: var(--color-terminal-bg);
-  min-height: 100vh;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+/* ── Gradient Subtle Background ─────────────────────────── */
+.bg-gradient-subtle {
+  background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
 }
 
-.terminal-card {
-  background: var(--color-terminal-surface);
-  border: 1px solid var(--color-terminal-border);
-  border-radius: 4px;
-  position: relative;
-}
-
-.terminal-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-terminal-border-bright), transparent);
-}
-
-.terminal-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-terminal-text-dim);
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-}
-
-.terminal-value {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  font-variant-numeric: tabular-nums;
-}
-
-.terminal-divider {
-  border-color: var(--color-terminal-border);
-  border-style: solid;
-  border-width: 0;
-  border-top-width: 1px;
-}
-
-/* Subtle amber glow for high-urgency elements */
-.terminal-glow-amber {
-  box-shadow: 0 0 12px rgba(255, 149, 0, 0.08), inset 0 1px 0 rgba(255, 149, 0, 0.06);
-}
-
-/* Subtle red glow for critical elements */
-.terminal-glow-red {
-  box-shadow: 0 0 12px rgba(255, 59, 48, 0.1), inset 0 1px 0 rgba(255, 59, 48, 0.06);
-}
-
-/* Pulsing dot animation */
-@keyframes terminal-pulse {
+/* ── Pulse Animation ────────────────────────────────────── */
+@keyframes gentle-pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.5; }
 }
 
-.terminal-pulse {
-  animation: terminal-pulse 2s ease-in-out infinite;
-}
-
-/* Scanline overlay (very subtle) */
-.terminal-scanlines {
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.008) 2px,
-    rgba(255, 255, 255, 0.008) 4px
-  );
-  pointer-events: none;
-}
-
-/* Bar chart glow */
-.terminal-bar {
-  transition: height 0.4s ease;
-}
-
-.terminal-bar-active {
-  box-shadow: 0 0 8px rgba(255, 149, 0, 0.3);
-}
-
-.terminal-bar-danger {
-  box-shadow: 0 0 8px rgba(255, 59, 48, 0.3);
+.gentle-pulse {
+  animation: gentle-pulse 2.5s ease-in-out infinite;
 }

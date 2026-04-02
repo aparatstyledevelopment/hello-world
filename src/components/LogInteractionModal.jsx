@@ -50,178 +50,91 @@ export function LogInteractionModal({ open, onClose }) {
 
   if (!open) return null;
 
+  const inputClasses = "w-full rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 transition-colors focus:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900/5";
+
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm"
       onClick={resetAndClose}
     >
       <div
-        className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl"
+        className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl border border-zinc-200/60"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-black">Log Interaction</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-zinc-900">Log Interaction</h2>
           <button
             onClick={resetAndClose}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-xl p-1.5 text-zinc-300 hover:bg-zinc-50 hover:text-zinc-500 transition-colors"
           >
             <X size={18} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Investor */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">
               Investor
             </label>
-            <select
-              value={investorId}
-              onChange={(e) => {
-                setInvestorId(e.target.value);
-                setContactId("");
-              }}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-              required
-            >
+            <select value={investorId} onChange={(e) => { setInvestorId(e.target.value); setContactId(""); }} className={inputClasses} required>
               <option value="">Select investor...</option>
-              {investors.map((inv) => (
-                <option key={inv.id} value={inv.id}>
-                  {inv.name}
-                </option>
-              ))}
+              {investors.map((inv) => (<option key={inv.id} value={inv.id}>{inv.name}</option>))}
             </select>
           </div>
 
-          {/* Contact */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
+            <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">
               Contact
             </label>
-            <select
-              value={contactId}
-              onChange={(e) => setContactId(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-              disabled={!investorId}
-              required
-            >
-              <option value="">
-                {investorId ? "Select contact..." : "Select an investor first"}
-              </option>
-              {contacts.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name} — {c.role}
-                </option>
-              ))}
+            <select value={contactId} onChange={(e) => setContactId(e.target.value)} className={inputClasses} disabled={!investorId} required>
+              <option value="">{investorId ? "Select contact..." : "Select an investor first"}</option>
+              {contacts.map((c) => (<option key={c.id} value={c.id}>{c.name} — {c.role}</option>))}
             </select>
           </div>
 
-          {/* Type */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
-              Type
-            </label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-              required
-            >
+            <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">Type</label>
+            <select value={type} onChange={(e) => setType(e.target.value)} className={inputClasses} required>
               <option value="">Select type...</option>
-              {interactionTypes.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
+              {interactionTypes.map((t) => (<option key={t} value={t}>{t}</option>))}
             </select>
           </div>
 
-          {/* Date */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
-              Date
-            </label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-              required
-            />
+            <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">Date</label>
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={inputClasses} required />
           </div>
 
-          {/* Summary */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
-              Summary
-            </label>
-            <textarea
-              value={summary}
-              onChange={(e) => setSummary(e.target.value)}
-              rows={3}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-              placeholder="Brief summary of the interaction..."
-            />
+            <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">Summary</label>
+            <textarea value={summary} onChange={(e) => setSummary(e.target.value)} rows={3} className={inputClasses} placeholder="Brief summary of the interaction..." />
           </div>
 
-          {/* Key Takeaways */}
           <div>
-            <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
-              Key Takeaways
-            </label>
-            <textarea
-              value={takeaways}
-              onChange={(e) => setTakeaways(e.target.value)}
-              rows={2}
-              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-              placeholder="Key takeaways or insights..."
-            />
+            <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">Key Takeaways</label>
+            <textarea value={takeaways} onChange={(e) => setTakeaways(e.target.value)} rows={2} className={inputClasses} placeholder="Key takeaways or insights..." />
           </div>
 
-          {/* Follow-up */}
           <div>
             <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={followUp}
-                onChange={(e) => setFollowUp(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-black focus:ring-gray-300"
-              />
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400">
-                Follow-up needed?
-              </span>
+              <input type="checkbox" checked={followUp} onChange={(e) => setFollowUp(e.target.checked)} className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-400" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">Follow-up needed?</span>
             </label>
           </div>
 
           {followUp && (
             <div>
-              <label className="block text-[11px] font-medium uppercase tracking-[0.1em] text-gray-400 mb-1">
-                Follow-up Description
-              </label>
-              <input
-                type="text"
-                value={followUpDesc}
-                onChange={(e) => setFollowUpDesc(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 placeholder:text-gray-400 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300"
-                placeholder="Describe the follow-up action..."
-              />
+              <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">Follow-up Description</label>
+              <input type="text" value={followUpDesc} onChange={(e) => setFollowUpDesc(e.target.value)} className={inputClasses} placeholder="Describe the follow-up action..." />
             </div>
           )}
 
-          {/* Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={resetAndClose}
-              className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-            >
+          <div className="flex items-center justify-end gap-3 pt-3">
+            <button type="button" onClick={resetAndClose} className="rounded-xl border border-zinc-200 px-4 py-2.5 text-sm font-medium text-zinc-500 hover:bg-zinc-50 transition-colors">
               Cancel
             </button>
-            <button
-              type="submit"
-              className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
-            >
+            <button type="submit" className="rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-zinc-800 transition-all">
               Log Interaction
             </button>
           </div>

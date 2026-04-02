@@ -1,10 +1,10 @@
 import { cn } from "../../lib/utils";
 
 const colorMap = {
-  strong: "bg-black",
-  moderate: "bg-gray-400",
-  weak: "bg-red-500",
-  unknown: "bg-gray-200",
+  strong: "bg-emerald-500",
+  moderate: "bg-amber-400",
+  weak: "bg-red-400",
+  unknown: "bg-zinc-200",
 };
 
 export function HealthDots({ values = [] }) {
@@ -14,7 +14,7 @@ export function HealthDots({ values = [] }) {
         <span
           key={i}
           className={cn(
-            "w-3.5 h-3.5 rounded-full",
+            "w-3 h-3 rounded-full",
             colorMap[status] ?? colorMap.unknown
           )}
         />

@@ -27,23 +27,23 @@ import {
 
 // ── Color palette ──────────────────────────────────────────
 const COLORS = {
-  primary: "#000000",
-  secondary: "#374151",
-  tertiary: "#6b7280",
-  success: "#9ca3af",
-  warning: "#d1d5db",
-  danger: "#dc2626",
-  neutral: "#9ca3af",
+  primary: "#09090b",
+  secondary: "#3f3f46",
+  tertiary: "#71717a",
+  success: "#a1a1aa",
+  warning: "#d4d4d8",
+  danger: "#ef4444",
+  neutral: "#a1a1aa",
 };
 
-const PIE_COLORS = ["#000000", "#374151", "#6b7280", "#9ca3af", "#d1d5db"];
-const FUNNEL_SHADES = ["#000000", "#374151", "#6b7280", "#9ca3af", "#d1d5db"];
+const PIE_COLORS = ["#09090b", "#3f3f46", "#71717a", "#a1a1aa", "#d4d4d8"];
+const FUNNEL_SHADES = ["#09090b", "#3f3f46", "#71717a", "#a1a1aa", "#d4d4d8"];
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
   return (
-    <div className="rounded-lg bg-white shadow-lg border border-gray-200 p-3">
-      {label && <p className="text-xs font-medium text-gray-500 mb-1">{label}</p>}
+    <div className="rounded-2xl bg-white shadow-lg border border-zinc-200 p-3">
+      {label && <p className="text-xs font-medium text-zinc-500 mb-1">{label}</p>}
       {payload.map((entry, i) => (
         <p key={i} className="text-sm font-semibold" style={{ color: entry.color || entry.fill }}>
           {entry.name}: {entry.value}
@@ -135,7 +135,7 @@ export function ReportsPage() {
     top3Investors.forEach((inv) => { point[inv.name] = inv.holdingHistory[i]; });
     return point;
   });
-  const ownershipLineColors = ["#000000", "#374151", "#6b7280"];
+  const ownershipLineColors = ["#09090b", "#3f3f46", "#71717a"];
 
   const tierCounts = { 1: 0, 2: 0, 3: 0 };
   timelineEvents.forEach((e) => {
@@ -159,29 +159,29 @@ export function ReportsPage() {
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-black">Reports & Analytics</h1>
-        <p className="mt-0.5 text-sm text-gray-400">
+        <h1 className="text-xl font-bold text-zinc-900">Reports & Analytics</h1>
+        <p className="mt-0.5 text-sm text-zinc-400">
           Narrative intelligence across engagement, signals, ownership, and team performance
         </p>
       </div>
 
       {/* Category tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-zinc-200">
         <div className="flex gap-6">
           {reportCategories.map((cat) => (
             <button
               key={cat.key}
               onClick={() => setActiveCategory(cat.key)}
               className={cn(
-                "relative pb-3 text-xs font-medium transition-colors",
+                "relative pb-3 text-xs font-medium transition-colors rounded-xl",
                 activeCategory === cat.key
-                  ? "text-black"
-                  : "text-gray-400 hover:text-gray-600"
+                  ? "text-zinc-900"
+                  : "text-zinc-400 hover:text-zinc-600"
               )}
             >
               {cat.label}
               {activeCategory === cat.key && (
-                <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-black" />
+                <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-zinc-900" />
               )}
             </button>
           ))}
@@ -192,15 +192,15 @@ export function ReportsPage() {
       {activeCategory === "engagement" && (
         <div className="space-y-5">
           {/* Narrative */}
-          <div className="rounded-lg bg-black p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">ENGAGEMENT NARRATIVE</p>
-            <p className="text-sm text-gray-300 leading-relaxed">
+          <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm border border-zinc-200/60">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">ENGAGEMENT NARRATIVE</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">
               Over the past 6 months, the IR team logged <span className="font-bold text-white">{engagement.totalInteractions} interactions</span> across
               {" "}{investors.length} tracked investors. <span className="font-bold text-white">{mostEngagedInvestor?.name}</span> received the most
               attention with {mostEngagedCount} touchpoints.
               {engagement.coverageGaps.length > 0 && (
-                <> However, <span className="font-bold text-gray-300">{engagement.coverageGaps.length} investor{engagement.coverageGaps.length > 1 ? "s" : ""}</span> show
-                coverage gaps with minimal recent engagement, representing a combined <span className="font-bold text-gray-300">
+                <> However, <span className="font-bold text-zinc-300">{engagement.coverageGaps.length} investor{engagement.coverageGaps.length > 1 ? "s" : ""}</span> show
+                coverage gaps with minimal recent engagement, representing a combined <span className="font-bold text-zinc-300">
                 {engagement.coverageGaps.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</span> of tracked ownership.</>
               )}
             </p>
@@ -208,56 +208,56 @@ export function ReportsPage() {
 
           {/* Key stats */}
           <div className="grid grid-cols-4 gap-3">
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Total Interactions</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{engagement.totalInteractions}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Total Interactions</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{engagement.totalInteractions}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Most Active</p>
-              <p className="mt-1 text-sm font-bold text-black">{mostEngagedInvestor?.name}</p>
-              <p className="text-xs text-gray-400">{mostEngagedCount} touchpoints</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Most Active</p>
+              <p className="mt-1 text-sm font-bold text-zinc-900">{mostEngagedInvestor?.name}</p>
+              <p className="text-xs text-zinc-400">{mostEngagedCount} touchpoints</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Coverage Gaps</p>
-              <p className={cn("mt-1 font-mono text-2xl font-bold", engagement.coverageGaps.length > 0 ? "text-red-600" : "text-black")}>{engagement.coverageGaps.length}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Coverage Gaps</p>
+              <p className={cn("mt-1 font-mono text-2xl font-bold", engagement.coverageGaps.length > 0 ? "text-red-600" : "text-zinc-900")}>{engagement.coverageGaps.length}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Avg per Investor</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{(engagement.totalInteractions / investors.length).toFixed(1)}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Avg per Investor</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{(engagement.totalInteractions / investors.length).toFixed(1)}</p>
             </div>
           </div>
 
           {/* Charts */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">ENGAGEMENT TREND</p>
-              <p className="text-xs text-gray-400 mb-3">Monthly interaction volume — March saw a recovery from the December low, driven by year-end governance meetings and Q1 planning outreach.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">ENGAGEMENT TREND</p>
+              <p className="text-xs text-zinc-400 mb-3">Monthly interaction volume — March saw a recovery from the December low, driven by year-end governance meetings and Q1 planning outreach.</p>
               <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={engagementTrendData}>
                   <defs>
                     <linearGradient id="areaBlue" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#000000" stopOpacity={0.15} />
-                      <stop offset="100%" stopColor="#000000" stopOpacity={0.02} />
+                      <stop offset="0%" stopColor="#09090b" stopOpacity={0.15} />
+                      <stop offset="100%" stopColor="#09090b" stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="count" name="Interactions" stroke="#000000" strokeWidth={2.5} fill="url(#areaBlue)" />
+                  <Area type="monotone" dataKey="count" name="Interactions" stroke="#09090b" strokeWidth={2.5} fill="url(#areaBlue)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">INTERACTIONS BY TYPE</p>
-              <p className="text-xs text-gray-400 mb-3">Meetings and emails dominate the engagement mix. Signal-driven interactions are growing as the intelligence engine matures.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">INTERACTIONS BY TYPE</p>
+              <p className="text-xs text-zinc-400 mb-3">Meetings and emails dominate the engagement mix. Signal-driven interactions are growing as the intelligence engine matures.</p>
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
                   <Pie data={interactionsByType} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
                     {interactionsByType.map((_, i) => (<Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} strokeWidth={0} />))}
                   </Pie>
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: "#374151" }} />
+                  <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, color: "#3f3f46" }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -265,18 +265,18 @@ export function ReportsPage() {
 
           {/* Coverage gaps detail */}
           {engagement.coverageGaps.length > 0 && (
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-700 mb-2">COVERAGE GAP DETAIL</p>
-              <p className="text-xs text-gray-500 mb-3">These investors have received minimal engagement and may require proactive outreach to prevent relationship decay.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-zinc-50 p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-700 mb-2">COVERAGE GAP DETAIL</p>
+              <p className="text-xs text-zinc-500 mb-3">These investors have received minimal engagement and may require proactive outreach to prevent relationship decay.</p>
               <div className="space-y-2">
                 {engagement.coverageGaps.map((inv) => (
-                  <div key={inv.id} className="flex items-center justify-between rounded-lg bg-white border border-gray-200 px-4 py-2.5">
+                  <div key={inv.id} className="flex items-center justify-between rounded-2xl bg-white border border-zinc-200/60 px-4 py-2.5 shadow-sm">
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{inv.name}</p>
-                      <p className="text-xs text-gray-400">{inv.type} &middot; Tier {inv.tier}</p>
+                      <p className="text-sm font-medium text-zinc-800">{inv.name}</p>
+                      <p className="text-xs text-zinc-400">{inv.type} &middot; Tier {inv.tier}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-mono text-sm font-bold text-black">{inv.holdingPct}%</p>
+                      <p className="font-mono text-sm font-bold text-zinc-900">{inv.holdingPct}%</p>
                       <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-semibold text-red-600 uppercase">Gap</span>
                     </div>
                   </div>
@@ -290,9 +290,9 @@ export function ReportsPage() {
       {/* ── SIGNAL INTELLIGENCE REPORT ────────────────────── */}
       {activeCategory === "signals" && (
         <div className="space-y-5">
-          <div className="rounded-lg bg-black p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">SIGNAL INTELLIGENCE NARRATIVE</p>
-            <p className="text-sm text-gray-300 leading-relaxed">
+          <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm border border-zinc-200/60">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">SIGNAL INTELLIGENCE NARRATIVE</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">
               The intelligence engine generated <span className="font-bold text-white">{signals.length} signals</span> this quarter,
               with a <span className="font-bold text-white">{signalAccuracyPct}% confirmation rate</span>.
               {highUrgencySignals.length > 0 && (
@@ -306,32 +306,32 @@ export function ReportsPage() {
           </div>
 
           <div className="grid grid-cols-4 gap-3">
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Generated</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{signals.length}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Generated</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{signals.length}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Accuracy</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{signalAccuracyPct}%</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Accuracy</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{signalAccuracyPct}%</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">High Urgency</p>
-              <p className={cn("mt-1 font-mono text-2xl font-bold", highUrgencySignals.length > 0 ? "text-red-600" : "text-black")}>{highUrgencySignals.length}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">High Urgency</p>
+              <p className={cn("mt-1 font-mono text-2xl font-bold", highUrgencySignals.length > 0 ? "text-red-600" : "text-zinc-900")}>{highUrgencySignals.length}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Conversion</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{effectiveness.conversionRate}%</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Conversion</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{effectiveness.conversionRate}%</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">CONVERSION FUNNEL</p>
-              <p className="text-xs text-gray-400 mb-3">Each stage represents progressive validation. The drop from Generated to Reviewed reflects automated filtering, while Confirmed to Actioned shows team prioritization.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">CONVERSION FUNNEL</p>
+              <p className="text-xs text-zinc-400 mb-3">Each stage represents progressive validation. The drop from Generated to Reviewed reflects automated filtering, while Confirmed to Actioned shows team prioritization.</p>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={funnelData} layout="vertical" barCategoryGap={8}>
-                  <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} />
-                  <YAxis type="category" dataKey="stage" axisLine={false} tickLine={false} tick={{ fill: "#374151", fontSize: 12 }} width={80} />
+                  <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+                  <YAxis type="category" dataKey="stage" axisLine={false} tickLine={false} tick={{ fill: "#3f3f46", fontSize: 12 }} width={80} />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar dataKey="value" name="Signals" radius={[0, 4, 4, 0]}>
                     {funnelData.map((_, i) => (<Cell key={i} fill={FUNNEL_SHADES[i]} />))}
@@ -340,18 +340,18 @@ export function ReportsPage() {
               </ResponsiveContainer>
             </div>
 
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">SIGNAL ACCURACY GAUGE</p>
-              <p className="text-xs text-gray-400 mb-3">{confirmedSignals} of {signals.length} signals were confirmed as actionable, demonstrating strong signal quality from the intelligence engine.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">SIGNAL ACCURACY GAUGE</p>
+              <p className="text-xs text-zinc-400 mb-3">{confirmedSignals} of {signals.length} signals were confirmed as actionable, demonstrating strong signal quality from the intelligence engine.</p>
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
                   <Pie data={[{ name: "Accurate", value: signalAccuracyPct }, { name: "Remaining", value: 100 - signalAccuracyPct }]}
                     cx="50%" cy="70%" startAngle={180} endAngle={0} innerRadius={60} outerRadius={90} paddingAngle={0} dataKey="value">
-                    <Cell fill="#000000" strokeWidth={0} />
-                    <Cell fill="#f3f4f6" strokeWidth={0} />
+                    <Cell fill="#09090b" strokeWidth={0} />
+                    <Cell fill="#f4f4f5" strokeWidth={0} />
                   </Pie>
-                  <text x="50%" y="62%" textAnchor="middle" dominantBaseline="middle" className="text-2xl font-bold" fill="#000000">{signalAccuracyPct}%</text>
-                  <text x="50%" y="78%" textAnchor="middle" dominantBaseline="middle" className="text-xs" fill="#9ca3af">confirmed</text>
+                  <text x="50%" y="62%" textAnchor="middle" dominantBaseline="middle" className="text-2xl font-bold" fill="#09090b">{signalAccuracyPct}%</text>
+                  <text x="50%" y="78%" textAnchor="middle" dominantBaseline="middle" className="text-xs" fill="#a1a1aa">confirmed</text>
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -362,9 +362,9 @@ export function ReportsPage() {
       {/* ── OWNERSHIP REPORT ──────────────────────────────── */}
       {activeCategory === "ownership" && (
         <div className="space-y-5">
-          <div className="rounded-lg bg-black p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">OWNERSHIP NARRATIVE</p>
-            <p className="text-sm text-gray-300 leading-relaxed">
+          <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm border border-zinc-200/60">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">OWNERSHIP NARRATIVE</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">
               The tracked shareholder base comprises <span className="font-bold text-white">{investors.length} investors</span> holding
               a combined <span className="font-bold text-white">{investors.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</span> of outstanding shares.
               {" "}<span className="font-bold text-white">{top3Investors[0]?.name}</span> remains the largest holder
@@ -378,36 +378,36 @@ export function ReportsPage() {
           </div>
 
           <div className="grid grid-cols-4 gap-3">
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Total Ownership</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{investors.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Total Ownership</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{investors.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Increasing</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{investors.filter((i) => i.holdingTrend === "up").length}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Increasing</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{investors.filter((i) => i.holdingTrend === "up").length}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Decreasing</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Decreasing</p>
               <p className="mt-1 font-mono text-2xl font-bold text-red-600">{investors.filter((i) => i.holdingTrend === "down").length}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Tier 1 Share</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tier 1 Share</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">
                 {investors.filter((i) => i.tier === 1).reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%
               </p>
             </div>
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">OWNERSHIP TREND</p>
-            <p className="text-xs text-gray-400 mb-3">
+          <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">OWNERSHIP TREND</p>
+            <p className="text-xs text-zinc-400 mb-3">
               BlackRock continues its steady accumulation, while Vanguard's position has flattened after earlier reductions.
               Wellington's consistent buying signals growing conviction in the investment thesis.
             </p>
             <ResponsiveContainer width="100%" height={240}>
               <LineChart data={ownershipTrendData}>
-                <XAxis dataKey="quarter" axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} domain={["auto", "auto"]} tickFormatter={(v) => `${v}%`} />
+                <XAxis dataKey="quarter" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} domain={["auto", "auto"]} tickFormatter={(v) => `${v}%`} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11 }} />
                 {top3Investors.map((inv, i) => (
@@ -419,30 +419,30 @@ export function ReportsPage() {
           </div>
 
           {/* Investor breakdown */}
-          <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-500">INVESTOR POSITION DETAILS</p>
+          <div className="rounded-2xl border border-zinc-200/60 bg-white overflow-hidden shadow-sm">
+            <div className="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-500">INVESTOR POSITION DETAILS</p>
             </div>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-zinc-100">
               {[...investors].sort((a, b) => b.holdingPct - a.holdingPct).map((inv) => (
                 <div key={inv.id} className="flex items-center gap-4 px-4 py-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-[10px] font-bold text-gray-600 flex-shrink-0">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-200 text-[10px] font-bold text-zinc-600 flex-shrink-0">
                     {inv.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800">{inv.name}</p>
-                    <p className="text-xs text-gray-400">{inv.type} &middot; Tier {inv.tier}</p>
+                    <p className="text-sm font-medium text-zinc-800">{inv.name}</p>
+                    <p className="text-xs text-zinc-400">{inv.type} &middot; Tier {inv.tier}</p>
                   </div>
                   <div className="w-24">
-                    <div className="h-1.5 rounded-full bg-gray-100">
-                      <div className="h-1.5 rounded-full bg-black" style={{ width: `${(inv.holdingPct / 10) * 100}%` }} />
+                    <div className="h-1.5 rounded-full bg-zinc-100">
+                      <div className="h-1.5 rounded-full bg-zinc-900" style={{ width: `${(inv.holdingPct / 10) * 100}%` }} />
                     </div>
                   </div>
-                  <span className="font-mono text-sm font-bold text-black w-14 text-right">{inv.holdingPct}%</span>
+                  <span className="font-mono text-sm font-bold text-zinc-900 w-14 text-right">{inv.holdingPct}%</span>
                   <span className={cn(
                     "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
-                    inv.holdingTrend === "up" ? "bg-gray-100 text-gray-700" :
-                    inv.holdingTrend === "down" ? "bg-red-50 text-red-700" : "bg-gray-100 text-gray-600"
+                    inv.holdingTrend === "up" ? "bg-zinc-100 text-zinc-700" :
+                    inv.holdingTrend === "down" ? "bg-red-50 text-red-700" : "bg-zinc-100 text-zinc-600"
                   )}>
                     {inv.holdingTrend === "up" ? "\u2191" : inv.holdingTrend === "down" ? "\u2193" : "\u2192"} {inv.holdingTrend}
                   </span>
@@ -456,9 +456,9 @@ export function ReportsPage() {
       {/* ── TEAM PERFORMANCE REPORT ───────────────────────── */}
       {activeCategory === "team" && (
         <div className="space-y-5">
-          <div className="rounded-lg bg-black p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-2">TEAM PERFORMANCE NARRATIVE</p>
-            <p className="text-sm text-gray-300 leading-relaxed">
+          <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm border border-zinc-200/60">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-2">TEAM PERFORMANCE NARRATIVE</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">
               The IR team has completed <span className="font-bold text-white">{effectiveness.completedActions} of {effectiveness.totalActions} actions</span> ({actionCompletionPct}%),
               with <span className="font-bold text-white">{effectiveness.openSignals} signals</span> still requiring attention.
               {Object.entries(effectiveness.workload).map(([name, data]) => (
@@ -470,57 +470,57 @@ export function ReportsPage() {
           </div>
 
           <div className="grid grid-cols-4 gap-3">
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Completion Rate</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{actionCompletionPct}%</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Completion Rate</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{actionCompletionPct}%</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Open Actions</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{effectiveness.totalActions - effectiveness.completedActions}</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Open Actions</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{effectiveness.totalActions - effectiveness.completedActions}</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Tier 1 Focus</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-black">{tierCounts[1]}</p>
-              <p className="text-xs text-gray-400">interactions</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tier 1 Focus</p>
+              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{tierCounts[1]}</p>
+              <p className="text-xs text-zinc-400">interactions</p>
             </div>
-            <div className="rounded-lg border border-gray-200 bg-white p-3">
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-gray-400">Overdue</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Overdue</p>
               <p className={cn("mt-1 font-mono text-2xl font-bold",
-                actions.filter((a) => a.dueDate < "2026-04-01" && a.state !== "completed").length > 0 ? "text-red-600" : "text-black"
+                actions.filter((a) => a.dueDate < "2026-04-01" && a.state !== "completed").length > 0 ? "text-red-600" : "text-zinc-900"
               )}>{actions.filter((a) => a.dueDate < "2026-04-01" && a.state !== "completed").length}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">TEAM WORKLOAD</p>
-              <p className="text-xs text-gray-400 mb-3">Distribution of completed vs. open actions per team member. Balance is key to preventing burnout and ensuring coverage.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">TEAM WORKLOAD</p>
+              <p className="text-xs text-zinc-400 mb-3">Distribution of completed vs. open actions per team member. Balance is key to preventing burnout and ensuring coverage.</p>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={teamWorkloadData} barCategoryGap="20%">
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#9ca3af", fontSize: 12 }} allowDecimals={false} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} allowDecimals={false} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
-                  <Bar dataKey="Completed" fill="#000000" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="Open" fill="#d1d5db" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Completed" fill="#09090b" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="Open" fill="#d4d4d8" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">ENGAGEMENT BY TIER</p>
-              <p className="text-xs text-gray-400 mb-3">Higher-tier investors should receive proportionally more attention. This chart shows whether engagement allocation matches strategic priority.</p>
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">ENGAGEMENT BY TIER</p>
+              <p className="text-xs text-zinc-400 mb-3">Higher-tier investors should receive proportionally more attention. This chart shows whether engagement allocation matches strategic priority.</p>
               <div className="space-y-3 mt-4">
                 {[1, 2, 3].map((tier) => {
                   const max = Math.max(tierCounts[1], tierCounts[2], tierCounts[3]) || 1;
-                  const colors = { 1: "bg-black", 2: "bg-gray-400", 3: "bg-gray-300" };
+                  const colors = { 1: "bg-zinc-900", 2: "bg-zinc-400", 3: "bg-zinc-300" };
                   return (
                     <div key={tier}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-medium text-gray-600">Tier {tier}</span>
-                        <span className="font-mono text-xs font-bold text-black">{tierCounts[tier]}</span>
+                        <span className="text-xs font-medium text-zinc-600">Tier {tier}</span>
+                        <span className="font-mono text-xs font-bold text-zinc-900">{tierCounts[tier]}</span>
                       </div>
-                      <div className="h-3 rounded-full bg-gray-100">
+                      <div className="h-3 rounded-full bg-zinc-100">
                         <div className={cn("h-3 rounded-full transition-all", colors[tier])} style={{ width: `${(tierCounts[tier] / max) * 100}%` }} />
                       </div>
                     </div>
