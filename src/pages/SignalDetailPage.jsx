@@ -421,7 +421,7 @@ export function SignalDetailPage() {
                       </span>
                     )}
                     <h4 className="text-sm font-bold text-zinc-700 font-mono">{ac.title}</h4>
-                    <p className="text-[11px] text-zinc-400 mt-1.5 leading-relaxed font-mono">{ac.description}</p>
+                    <p className="text-[11px] text-zinc-400 mt-1.5 leading-relaxed font-mono break-words">{ac.description}</p>
 
                     <div className="mt-3 pt-3 border-t border-zinc-200/50 space-y-2">
                       <div className="flex items-center justify-between">
@@ -542,7 +542,7 @@ export function SignalDetailPage() {
                       const barHeight = Math.max(pct, 10) * 0.64;
                       const isLast = i === investor.holdingHistory.length - 1;
                       return (
-                        <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                        <div key={i} className="flex-1 flex flex-col items-center gap-1 min-w-0">
                           <span className={cn(
                             "text-[10px] font-mono",
                             isLast ? "font-bold text-amber-600" : "text-zinc-300"
@@ -579,7 +579,7 @@ export function SignalDetailPage() {
                       const barHeight = Math.max(pct, 10) * 0.64;
                       const isLast = i === investor.holdingHistory.length - 1;
                       return (
-                        <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                        <div key={i} className="flex-1 flex flex-col items-center gap-1 min-w-0">
                           <span className={cn(
                             "text-[10px] font-mono",
                             isLast ? "font-bold text-amber-600" : "text-zinc-300"

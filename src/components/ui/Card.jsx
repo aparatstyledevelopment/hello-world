@@ -1,12 +1,12 @@
 import { cn } from "../../lib/utils";
 
 const variantStyles = {
-  default: "bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-sm",
-  dark: "bg-zinc-900 text-white rounded-2xl p-5 shadow-sm",
-  section: "bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-sm",
-  fact: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5",
-  inference: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5",
-  recommendation: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5",
+  default: "bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-sm min-w-0 overflow-hidden",
+  dark: "bg-zinc-900 text-white rounded-2xl p-5 shadow-sm min-w-0 overflow-hidden",
+  section: "bg-white border border-zinc-200/60 rounded-2xl p-5 shadow-sm min-w-0 overflow-hidden",
+  fact: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5 min-w-0 overflow-hidden",
+  inference: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5 min-w-0 overflow-hidden",
+  recommendation: "bg-zinc-50 border border-zinc-200/60 rounded-2xl p-5 min-w-0 overflow-hidden",
 };
 
 export function Card({
