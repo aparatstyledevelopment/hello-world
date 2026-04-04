@@ -240,7 +240,7 @@ export function AGMPage() {
     <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900">AGM Intelligence</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">AGM Intelligence</h1>
         <p className="mt-1 text-sm text-zinc-500">
           Proxy season preparation and governance risk management
         </p>

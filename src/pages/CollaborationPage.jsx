@@ -222,7 +222,7 @@ export function CollaborationPage() {
     <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900">Team Collaboration</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Team Collaboration</h1>
         <p className="mt-1 text-sm text-zinc-500">
           Coordinate investor engagement across the IR team
         </p>

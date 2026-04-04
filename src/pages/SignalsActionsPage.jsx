@@ -98,7 +98,7 @@ export function SignalsActionsPage() {
       </div>
 
       {/* Stats row */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-3 py-2">
           <Zap size={14} className="text-zinc-500" />
           <span className="text-xs font-medium text-zinc-500">Active Signals</span>

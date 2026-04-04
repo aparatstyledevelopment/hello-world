@@ -201,7 +201,7 @@ export function MarketPage() {
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900">Market Intelligence</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Market Intelligence</h1>
         <p className="mt-1 text-sm text-zinc-500">
           Ownership shifts, peer activity, and market signals that matter to your investors
         </p>
@@ -210,12 +210,12 @@ export function MarketPage() {
       {/* ── Concentration + Shareholder Base Row ─────────── */}
       <div className="flex flex-col md:flex-row gap-4">
         {/* Dark Concentration Index Card */}
-        <div className="rounded-2xl bg-zinc-900 p-5 md:w-80 md:flex-shrink-0 shadow-sm">
+        <div className="rounded-2xl bg-zinc-900 p-5 w-full md:w-80 md:flex-shrink-0 shadow-sm">
           <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
             CONCENTRATION INDEX
           </p>
           <div className="mt-3 flex items-baseline gap-4">
-            <span className="font-mono text-5xl font-bold text-white">42.8%</span>
+            <span className="font-mono text-3xl md:text-5xl font-bold text-white">42.8%</span>
             <span className="text-sm font-medium text-zinc-400">Top-5 holder share</span>
           </div>
           <div className="mt-4 h-2.5 w-full rounded-full bg-zinc-700">
@@ -413,22 +413,22 @@ export function MarketPage() {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">HIGH RELEVANCE ITEMS</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-red-600">{stats.high}</p>
+            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-red-600">{stats.high}</p>
             <p className="mt-0.5 text-xs text-zinc-500">Require attention</p>
           </div>
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">INVESTORS AFFECTED</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
+            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
             <p className="mt-0.5 text-xs text-zinc-500">Across all items</p>
           </div>
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">THIS WEEK</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
+            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
             <p className="mt-0.5 text-xs text-zinc-500">New items</p>
           </div>
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">AFFECTING YOUR BASE</p>
-            <p className="mt-1.5 font-mono text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
+            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
             <p className="mt-0.5 text-xs text-zinc-500">of {stats.total} total</p>
           </div>
         </div>

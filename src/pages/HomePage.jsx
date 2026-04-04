@@ -359,7 +359,7 @@ export function HomePage() {
       )}
 
       {/* -- OWNERSHIP OVERVIEW ----------------------------------------- */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
         <div className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-3">
           <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tracked</p>
           <p className="mt-1 font-mono text-lg font-bold text-zinc-900">{investors.length}</p>

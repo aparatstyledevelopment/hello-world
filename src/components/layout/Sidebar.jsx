@@ -80,7 +80,7 @@ export function Sidebar({ onNavigate }) {
       </div>
 
       {/* Main Navigation */}
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 pt-2">
+      <nav className="flex-1 space-y-4 md:space-y-6 overflow-y-auto px-3 pt-2">
         <div>
           <SectionLabel>Main Engine</SectionLabel>
           <div className="space-y-0.5">

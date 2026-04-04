@@ -75,7 +75,7 @@ function PhaseTimeline({ currentState }) {
   const currentIdx = getStateIndex(currentState);
 
   return (
-    <div className="grid grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {actionStates.map((step, idx) => {
         const isCompleted = idx < currentIdx;
         const isCurrent = idx === currentIdx;

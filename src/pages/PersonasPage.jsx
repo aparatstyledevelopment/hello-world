@@ -382,7 +382,7 @@ export function PersonasPage() {
     <div className="p-4 md:p-6 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900">
+        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">
           Investor Personas
         </h1>
         <p className="mt-1 text-sm text-zinc-500">
@@ -528,7 +528,7 @@ function StatCard({ label, value, annotation, annotationColor = "zinc", variant 
         {label}
       </p>
       <p className={cn(
-        "mt-1 font-mono text-4xl font-bold",
+        "mt-1 font-mono text-2xl md:text-4xl font-bold",
         isDark ? "text-white" : "text-zinc-900"
       )}>
         {value}

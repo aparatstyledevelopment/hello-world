@@ -62,7 +62,7 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
     <div className="flex items-center gap-3 py-1.5">
       <span
         className={cn(
-          "w-44 text-sm truncate",
+          "w-28 md:w-44 text-sm truncate",
           isOurs ? "font-semibold text-zinc-900" : "text-zinc-600"
         )}
       >
@@ -217,7 +217,7 @@ export function BenchmarkingPage() {
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900">Peer Benchmarking</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Peer Benchmarking</h1>
         <p className="mt-1 text-sm text-zinc-500">
           How you compare, where you excel, and where to improve
         </p>
@@ -229,7 +229,7 @@ export function BenchmarkingPage() {
           PEER POSITION INDEX
         </p>
         <div className="mt-3 flex items-baseline gap-4">
-          <span className="font-mono text-5xl font-bold text-white">
+          <span className="font-mono text-3xl md:text-5xl font-bold text-white">
             {ourMetrics.engagementIntensity}%
           </span>
           <span className={cn(
@@ -410,7 +410,7 @@ export function BenchmarkingPage() {
               <div key={entry.name} className="flex items-center gap-3 py-1.5">
                 <span
                   className={cn(
-                    "w-44 text-sm truncate",
+                    "w-28 md:w-44 text-sm truncate",
                     entry.isOurs ? "font-semibold text-zinc-900" : "text-zinc-600"
                   )}
                 >

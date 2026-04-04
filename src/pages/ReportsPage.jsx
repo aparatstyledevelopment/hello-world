@@ -207,7 +207,7 @@ export function ReportsPage() {
           </div>
 
           {/* Key stats */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Total Interactions</p>
               <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{engagement.totalInteractions}</p>
@@ -305,7 +305,7 @@ export function ReportsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Generated</p>
               <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{signals.length}</p>
@@ -377,7 +377,7 @@ export function ReportsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Total Ownership</p>
               <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{investors.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</p>
@@ -469,7 +469,7 @@ export function ReportsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Completion Rate</p>
               <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{actionCompletionPct}%</p>
