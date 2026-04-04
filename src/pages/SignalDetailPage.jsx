@@ -137,6 +137,7 @@ function TerminalDataRow({ label, value, accent = false, mono = true }) {
 export function SignalDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [moreOpen, setMoreOpen] = useState(false);
   const signal = getSignal(id);
 
   if (!signal) {
@@ -640,10 +641,64 @@ export function SignalDetailPage() {
                 Triage Action
               </button>
 
-              <button className="w-full inline-flex items-center justify-center gap-2 rounded border border-zinc-200 bg-white px-5 py-2.5 text-[11px] font-mono font-medium text-zinc-400 uppercase tracking-[0.1em] transition-all hover:border-zinc-300 hover:text-zinc-600">
-                <MoreHorizontal size={14} />
-                More
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setMoreOpen(!moreOpen)}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-[11px] font-mono font-medium text-zinc-400 uppercase tracking-[0.1em] transition-all hover:border-zinc-300 hover:text-zinc-600"
+                >
+                  <MoreHorizontal size={14} />
+                  More Actions
+                </button>
+
+                {moreOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setMoreOpen(false)} />
+                    <div className="absolute left-0 right-0 top-full mt-1 z-20 rounded-xl border border-zinc-200 bg-white shadow-lg overflow-hidden">
+                      <button
+                        onClick={() => { setMoreOpen(false); alert("Signal marked as resolved (demo)."); }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs text-zinc-700 hover:bg-zinc-50 transition-colors"
+                      >
+                        <CheckCircle2 size={14} className="text-emerald-500" />
+                        Mark as Resolved
+                      </button>
+                      <button
+                        onClick={() => { setMoreOpen(false); alert("Signal dismissed (demo)."); }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs text-zinc-700 hover:bg-zinc-50 transition-colors"
+                      >
+                        <XCircle size={14} className="text-zinc-400" />
+                        Dismiss Signal
+                      </button>
+                      <div className="border-t border-zinc-100" />
+                      {investor && (
+                        <button
+                          onClick={() => { setMoreOpen(false); navigate(`/investors/${investor.id}`); }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs text-zinc-700 hover:bg-zinc-50 transition-colors"
+                        >
+                          <Eye size={14} className="text-zinc-400" />
+                          View Investor Profile
+                        </button>
+                      )}
+                      {investor && (
+                        <button
+                          onClick={() => { setMoreOpen(false); navigate(`/investors/${investor.id}/timeline`); }}
+                          className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs text-zinc-700 hover:bg-zinc-50 transition-colors"
+                        >
+                          <ListChecks size={14} className="text-zinc-400" />
+                          View Full Timeline
+                        </button>
+                      )}
+                      <div className="border-t border-zinc-100" />
+                      <button
+                        onClick={() => { setMoreOpen(false); alert("Signal shared to clipboard (demo)."); }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs text-zinc-700 hover:bg-zinc-50 transition-colors"
+                      >
+                        <ExternalLink size={14} className="text-zinc-400" />
+                        Share / Export
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
 
               {/* Investor Snapshot */}
               {investor && (
@@ -692,10 +747,14 @@ export function SignalDetailPage() {
                       <p className="text-[9px] font-mono font-semibold tracking-[0.15em] text-zinc-400 uppercase mb-2">KEY CONTACTS</p>
                       <div className="space-y-1.5">
                         {investor.contacts.map((c) => (
-                          <div key={c.id} className="text-[11px] font-mono text-zinc-700">
-                            <span className="font-medium text-zinc-700">{c.name}</span>
+                          <button
+                            key={c.id}
+                            onClick={() => navigate(`/contacts/${c.id}`)}
+                            className="block w-full text-left text-[11px] font-mono text-zinc-700 hover:text-zinc-900 transition-colors"
+                          >
+                            <span className="font-medium hover:underline">{c.name}</span>
                             {c.role && <span className="text-zinc-400"> / {c.role}</span>}
-                          </div>
+                          </button>
                         ))}
                       </div>
                     </div>

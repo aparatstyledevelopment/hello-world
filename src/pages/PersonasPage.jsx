@@ -139,7 +139,7 @@ function getSignalNote(archetype) {
   }
 }
 
-export function PersonasPage() {
+export function PersonasPage({ embedded = false }) {
   const [archetypeFilter, setArchetypeFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
 
@@ -379,8 +379,9 @@ export function PersonasPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
+    <div className={embedded ? "space-y-6" : "p-4 md:p-6 space-y-8"}>
       {/* Header */}
+      {!embedded && (
       <div>
         <h1 className="text-xl md:text-3xl font-bold text-zinc-900">
           Investor Personas
@@ -389,6 +390,7 @@ export function PersonasPage() {
           How your investors behave, who is at risk, and how to engage each one
         </p>
       </div>
+      )}
 
       {/* Hero persona summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

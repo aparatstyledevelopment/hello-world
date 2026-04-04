@@ -149,9 +149,25 @@ export function TodayPage() {
           </Link>
         </div>
 
-        <p className="text-sm text-zinc-700 leading-relaxed">
-          {marketContextSummary}
-        </p>
+        <div className="text-sm text-zinc-600 leading-relaxed space-y-2">
+          <p>
+            Our stock closed at <span className="font-semibold text-zinc-900">$142.30</span> yesterday,{" "}
+            <span className="font-semibold text-emerald-600">up 1.8%</span> — outperforming the sector index by 0.6%.
+            The rally was driven by positive analyst commentary following the AI infrastructure spending report from McKinsey,
+            which projects <span className="font-medium text-zinc-800">40% YoY growth through 2028</span>.
+          </p>
+          <p>
+            Among peers, <span className="font-medium text-zinc-800">XYZ Corp announced a $4.2B acquisition</span> in AI infrastructure,
+            which may shift investor perception of competitive positioning.
+            Bond yields held steady at <span className="font-medium text-zinc-800">4.12%</span>, while active equity funds saw{" "}
+            <span className="font-semibold text-red-500">$8B in outflows</span> for March — something to watch for our active holders
+            like Wellington and Harris.
+          </p>
+          <p>
+            BlackRock has <span className="font-medium text-zinc-800">increased sector-wide positions by 0.3%</span> in Q1,
+            suggesting a macro allocation shift rather than company-specific conviction.
+          </p>
+        </div>
 
         {/* Expandable data points */}
         <button
@@ -245,8 +261,8 @@ export function TodayPage() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-zinc-900">{inv?.name ?? "Unknown"}</p>
-                        <p className="text-[11px] text-zinc-400">
-                          {contact?.name} &middot; {contact?.role}
+                        <p className="text-[11px] text-zinc-400" onClick={(e) => { if (contact) { e.stopPropagation(); navigate(`/contacts/${contact.id}`); } }}>
+                          <span className="hover:underline cursor-pointer">{contact?.name}</span> &middot; {contact?.role}
                         </p>
                       </div>
                     </div>

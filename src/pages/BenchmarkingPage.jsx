@@ -104,7 +104,7 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
   );
 }
 
-export function BenchmarkingPage() {
+export function BenchmarkingPage({ embedded = false }) {
   const ourMetrics = useMemo(() => {
     const totalHolding = investors.reduce((s, i) => s + i.holdingPct, 0);
     const byType = { passive: 0, active: 0, sovereign: 0, pension: 0 };
@@ -214,14 +214,16 @@ export function BenchmarkingPage() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-5">
+    <div className={embedded ? "space-y-5" : "p-4 md:p-6 space-y-5"}>
       {/* Header */}
-      <div>
-        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Peer Benchmarking</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          How you compare, where you excel, and where to improve
-        </p>
-      </div>
+      {!embedded && (
+        <div>
+          <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Peer Benchmarking</h1>
+          <p className="mt-1 text-sm text-zinc-500">
+            How you compare, where you excel, and where to improve
+          </p>
+        </div>
+      )}
 
       {/* ── Dark Concentration-style Card ─────────────────── */}
       <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm border border-zinc-200/60">

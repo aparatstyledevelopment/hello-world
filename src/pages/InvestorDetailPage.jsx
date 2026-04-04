@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate, Link } from "react-router-dom";
 import {
   ArrowUpRight,
   ArrowDownRight,
@@ -519,7 +519,10 @@ function OverviewTab({ investor, signals }) {
         function ContactCard({ contact }) {
           const days = daysSince(contact.lastInteraction);
           return (
-            <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+            <Link
+              to={`/contacts/${contact.id}`}
+              className="rounded-2xl border border-zinc-200 bg-white p-4 block transition-colors hover:bg-zinc-50 hover:border-zinc-300"
+            >
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-zinc-200 text-xs font-bold text-zinc-600">
                   {contact.name.split(" ").map((w) => w[0]).join("").toUpperCase()}
@@ -532,7 +535,7 @@ function OverviewTab({ investor, signals }) {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           );
         }
 
@@ -601,9 +604,9 @@ function EngagementTab({ investorId, investor }) {
     .filter((v, i, a) => a.indexOf(v) === i);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Main Timeline */}
-      <div className="col-span-2">
+      <div className="lg:col-span-2">
         <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
           ENGAGEMENT HISTORY
         </h3>
@@ -807,7 +810,7 @@ function PrepareTab({ investor, investorId }) {
               const lastTopic = contactTimeline[0];
 
               return (
-                <div key={contact.id} className="rounded-2xl border border-zinc-200 bg-white p-4">
+                <Link key={contact.id} to={`/contacts/${contact.id}`} className="rounded-2xl border border-zinc-200 bg-white p-4 block transition-colors hover:bg-zinc-50 hover:border-zinc-300">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-200 text-[10px] font-bold text-zinc-600">
@@ -830,7 +833,7 @@ function PrepareTab({ investor, investorId }) {
                       Last: {lastTopic.description}
                     </p>
                   )}
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -949,6 +952,7 @@ function PrepareTab({ investor, investorId }) {
 export function InvestorDetailPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
 
   // Auto-open prepare tab if ?prepare=true
@@ -1057,7 +1061,10 @@ export function InvestorDetailPage() {
               </p>
             </div>
           </div>
-          <button className="inline-flex items-center gap-1.5 rounded-2xl bg-white px-4 py-2 text-xs font-medium text-zinc-900 shadow-sm transition-colors hover:bg-zinc-100">
+          <button
+            onClick={() => navigate(`/actions/new?investorId=${investor.id}`)}
+            className="inline-flex items-center gap-1.5 rounded-2xl bg-white px-4 py-2 text-xs font-medium text-zinc-900 shadow-sm transition-colors hover:bg-zinc-100 flex-shrink-0"
+          >
             <Send size={14} />
             Draft Outreach
           </button>

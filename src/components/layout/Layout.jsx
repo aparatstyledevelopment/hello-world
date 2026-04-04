@@ -78,7 +78,7 @@ export function Layout() {
   const [logModalOpen, setLogModalOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-50">
+    <div className="flex h-dvh overflow-hidden bg-zinc-50">
       {/* Sidebar - hidden on mobile, shown as overlay when menuOpen */}
       <div
         className={`fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity md:hidden ${
@@ -94,12 +94,10 @@ export function Layout() {
         <Sidebar onNavigate={() => setMenuOpen(false)} />
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col min-h-0">
         <HeaderBar onMenuToggle={() => setMenuOpen(!menuOpen)} menuOpen={menuOpen} onLogInteraction={() => setLogModalOpen(true)} />
-        <main className="flex-1 overflow-y-auto bg-zinc-50/50">
-          <div className="min-h-full">
-            <Outlet />
-          </div>
+        <main className="flex-1 overflow-y-auto overscroll-contain bg-zinc-50/50">
+          <Outlet />
         </main>
       </div>
       <CaptureModal open={logModalOpen} onClose={() => setLogModalOpen(false)} />

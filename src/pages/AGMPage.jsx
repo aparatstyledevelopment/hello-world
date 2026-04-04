@@ -206,7 +206,7 @@ const statusColors = {
   "Not started": "text-zinc-400",
 };
 
-export function AGMPage() {
+export function AGMPage({ embedded = false }) {
   const govInvestors = useMemo(() => getGovernanceInvestors(), []);
   const votingPredictions = useMemo(
     () => govInvestors.map(predictVoting),
@@ -237,14 +237,16 @@ export function AGMPage() {
   const classBVotes = 18;
 
   return (
-    <div className="p-4 md:p-6 space-y-8">
+    <div className={embedded ? "space-y-6" : "p-4 md:p-6 space-y-8"}>
       {/* Header */}
-      <div>
-        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">AGM Intelligence</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          Proxy season preparation and governance risk management
-        </p>
-      </div>
+      {!embedded && (
+        <div>
+          <h1 className="text-xl md:text-3xl font-bold text-zinc-900">AGM Intelligence</h1>
+          <p className="mt-1 text-sm text-zinc-500">
+            Proxy season preparation and governance risk management
+          </p>
+        </div>
+      )}
 
       {/* ── Dark Hero: Days to AGM ────────────────────────── */}
       <div className="rounded-2xl bg-zinc-900 p-6 shadow-sm">
