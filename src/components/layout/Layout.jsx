@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
-import { Search, Bell, Plus, Menu, X } from 'lucide-react'
-import { LogInteractionModal } from '../LogInteractionModal'
+import { Search, Bell, Mic, Menu, X } from 'lucide-react'
+import { CaptureModal } from '../CaptureModal'
 
 function HeaderBar({ onMenuToggle, menuOpen, onLogInteraction }) {
   return (
@@ -60,13 +60,13 @@ function HeaderBar({ onMenuToggle, menuOpen, onLogInteraction }) {
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
         </button>
 
-        {/* Log Interaction CTA */}
+        {/* Capture CTA */}
         <button
           onClick={onLogInteraction}
           className="flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-2 text-[13px] font-medium text-white shadow-sm transition-all hover:bg-zinc-800 hover:shadow-md active:scale-[0.98]"
         >
-          <Plus size={15} strokeWidth={2} />
-          <span className="hidden sm:inline">Log Interaction</span>
+          <Mic size={15} strokeWidth={2} />
+          <span className="hidden sm:inline">Capture</span>
         </button>
       </div>
     </header>
@@ -102,7 +102,7 @@ export function Layout() {
           </div>
         </main>
       </div>
-      <LogInteractionModal open={logModalOpen} onClose={() => setLogModalOpen(false)} />
+      <CaptureModal open={logModalOpen} onClose={() => setLogModalOpen(false)} />
     </div>
   )
 }
