@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Mic, FileText, Phone, Mail, Camera, StickyNote, File, Sparkles } from "lucide-react";
+import { X, Plus, FileText, Phone, Mail, Camera, StickyNote, File, Sparkles } from "lucide-react";
 import { investors } from "../data/mock-data";
 
 const sourceTypes = [
@@ -49,14 +49,14 @@ export function CaptureModal({ open, onClose }) {
       onClick={resetAndClose}
     >
       <div
-        className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl border border-zinc-200/60"
+        className="w-full max-w-lg mx-4 rounded-2xl bg-white p-6 shadow-xl border border-zinc-200/60"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-900">
-              <Mic size={14} className="text-white" />
+              <Plus size={14} className="text-white" />
             </div>
             <h2 className="text-lg font-semibold text-zinc-900">Capture</h2>
           </div>
@@ -128,7 +128,7 @@ export function CaptureModal({ open, onClose }) {
             </div>
 
             {/* Investor (optional) + Date row */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400 mb-1.5">
                   Investor <span className="text-zinc-300">(optional)</span>

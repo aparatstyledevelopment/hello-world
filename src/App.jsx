@@ -28,6 +28,7 @@ export default function App() {
           <Route path="/shareholders" element={<ShareholderIntelPage />} />
           <Route path="/signals-actions" element={<SignalsActionsPage />} />
           <Route path="/signals/:id" element={<SignalDetailPage />} />
+          <Route path="/actions" element={<Navigate to="/signals-actions" replace />} />
           <Route path="/actions/:id" element={<ActionDetailPage />} />
           <Route path="/market" element={<MarketPage />} />
           <Route path="/personas" element={<Navigate to="/investors?tab=personas" replace />} />
