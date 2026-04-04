@@ -118,7 +118,7 @@ export function ShareholderIntelPage() {
         </div>
 
         {/* Summary stats */}
-        <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="flex-1 min-w-0 grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard label="TOTAL INVESTORS" value={investors.length} />
           <StatCard label="TIER 1" value={tierCounts[1]} annotation={`${tierCounts[2]} T2, ${tierCounts[3]} T3`} annotationColor="slate" />
           <StatCard
@@ -134,12 +134,12 @@ export function ShareholderIntelPage() {
       {/* ── Ownership Composition ────────────────────────── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {Object.entries(typeLabels).map(([key, label]) => (
-          <div key={key} className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4">
-            <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">
+          <div key={key} className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-4 min-w-0 overflow-hidden">
+            <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400 truncate">
               {label}
             </p>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="font-mono text-2xl font-bold text-zinc-900">
+            <div className="mt-2 flex items-baseline gap-1.5 flex-wrap">
+              <span className="font-mono text-xl md:text-2xl font-bold text-zinc-900">
                 {byType.holdings[key]?.toFixed(1) ?? "0.0"}%
               </span>
               <span className="text-xs text-zinc-400">{byType.counts[key] ?? 0} investors</span>

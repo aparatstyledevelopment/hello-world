@@ -96,7 +96,7 @@ export function Layout() {
 
       <div className="flex flex-1 flex-col min-h-0">
         <HeaderBar onMenuToggle={() => setMenuOpen(!menuOpen)} menuOpen={menuOpen} onLogInteraction={() => setLogModalOpen(true)} />
-        <main className="flex-1 overflow-y-auto overscroll-contain bg-zinc-50/50">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain bg-zinc-50/50">
           <Outlet />
         </main>
       </div>
