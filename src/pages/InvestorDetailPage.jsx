@@ -224,7 +224,7 @@ function OverviewTab({ investor, signals }) {
                     : "bg-zinc-400"
                 )}
               />
-              <span className="font-mono text-lg font-bold text-zinc-900">
+              <span className="font-mono text-base md:text-lg font-bold text-zinc-900">
                 {marStatus.label}
               </span>
             </div>
@@ -1000,13 +1000,13 @@ export function InvestorDetailPage() {
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-zinc-900">{investor.name}</h1>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl md:text-2xl font-bold text-zinc-900">{investor.name}</h1>
             <Badge variant={investor.tier} kind="tier" />
           </div>
-          <div className="mt-2 flex items-center gap-2 text-sm text-zinc-500">
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-zinc-500">
             <span>
               Ownership:{" "}
               <span className="font-mono font-medium text-zinc-700">
@@ -1043,7 +1043,7 @@ export function InvestorDetailPage() {
 
       {/* Recommendation banner */}
       {(needsReengagement || hasHighUrgencySignal) && (
-        <div className="flex items-center justify-between rounded-2xl bg-zinc-800 p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl bg-zinc-800 p-4">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-400/20">
               <AlertTriangle size={16} className="text-zinc-400" />

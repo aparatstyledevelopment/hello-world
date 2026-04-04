@@ -37,17 +37,17 @@ export function StatCard({
         </p>
       )}
 
-      <div className="mt-1.5 flex items-baseline gap-3">
+      <div className="mt-1.5">
         <span
           className={cn(
-            "font-mono text-3xl font-bold tracking-tight",
+            "font-mono text-2xl md:text-3xl font-bold tracking-tight",
             isDark ? "text-white" : "text-zinc-900"
           )}
         >
           {value}
         </span>
         {threshold && (
-          <span className="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-zinc-500">
+          <span className="mt-1 block rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-zinc-500 w-fit">
             {threshold}
           </span>
         )}

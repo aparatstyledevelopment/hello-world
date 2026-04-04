@@ -12,7 +12,7 @@ export function SettingsPage() {
   return (
     <div className="min-h-full p-4 md:p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900">Settings</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Settings</h1>
         <p className="mt-1 text-sm text-zinc-500">Platform configuration and system preferences.</p>
       </div>
 

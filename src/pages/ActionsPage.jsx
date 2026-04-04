@@ -30,7 +30,6 @@ const stateLabels = {
   planned: "Planned",
   preparing: "Preparing",
   in_progress: "In Progress",
-  awaiting_logging: "Awaiting Logging",
   completed: "Completed",
 };
 
@@ -38,7 +37,6 @@ const stateBadgeVariants = {
   planned: "new",
   preparing: "reviewing",
   in_progress: "confirmed",
-  awaiting_logging: "action_created",
   completed: "resolved",
 };
 
@@ -54,7 +52,6 @@ const phaseColors = {
   planned: "border-zinc-300 bg-zinc-50/30",
   preparing: "border-zinc-300 bg-zinc-50/30",
   in_progress: "border-zinc-400 bg-zinc-50/30",
-  awaiting_logging: "border-zinc-300 bg-zinc-50/30",
   completed: "border-zinc-200 bg-zinc-50/30",
 };
 
@@ -62,7 +59,6 @@ const phaseHeaderColors = {
   planned: "text-zinc-700",
   preparing: "text-zinc-700",
   in_progress: "text-zinc-900",
-  awaiting_logging: "text-zinc-700",
   completed: "text-zinc-400",
 };
 
@@ -254,7 +250,7 @@ function BoardView({ filteredActions, navigate }) {
   }));
 
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 overflow-x-auto">
       {stateColumns.map((col, colIdx) => (
         <div key={col.key} className="flex flex-col">
           {/* Phase-style header */}
@@ -350,14 +346,14 @@ export function ActionsPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold text-zinc-900">Actions</h1>
           <p className="mt-0.5 text-sm text-zinc-400">
             Engagement actions and outreach management
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-shrink-0">
           {/* View toggle */}
           <div className="inline-flex rounded-xl border border-zinc-200/60 bg-white p-0.5 shadow-sm">
             <button
@@ -397,7 +393,7 @@ export function ActionsPage() {
       </div>
 
       {/* Stats overview cards */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="rounded-2xl bg-zinc-900 p-4 shadow-sm">
           <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">TOTAL ACTIONS</p>
           <div className="mt-2 flex items-baseline gap-2">

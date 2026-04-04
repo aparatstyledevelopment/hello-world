@@ -95,12 +95,12 @@ export function ShareholderIntelPage() {
       {/* ── Ownership Overview ───────────────────────────── */}
       <div className="flex flex-col md:flex-row gap-4">
         {/* Concentration card (dark) */}
-        <div className="rounded-2xl bg-zinc-900 p-5 md:w-72 md:flex-shrink-0 shadow-sm">
+        <div className="rounded-2xl bg-zinc-900 p-5 w-full md:w-72 md:flex-shrink-0 shadow-sm">
           <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">
             CONCENTRATION INDEX
           </p>
           <div className="mt-3 flex items-baseline gap-3">
-            <span className="font-mono text-4xl font-bold text-white">
+            <span className="font-mono text-3xl md:text-4xl font-bold text-white">
               {top5Share.toFixed(1)}%
             </span>
             <span className="text-xs text-zinc-400">Top-5 share</span>

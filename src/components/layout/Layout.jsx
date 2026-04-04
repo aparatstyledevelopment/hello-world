@@ -16,7 +16,7 @@ function HeaderBar({ onMenuToggle, menuOpen, onLogInteraction }) {
       </button>
 
       {/* Search */}
-      <div className="relative hidden w-80 sm:block">
+      <div className="relative hidden sm:block sm:w-52 md:w-80">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-300" />
         <input
           type="text"

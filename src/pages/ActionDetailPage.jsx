@@ -75,7 +75,7 @@ function PhaseTimeline({ currentState }) {
   const currentIdx = getStateIndex(currentState);
 
   return (
-    <div className="grid grid-cols-5 gap-3">
+    <div className="flex gap-2 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:gap-3 md:overflow-visible md:pb-0">
       {actionStates.map((step, idx) => {
         const isCompleted = idx < currentIdx;
         const isCurrent = idx === currentIdx;
@@ -86,7 +86,7 @@ function PhaseTimeline({ currentState }) {
           <div
             key={step.key}
             className={cn(
-              "relative rounded-2xl border p-4 transition-all",
+              "relative rounded-2xl border p-3 md:p-4 transition-all flex-shrink-0 w-32 md:w-auto",
               isCompleted
                 ? "border-zinc-400 bg-zinc-100/50"
                 : isCurrent
@@ -95,7 +95,7 @@ function PhaseTimeline({ currentState }) {
             )}
           >
             {/* Phase number */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1 md:mb-2">
               <span
                 className={cn(
                   "text-[10px] font-bold uppercase tracking-[0.15em]",
@@ -110,19 +110,19 @@ function PhaseTimeline({ currentState }) {
               </span>
               {isCompleted && (
                 <CheckCircle2
-                  size={16}
+                  size={14}
                   className="text-zinc-900"
                 />
               )}
               {isCurrent && (
-                <span className="h-2.5 w-2.5 rounded-full bg-zinc-900 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-zinc-900 animate-pulse" />
               )}
             </div>
 
             {/* Step label */}
             <p
               className={cn(
-                "text-sm font-semibold",
+                "text-xs md:text-sm font-semibold",
                 isCompleted
                   ? "text-zinc-900"
                   : isCurrent
@@ -133,10 +133,10 @@ function PhaseTimeline({ currentState }) {
               {step.label}
             </p>
 
-            {/* Description */}
+            {/* Description - hidden on mobile */}
             <p
               className={cn(
-                "mt-1 text-[11px] leading-relaxed",
+                "mt-1 text-[11px] leading-relaxed hidden md:block",
                 isCompleted
                   ? "text-zinc-700"
                   : isCurrent
@@ -146,16 +146,6 @@ function PhaseTimeline({ currentState }) {
             >
               {phaseDescriptions[step.key]}
             </p>
-
-            {/* Connector line */}
-            {idx < actionStates.length - 1 && (
-              <div
-                className={cn(
-                  "absolute right-0 top-1/2 h-0.5 w-3 translate-x-full -translate-y-1/2",
-                  isCompleted ? "bg-zinc-900" : "bg-zinc-200"
-                )}
-              />
-            )}
           </div>
         );
       })}
@@ -408,7 +398,7 @@ export function ActionDetailPage() {
       {/* Two-column layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Form -- 2/3 */}
-        <div className="col-span-2 space-y-5">
+        <div className="col-span-1 md:col-span-2 space-y-5">
           <Card>
             <div className="grid grid-cols-2 gap-4">
               {/* Investor */}

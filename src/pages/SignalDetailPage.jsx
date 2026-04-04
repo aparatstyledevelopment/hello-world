@@ -336,7 +336,7 @@ export function SignalDetailPage() {
         </div>
 
         {/* ── TWO-COLUMN LAYOUT ──────────────────────────────── */}
-        <div className="flex gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
 
           {/* ── MAIN COLUMN ──────────────────────────────────── */}
           <div className="min-w-0 flex-1 space-y-4">
@@ -603,7 +603,7 @@ export function SignalDetailPage() {
           </div>
 
           {/* ── SIDEBAR ──────────────────────────────────────── */}
-          <aside className="hidden w-full lg:w-80 flex-shrink-0 lg:block">
+          <aside className="w-full lg:w-80 flex-shrink-0">
             <div className="sticky top-6 space-y-3">
 
               {/* Evidence Panel */}

@@ -148,7 +148,7 @@ export function InvestorsPage() {
   };
 
   const columns = [
-    { key: "name", label: "Investor & Fund", width: "260px" },
+    { key: "name", label: "Investor & Fund", width: "180px" },
     { key: "type", label: "Type" },
     { key: "holdingPct", label: "Holding %" },
     { key: "health", label: "Relationship Health" },
@@ -229,8 +229,8 @@ export function InvestorsPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-xl md:text-2xl font-bold text-zinc-900 tracking-tight">
           Priority Coverage Matrix
         </h1>
         <div className="flex items-center gap-3">
