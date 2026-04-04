@@ -6,13 +6,11 @@ import { SignalDetailPage } from './pages/SignalDetailPage'
 import { ActionDetailPage } from './pages/ActionDetailPage'
 import { InvestorsPage } from './pages/InvestorsPage'
 import { InvestorDetailPage } from './pages/InvestorDetailPage'
+import { ContactDetailPage } from './pages/ContactDetailPage'
 import { InvestorTimelinePage } from './pages/InvestorTimelinePage'
 import { ShareholderIntelPage } from './pages/ShareholderIntelPage'
 import { MarketPage } from './pages/MarketPage'
-import { PersonasPage } from './pages/PersonasPage'
 import { ReportsPage } from './pages/ReportsPage'
-import { BenchmarkingPage } from './pages/BenchmarkingPage'
-import { AGMPage } from './pages/AGMPage'
 import { CollaborationPage } from './pages/CollaborationPage'
 import { SettingsPage } from './pages/SettingsPage'
 
@@ -25,16 +23,17 @@ export default function App() {
           <Route path="/today" element={<TodayPage />} />
           <Route path="/investors" element={<InvestorsPage />} />
           <Route path="/investors/:id" element={<InvestorDetailPage />} />
+          <Route path="/contacts/:id" element={<ContactDetailPage />} />
           <Route path="/investors/:id/timeline" element={<InvestorTimelinePage />} />
           <Route path="/shareholders" element={<ShareholderIntelPage />} />
           <Route path="/signals-actions" element={<SignalsActionsPage />} />
           <Route path="/signals/:id" element={<SignalDetailPage />} />
           <Route path="/actions/:id" element={<ActionDetailPage />} />
           <Route path="/market" element={<MarketPage />} />
-          <Route path="/personas" element={<PersonasPage />} />
+          <Route path="/personas" element={<Navigate to="/investors?tab=personas" replace />} />
+          <Route path="/agm" element={<Navigate to="/investors?tab=agm" replace />} />
           <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/benchmarking" element={<BenchmarkingPage />} />
-          <Route path="/agm" element={<AGMPage />} />
+          <Route path="/benchmarking" element={<Navigate to="/market?tab=benchmarking" replace />} />
           <Route path="/collaboration" element={<CollaborationPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>

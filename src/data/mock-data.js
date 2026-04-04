@@ -477,6 +477,10 @@ export function getContact(id) {
   return null;
 }
 
+export function getInvestorForContact(contactId) {
+  return investors.find((inv) => inv.contacts.some((c) => c.id === contactId)) || null;
+}
+
 export function getSignal(id) {
   return signals.find((s) => s.id === id);
 }

@@ -5,11 +5,7 @@ import {
   PieChart,
   Zap,
   TrendingUp,
-  UserCircle,
   BarChart3,
-  GitCompare,
-  Vote,
-  Users2,
   Settings,
 } from 'lucide-react'
 
@@ -22,11 +18,7 @@ const mainEngineNav = [
 
 const resourcesNav = [
   { to: '/market', label: 'Market Intel', icon: TrendingUp },
-  { to: '/personas', label: 'Personas', icon: UserCircle },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
-  { to: '/benchmarking', label: 'Benchmarking', icon: GitCompare },
-  { to: '/agm', label: 'AGM Intel', icon: Vote },
-  { to: '/collaboration', label: 'Collaboration', icon: Users2 },
   { to: '/settings', label: 'Settings', icon: Settings },
 ]
 

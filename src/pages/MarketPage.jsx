@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   TrendingUp,
   TrendingDown,
@@ -10,7 +10,9 @@ import {
   Radio,
   Newspaper,
   Shield,
+  GitCompare,
 } from "lucide-react";
+import { BenchmarkingPage } from "./BenchmarkingPage";
 import { cn } from "../lib/utils";
 import { StatCard } from "../components/ui/StatCard";
 import { Card } from "../components/ui/Card";
@@ -175,7 +177,14 @@ const topSellers = [
   { name: "Quant Capital", change: "-0.1%", id: null },
 ];
 
+const marketSubTabs = [
+  { key: "intel", label: "Market Intel", icon: TrendingUp },
+  { key: "benchmarking", label: "Benchmarking", icon: GitCompare },
+];
+
 export function MarketPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeSubTab = searchParams.get("tab") || "intel";
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filtered = useMemo(() => {
@@ -200,12 +209,39 @@ export function MarketPage() {
   return (
     <div className="p-4 md:p-6 space-y-5">
       {/* Header */}
-      <div>
-        <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Market Intelligence</h1>
-        <p className="mt-1 text-sm text-zinc-500">
-          Ownership shifts, peer activity, and market signals that matter to your investors
-        </p>
+      <h1 className="text-xl md:text-3xl font-bold text-zinc-900">Market Intelligence</h1>
+
+      {/* Sub-tabs */}
+      <div className="flex gap-1 rounded-xl bg-zinc-100 p-1 w-fit overflow-x-auto">
+        {marketSubTabs.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setSearchParams(tab.key === "intel" ? {} : { tab: tab.key })}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition-colors whitespace-nowrap",
+                activeSubTab === tab.key
+                  ? "bg-white text-zinc-900 shadow-sm"
+                  : "text-zinc-500 hover:text-zinc-700"
+              )}
+            >
+              <Icon size={13} />
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
+
+      {/* Benchmarking tab */}
+      {activeSubTab === "benchmarking" && <BenchmarkingPage embedded />}
+
+      {/* Market Intel tab */}
+      {activeSubTab === "intel" && (
+      <div className="space-y-5">
+      <p className="text-sm text-zinc-500">
+        Ownership shifts, peer activity, and market signals that matter to your investors
+      </p>
 
       {/* ── Concentration + Shareholder Base Row ─────────── */}
       <div className="flex flex-col md:flex-row gap-4">
@@ -413,26 +449,36 @@ export function MarketPage() {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">HIGH RELEVANCE ITEMS</p>
-            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-red-600">{stats.high}</p>
-            <p className="mt-0.5 text-xs text-zinc-500">Require attention</p>
+            <div className="flex items-baseline gap-1.5 md:justify-center">
+              <p className="font-mono text-2xl md:text-3xl font-bold text-red-600">{stats.high}</p>
+              <p className="text-xs text-zinc-500">Require attention</p>
+            </div>
           </div>
           <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">INVESTORS AFFECTED</p>
-            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
-            <p className="mt-0.5 text-xs text-zinc-500">Across all items</p>
+            <div className="flex items-baseline gap-1.5 md:justify-center">
+              <p className="font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
+              <p className="text-xs text-zinc-500">Across all items</p>
+            </div>
           </div>
           <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">THIS WEEK</p>
-            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
-            <p className="mt-0.5 text-xs text-zinc-500">New items</p>
+            <div className="flex items-baseline gap-1.5 md:justify-center">
+              <p className="font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
+              <p className="text-xs text-zinc-500">New items</p>
+            </div>
           </div>
           <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">AFFECTING YOUR BASE</p>
-            <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
-            <p className="mt-0.5 text-xs text-zinc-500">of {stats.total} total</p>
+            <div className="flex items-baseline gap-1.5 md:justify-center">
+              <p className="font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
+              <p className="text-xs text-zinc-500">of {stats.total} total</p>
+            </div>
           </div>
         </div>
       </Card>
+      </div>
+      )}
     </div>
   );
 }

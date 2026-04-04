@@ -164,22 +164,18 @@ export function SignalsActionsPage() {
                     isResolved ? "border-zinc-100 opacity-60" : "border-zinc-200/60 shadow-sm"
                   )}
                 >
-                  {/* Top row: urgency dot + type badge + age */}
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "h-2.5 w-2.5 rounded-full flex-shrink-0",
-                        sig.urgency === "high" ? "bg-red-500" :
-                        sig.urgency === "medium" ? "bg-zinc-400" : "bg-zinc-300"
-                      )} />
-                      <Badge variant={sig.type} kind="type" />
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <ConfidenceBadge mode="label" level={sig.confidence} />
-                      <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">
-                        {relativeAge(sig.detectedAt)}
-                      </span>
-                    </div>
+                  {/* Top row: urgency dot + type badge + confidence + age */}
+                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                    <div className={cn(
+                      "h-2.5 w-2.5 rounded-full flex-shrink-0",
+                      sig.urgency === "high" ? "bg-red-500" :
+                      sig.urgency === "medium" ? "bg-zinc-400" : "bg-zinc-300"
+                    )} />
+                    <Badge variant={sig.type} kind="type" />
+                    <ConfidenceBadge mode="label" level={sig.confidence} />
+                    <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider ml-auto">
+                      {relativeAge(sig.detectedAt)}
+                    </span>
                   </div>
 
                   {/* Headline */}

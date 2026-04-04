@@ -126,30 +126,19 @@ export function InvestorTimelinePage() {
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-zinc-900">
-            {investor.name} — Timeline
-          </h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            Complete engagement history and activity log
-          </p>
-        </div>
-        <div className="flex items-center gap-4 text-xs text-zinc-500">
-          <div>
-            <span className="font-mono font-bold text-zinc-900 text-lg">{events.length}</span>
-            <span className="ml-1">events</span>
-          </div>
-          <div className="h-6 w-px bg-zinc-200" />
-          <div>
-            <span className="font-mono font-bold text-zinc-600 text-lg">{openSignals.length}</span>
-            <span className="ml-1">signals</span>
-          </div>
-          <div className="h-6 w-px bg-zinc-200" />
-          <div>
-            <span className="font-mono font-bold text-zinc-600 text-lg">{openActions.length}</span>
-            <span className="ml-1">actions</span>
-          </div>
+      <div>
+        <h1 className="text-xl md:text-2xl font-bold text-zinc-900">
+          {investor.name} — Timeline
+        </h1>
+        <p className="mt-1 text-sm text-zinc-400">
+          Complete engagement history and activity log
+        </p>
+        <div className="flex items-center gap-3 mt-2 text-xs text-zinc-500">
+          <span><span className="font-mono font-bold text-zinc-900">{events.length}</span> events</span>
+          <span className="text-zinc-300">&middot;</span>
+          <span><span className="font-mono font-bold text-zinc-600">{openSignals.length}</span> signals</span>
+          <span className="text-zinc-300">&middot;</span>
+          <span><span className="font-mono font-bold text-zinc-600">{openActions.length}</span> actions</span>
         </div>
       </div>
 
