@@ -160,42 +160,42 @@ export function SignalsActionsPage() {
                   key={sig.id}
                   onClick={() => navigate(`/signals/${sig.id}`)}
                   className={cn(
-                    "flex w-full items-center gap-4 rounded-2xl border bg-white px-4 py-3.5 text-left transition-all hover:shadow-md hover:border-zinc-300",
+                    "w-full rounded-2xl border bg-white px-4 py-3.5 text-left transition-all hover:shadow-md hover:border-zinc-300",
                     isResolved ? "border-zinc-100 opacity-60" : "border-zinc-200/60 shadow-sm"
                   )}
                 >
-                  {/* Urgency dot */}
-                  <div className={cn(
-                    "h-2.5 w-2.5 rounded-full flex-shrink-0",
-                    sig.urgency === "high" ? "bg-red-500" :
-                    sig.urgency === "medium" ? "bg-zinc-400" : "bg-zinc-300"
-                  )} />
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                  {/* Top row: urgency dot + type badge + age */}
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className={cn(
+                        "h-2.5 w-2.5 rounded-full flex-shrink-0",
+                        sig.urgency === "high" ? "bg-red-500" :
+                        sig.urgency === "medium" ? "bg-zinc-400" : "bg-zinc-300"
+                      )} />
                       <Badge variant={sig.type} kind="type" />
-                      <span className="text-sm font-semibold text-zinc-900 truncate">
-                        {sig.headline}
-                      </span>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-zinc-400">
-                      <span className="font-medium text-zinc-600">{inv?.name ?? "Unknown"}</span>
-                      <span>{sig.source}</span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <ConfidenceBadge mode="label" level={sig.confidence} />
+                      <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">
+                        {relativeAge(sig.detectedAt)}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Right */}
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <ConfidenceBadge mode="label" level={sig.confidence} />
-                    <div className="text-right">
-                      <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">
-                        {relativeAge(sig.detectedAt)}
-                      </p>
-                      <p className="text-[10px] text-zinc-300 mt-0.5">
-                        {stateLabels[sig.state] ?? sig.state}
-                      </p>
+                  {/* Headline */}
+                  <p className="text-sm font-semibold text-zinc-900 line-clamp-2">
+                    {sig.headline}
+                  </p>
+
+                  {/* Bottom row: investor + source + state */}
+                  <div className="flex items-center justify-between gap-2 mt-1.5">
+                    <div className="flex items-center gap-2 text-xs text-zinc-400">
+                      <span className="font-medium text-zinc-600">{inv?.name ?? "Unknown"}</span>
+                      <span>{sig.source}</span>
                     </div>
+                    <span className="text-[10px] text-zinc-300">
+                      {stateLabels[sig.state] ?? sig.state}
+                    </span>
                   </div>
                 </button>
               );
@@ -221,53 +221,53 @@ export function SignalsActionsPage() {
                   key={act.id}
                   onClick={() => navigate(`/actions/${act.id}`)}
                   className={cn(
-                    "flex w-full items-center gap-4 rounded-2xl border bg-white px-4 py-3.5 text-left transition-all hover:shadow-md hover:border-zinc-300",
+                    "w-full rounded-2xl border bg-white px-4 py-3.5 text-left transition-all hover:shadow-md hover:border-zinc-300",
                     isComplete ? "border-zinc-100 opacity-60" :
                     isOverdue ? "border-red-200 shadow-sm" : "border-zinc-200/60 shadow-sm"
                   )}
                 >
-                  {/* State indicator */}
-                  <div className={cn(
-                    "h-2.5 w-2.5 rounded-full flex-shrink-0",
-                    isComplete ? "bg-emerald-400" :
-                    act.state === "in_progress" ? "bg-zinc-900" :
-                    act.state === "preparing" ? "bg-zinc-500" : "bg-zinc-300"
-                  )} />
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                  {/* Top row: state dot + type badge + state label + due */}
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className={cn(
+                        "h-2.5 w-2.5 rounded-full flex-shrink-0",
+                        isComplete ? "bg-emerald-400" :
+                        act.state === "in_progress" ? "bg-zinc-900" :
+                        act.state === "preparing" ? "bg-zinc-500" : "bg-zinc-300"
+                      )} />
                       <Badge variant={act.type} kind="type" />
-                      <span className="text-sm font-semibold text-zinc-900 truncate">
-                        {act.objective}
+                      <span className={cn(
+                        "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
+                        isComplete ? "bg-emerald-50 text-emerald-700" :
+                        act.state === "in_progress" ? "bg-zinc-900 text-white" :
+                        "bg-zinc-100 text-zinc-600"
+                      )}>
+                        {stateLabels[act.state] ?? act.state}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-zinc-400">
-                      <span className="font-medium text-zinc-600">{inv?.name ?? "Unknown"}</span>
-                      {contact && <span>{contact.name}</span>}
-                      <span>{act.channel}</span>
-                    </div>
-                  </div>
-
-                  {/* Right */}
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className={cn(
-                      "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider",
-                      isComplete ? "bg-emerald-50 text-emerald-700" :
-                      act.state === "in_progress" ? "bg-zinc-900 text-white" :
-                      "bg-zinc-100 text-zinc-600"
-                    )}>
-                      {stateLabels[act.state] ?? act.state}
-                    </span>
-                    <div className="text-right min-w-[70px]">
+                    <div className="text-right flex-shrink-0">
                       <p className={cn(
                         "text-[10px] font-medium uppercase tracking-wider",
                         isOverdue ? "text-red-500" : "text-zinc-400"
                       )}>
                         {isComplete ? "Done" : daysUntil(act.dueDate)}
                       </p>
-                      <p className="text-[10px] text-zinc-300 mt-0.5">{act.owner}</p>
                     </div>
+                  </div>
+
+                  {/* Objective */}
+                  <p className="text-sm font-semibold text-zinc-900 line-clamp-2">
+                    {act.objective}
+                  </p>
+
+                  {/* Bottom row: investor + contact + owner */}
+                  <div className="flex items-center justify-between gap-2 mt-1.5">
+                    <div className="flex items-center gap-2 text-xs text-zinc-400">
+                      <span className="font-medium text-zinc-600">{inv?.name ?? "Unknown"}</span>
+                      {contact && <span>{contact.name}</span>}
+                      <span>{act.channel}</span>
+                    </div>
+                    <span className="text-[10px] text-zinc-300 flex-shrink-0">{act.owner}</span>
                   </div>
                 </button>
               );

@@ -208,27 +208,27 @@ export function ReportsPage() {
 
           {/* Key stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Total Interactions</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{engagement.totalInteractions}</p>
+              <p className="mt-1 font-mono text-xl md:text-2xl font-bold text-zinc-900">{engagement.totalInteractions}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Most Active</p>
-              <p className="mt-1 text-sm font-bold text-zinc-900">{mostEngagedInvestor?.name}</p>
+              <p className="mt-1 text-sm font-bold text-zinc-900 truncate">{mostEngagedInvestor?.name}</p>
               <p className="text-xs text-zinc-400">{mostEngagedCount} touchpoints</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Coverage Gaps</p>
-              <p className={cn("mt-1 font-mono text-2xl font-bold", engagement.coverageGaps.length > 0 ? "text-red-600" : "text-zinc-900")}>{engagement.coverageGaps.length}</p>
+              <p className={cn("mt-1 font-mono text-xl md:text-2xl font-bold", engagement.coverageGaps.length > 0 ? "text-red-600" : "text-zinc-900")}>{engagement.coverageGaps.length}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Avg per Investor</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{(engagement.totalInteractions / investors.length).toFixed(1)}</p>
+              <p className="mt-1 font-mono text-xl md:text-2xl font-bold text-zinc-900">{(engagement.totalInteractions / investors.length).toFixed(1)}</p>
             </div>
           </div>
 
           {/* Charts */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">ENGAGEMENT TREND</p>
               <p className="text-xs text-zinc-400 mb-3">Monthly interaction volume — March saw a recovery from the December low, driven by year-end governance meetings and Q1 planning outreach.</p>
@@ -306,25 +306,25 @@ export function ReportsPage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Generated</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{signals.length}</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{signals.length}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Accuracy</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{signalAccuracyPct}%</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{signalAccuracyPct}%</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">High Urgency</p>
-              <p className={cn("mt-1 font-mono text-2xl font-bold", highUrgencySignals.length > 0 ? "text-red-600" : "text-zinc-900")}>{highUrgencySignals.length}</p>
+              <p className={cn("mt-1 font-mono text-lg md:text-2xl font-bold", highUrgencySignals.length > 0 ? "text-red-600" : "text-zinc-900")}>{highUrgencySignals.length}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Conversion</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{effectiveness.conversionRate}%</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{effectiveness.conversionRate}%</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">CONVERSION FUNNEL</p>
               <p className="text-xs text-zinc-400 mb-3">Each stage represents progressive validation. The drop from Generated to Reviewed reflects automated filtering, while Confirmed to Actioned shows team prioritization.</p>
@@ -378,21 +378,21 @@ export function ReportsPage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Total Ownership</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{investors.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{investors.reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Increasing</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{investors.filter((i) => i.holdingTrend === "up").length}</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{investors.filter((i) => i.holdingTrend === "up").length}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Decreasing</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-red-600">{investors.filter((i) => i.holdingTrend === "down").length}</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-red-600">{investors.filter((i) => i.holdingTrend === "down").length}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tier 1 Share</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">
                 {investors.filter((i) => i.tier === 1).reduce((s, i) => s + i.holdingPct, 0).toFixed(1)}%
               </p>
             </div>
@@ -425,27 +425,29 @@ export function ReportsPage() {
             </div>
             <div className="divide-y divide-zinc-100">
               {[...investors].sort((a, b) => b.holdingPct - a.holdingPct).map((inv) => (
-                <div key={inv.id} className="flex items-center gap-4 px-4 py-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-200 text-[10px] font-bold text-zinc-600 flex-shrink-0">
-                    {inv.name.charAt(0)}
+                <div key={inv.id} className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-200 text-[10px] font-bold text-zinc-600 flex-shrink-0">
+                      {inv.name.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-zinc-800 truncate">{inv.name}</p>
+                      <p className="text-xs text-zinc-400">{inv.type} &middot; Tier {inv.tier}</p>
+                    </div>
+                    <span className="font-mono text-sm font-bold text-zinc-900 flex-shrink-0">{inv.holdingPct}%</span>
+                    <span className={cn(
+                      "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase flex-shrink-0",
+                      inv.holdingTrend === "up" ? "bg-zinc-100 text-zinc-700" :
+                      inv.holdingTrend === "down" ? "bg-red-50 text-red-700" : "bg-zinc-100 text-zinc-600"
+                    )}>
+                      {inv.holdingTrend === "up" ? "\u2191 UP" : inv.holdingTrend === "down" ? "\u2193 DOWN" : "\u2192 NEUTRAL"}
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-zinc-800">{inv.name}</p>
-                    <p className="text-xs text-zinc-400">{inv.type} &middot; Tier {inv.tier}</p>
-                  </div>
-                  <div className="w-24">
+                  <div className="mt-2 ml-11">
                     <div className="h-1.5 rounded-full bg-zinc-100">
                       <div className="h-1.5 rounded-full bg-zinc-900" style={{ width: `${(inv.holdingPct / 10) * 100}%` }} />
                     </div>
                   </div>
-                  <span className="font-mono text-sm font-bold text-zinc-900 w-14 text-right">{inv.holdingPct}%</span>
-                  <span className={cn(
-                    "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
-                    inv.holdingTrend === "up" ? "bg-zinc-100 text-zinc-700" :
-                    inv.holdingTrend === "down" ? "bg-red-50 text-red-700" : "bg-zinc-100 text-zinc-600"
-                  )}>
-                    {inv.holdingTrend === "up" ? "\u2191" : inv.holdingTrend === "down" ? "\u2193" : "\u2192"} {inv.holdingTrend}
-                  </span>
                 </div>
               ))}
             </div>
@@ -470,28 +472,28 @@ export function ReportsPage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Completion Rate</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{actionCompletionPct}%</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{actionCompletionPct}%</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Open Actions</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{effectiveness.totalActions - effectiveness.completedActions}</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{effectiveness.totalActions - effectiveness.completedActions}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Tier 1 Focus</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-zinc-900">{tierCounts[1]}</p>
+              <p className="mt-1 font-mono text-lg md:text-2xl font-bold text-zinc-900">{tierCounts[1]}</p>
               <p className="text-xs text-zinc-400">interactions</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm">
+            <div className="rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-sm min-w-0 overflow-hidden">
               <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400">Overdue</p>
-              <p className={cn("mt-1 font-mono text-2xl font-bold",
+              <p className={cn("mt-1 font-mono text-lg md:text-2xl font-bold",
                 actions.filter((a) => a.dueDate < "2026-04-01" && a.state !== "completed").length > 0 ? "text-red-600" : "text-zinc-900"
               )}>{actions.filter((a) => a.dueDate < "2026-04-01" && a.state !== "completed").length}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-2xl border border-zinc-200/60 bg-white p-4 shadow-sm">
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">TEAM WORKLOAD</p>
               <p className="text-xs text-zinc-400 mb-3">Distribution of completed vs. open actions per team member. Balance is key to preventing burnout and ensuring coverage.</p>
