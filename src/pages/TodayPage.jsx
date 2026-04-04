@@ -13,15 +13,7 @@ import {
 import { useMemo } from "react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
-import {
-  signals,
-  actions,
-  investors,
-  getInvestor,
-  getContact,
-  getTimelineForInvestor,
-  getMeetingsForDate,
-} from "../data/mock-data";
+import { useData } from "../data/store";
 
 const TODAY = "2026-04-04";
 const TOMORROW = "2026-04-05";
@@ -62,6 +54,7 @@ function daysSince(dateStr) {
 // ── Page ──────────────────────────────────────────────────
 export function TodayPage() {
   const navigate = useNavigate();
+  const { signals, actions, investors, getInvestor, getContact, getTimelineForInvestor, getMeetingsForDate } = useData();
 
   const todayMeetings = getMeetingsForDate(TODAY);
   const tomorrowMeetings = getMeetingsForDate(TOMORROW);
@@ -109,7 +102,7 @@ export function TodayPage() {
       if (ua !== ub) return ua - ub;
       return new Date(a.date) - new Date(b.date);
     });
-  }, []);
+  }, [signals, actions]);
 
   return (
     <div className="space-y-5 p-4 md:p-6">
