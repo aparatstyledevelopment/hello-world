@@ -358,13 +358,13 @@ export function MarketPage() {
                         {item.description}
                       </p>
 
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <span className={cn("inline-flex items-center rounded-xl px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em]", categoryBadgeColors[item.category])}>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-wrap">
+                        <span className={cn("inline-flex items-center rounded-xl px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.05em] w-fit", categoryBadgeColors[item.category])}>
                           {item.category}
                         </span>
 
                         {hasAffected && (
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-zinc-900 px-1.5 font-mono text-[10px] font-bold text-white">
                               {item.affectedInvestorIds.length}
                             </span>
@@ -386,7 +386,7 @@ export function MarketPage() {
                           </div>
                         )}
 
-                        <div className="flex items-center gap-1 text-xs text-zinc-400 ml-auto">
+                        <div className="flex items-center gap-1 text-xs text-zinc-400 sm:ml-auto">
                           <ExternalLink size={11} />
                           <span>{item.source}</span>
                           <span className="text-zinc-300 mx-1">&middot;</span>
