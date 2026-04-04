@@ -132,6 +132,7 @@ const timelineTypeBadge = {
 
 const tabConfig = [
   { key: "overview", label: "OVERVIEW", icon: BarChart3 },
+  { key: "contacts", label: "CONTACTS", icon: Users },
   { key: "engagement", label: "ENGAGEMENT & TIMELINE", icon: Activity },
   { key: "prepare", label: "PREPARE", icon: BookOpen },
 ];
@@ -552,6 +553,86 @@ function OverviewTab({ investor, signals }) {
           </div>
         );
       })()}
+    </div>
+  );
+}
+
+// ── Contacts Tab ────────────────────────────────────────
+function ContactsTab({ investor }) {
+  const contacts = investor.contacts || [];
+
+  return (
+    <div className="space-y-5">
+      {/* Summary */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-zinc-500">
+          {contacts.length} contact{contacts.length !== 1 ? "s" : ""} at {investor.name}
+        </p>
+      </div>
+
+      {/* Contact cards */}
+      {contacts.length === 0 ? (
+        <EmptyState
+          icon={User}
+          title="No contacts"
+          description="No contacts have been added for this investor."
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {contacts.map((contact) => {
+            const days = daysSince(contact.lastInteraction);
+            const isStale = days !== null && days > 30;
+
+            return (
+              <Link
+                key={contact.id}
+                to={`/contacts/${contact.id}`}
+                className="rounded-2xl border border-zinc-200/60 bg-white shadow-sm p-5 transition-all hover:shadow-md hover:border-zinc-300"
+              >
+                {/* Top row */}
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-sm font-bold text-zinc-700">
+                    {contact.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-zinc-900">{contact.name}</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">{contact.role}</p>
+                  </div>
+                </div>
+
+                {/* Contact details */}
+                <div className="mt-4 space-y-2">
+                  {contact.email && (
+                    <div className="flex items-center gap-2 text-xs text-zinc-500">
+                      <Mail size={12} className="text-zinc-400 flex-shrink-0" />
+                      <span className="truncate">{contact.email}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2 text-xs">
+                    <Clock size={12} className={cn("flex-shrink-0", isStale ? "text-red-400" : "text-zinc-400")} />
+                    <span className={cn(isStale ? "text-red-600 font-medium" : "text-zinc-500")}>
+                      {contact.lastInteraction
+                        ? `Last interaction: ${contact.lastInteraction}${days !== null ? ` (${days}d ago)` : ""}`
+                        : "No interactions recorded"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Status indicator */}
+                {isStale && (
+                  <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-red-50 px-2.5 py-1.5">
+                    <AlertTriangle size={12} className="text-red-500" />
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-red-600">
+                      Re-engagement needed
+                    </span>
+                  </div>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -1102,6 +1183,9 @@ export function InvestorDetailPage() {
       <div>
         {activeTab === "overview" && (
           <OverviewTab investor={investor} signals={signals} />
+        )}
+        {activeTab === "contacts" && (
+          <ContactsTab investor={investor} />
         )}
         {activeTab === "engagement" && (
           <EngagementTab investorId={id} investor={investor} />

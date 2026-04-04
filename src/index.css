@@ -44,11 +44,9 @@ body {
   color: #09090b;
 }
 
-/* ── Scrollbar ──────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
+/* ── Scrollbar (hidden) ─────────────────────────────────── */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+::-webkit-scrollbar { display: none; }
 
 /* ── Focus ──────────────────────────────────────────────── */
 :focus-visible {

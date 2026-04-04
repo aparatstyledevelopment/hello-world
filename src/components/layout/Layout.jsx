@@ -3,12 +3,13 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Search, Bell, Plus, Menu, X, Users, Zap, User, TrendingDown, Shield, FileText, CheckSquare, Clock } from 'lucide-react'
 import { CaptureModal } from '../CaptureModal'
-import { investors, signals, actions, getInvestor } from '../../data/mock-data'
+import { useData } from '../../data/store'
 
 function SearchOverlay({ open, onClose }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
   const navigate = useNavigate()
+  const { investors, signals } = useData()
 
   useEffect(() => {
     if (open) {
@@ -143,73 +144,62 @@ function SearchOverlay({ open, onClose }) {
   )
 }
 
-const TODAY = new Date('2026-04-04')
+const NOTIF_TODAY = new Date('2026-04-04')
 
-const notificationItems = (() => {
+function buildNotifications(signals, actions, getInvestor) {
   const items = []
 
-  // High-urgency unresolved signals
   for (const s of signals) {
     if (s.state !== 'resolved' && s.state !== 'dismissed' && s.urgency === 'high') {
       const inv = getInvestor(s.investorId)
       items.push({
-        id: `sig-${s.id}`,
-        type: 'signal',
-        title: s.headline,
-        subtitle: inv?.name || 'Unknown investor',
-        urgency: s.urgency,
-        date: s.detectedAt,
-        route: `/signals/${s.id}`,
-        read: false,
+        id: `sig-${s.id}`, type: 'signal', title: s.headline,
+        subtitle: inv?.name || 'Unknown investor', urgency: s.urgency,
+        date: s.detectedAt, route: `/signals/${s.id}`, read: false,
       })
     }
   }
 
-  // Overdue or due-today actions
   for (const a of actions) {
     if (a.state === 'completed') continue
     const due = new Date(a.dueDate)
-    if (due <= TODAY) {
+    if (due <= NOTIF_TODAY) {
       const inv = getInvestor(a.investorId)
-      const isOverdue = due < TODAY
+      const isOverdue = due < NOTIF_TODAY
       items.push({
-        id: `act-${a.id}`,
-        type: 'action',
+        id: `act-${a.id}`, type: 'action',
         title: a.objective.length > 70 ? a.objective.slice(0, 70) + '...' : a.objective,
         subtitle: `${inv?.name || 'Unknown'} — ${isOverdue ? 'Overdue' : 'Due today'}`,
-        urgency: isOverdue ? 'high' : 'medium',
-        date: a.dueDate,
-        route: `/actions/${a.id}`,
-        read: false,
+        urgency: isOverdue ? 'high' : 'medium', date: a.dueDate,
+        route: `/actions/${a.id}`, read: false,
       })
     }
   }
 
-  // Medium-urgency signals
   for (const s of signals) {
     if (s.state !== 'resolved' && s.state !== 'dismissed' && s.urgency === 'medium') {
       const inv = getInvestor(s.investorId)
       items.push({
-        id: `sig-${s.id}`,
-        type: 'signal',
-        title: s.headline,
-        subtitle: inv?.name || 'Unknown investor',
-        urgency: s.urgency,
-        date: s.detectedAt,
-        route: `/signals/${s.id}`,
-        read: true,
+        id: `sig-${s.id}`, type: 'signal', title: s.headline,
+        subtitle: inv?.name || 'Unknown investor', urgency: s.urgency,
+        date: s.detectedAt, route: `/signals/${s.id}`, read: true,
       })
     }
   }
 
   return items.slice(0, 12)
-})()
-
-const unreadCount = notificationItems.filter((n) => !n.read).length
+}
 
 function NotificationsPanel({ open, onClose }) {
   const navigate = useNavigate()
   const panelRef = useRef(null)
+  const { signals, actions, getInvestor } = useData()
+
+  const notificationItems = useMemo(
+    () => buildNotifications(signals, actions, getInvestor),
+    [signals, actions, getInvestor]
+  )
+  const unreadCount = notificationItems.filter((n) => !n.read).length
 
   useEffect(() => {
     if (!open) return
@@ -285,6 +275,11 @@ function NotificationsPanel({ open, onClose }) {
 
 function HeaderBar({ onMenuToggle, menuOpen, onLogInteraction, onSearchOpen }) {
   const [notifOpen, setNotifOpen] = useState(false)
+  const { signals, actions, getInvestor } = useData()
+  const unreadCount = useMemo(
+    () => buildNotifications(signals, actions, getInvestor).filter((n) => !n.read).length,
+    [signals, actions, getInvestor]
+  )
 
   return (
     <header className="flex h-14 items-center justify-between border-b border-zinc-100 bg-white px-4 md:px-6">
@@ -299,10 +294,10 @@ function HeaderBar({ onMenuToggle, menuOpen, onLogInteraction, onSearchOpen }) {
       {/* Search trigger */}
       <button
         onClick={onSearchOpen}
-        className="relative hidden sm:flex sm:w-52 md:w-80 items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50/50 py-2 pl-9 pr-16 text-left transition-colors hover:border-zinc-300 hover:bg-white"
+        className="relative hidden sm:flex sm:w-52 md:w-80 items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50/50 py-2 pl-9 pr-16 text-left transition-colors hover:border-zinc-300 hover:bg-white overflow-hidden"
       >
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-300" />
-        <span className="text-[13px] text-zinc-400">Search investors, signals, or notes...</span>
+        <span className="text-[13px] text-zinc-400 truncate whitespace-nowrap">Search investors, signals, or notes...</span>
         <div className="absolute right-2.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
           <kbd className="rounded-md border border-zinc-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-zinc-400">⌘</kbd>
           <kbd className="rounded-md border border-zinc-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-zinc-400">K</kbd>

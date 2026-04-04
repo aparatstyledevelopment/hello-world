@@ -1,4 +1,5 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { DataProvider } from './data/store'
 import { Layout } from './components/layout/Layout'
 import { TodayPage } from './pages/TodayPage'
 import { SignalsActionsPage } from './pages/SignalsActionsPage'
@@ -16,6 +17,7 @@ import { SettingsPage } from './pages/SettingsPage'
 
 export default function App() {
   return (
+    <DataProvider>
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
@@ -40,5 +42,6 @@ export default function App() {
         </Route>
       </Routes>
     </HashRouter>
+    </DataProvider>
   )
 }
