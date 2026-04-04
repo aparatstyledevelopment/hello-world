@@ -1,32 +1,22 @@
 import { useNavigate, Link } from "react-router-dom";
 import {
   ArrowRight,
-  Calendar,
   Clock,
   Video,
-  Users,
-  MapPin,
   Zap,
   CheckSquare,
   TrendingUp,
   TrendingDown,
   Shield,
   FileText,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
-import { Card } from "../components/ui/Card";
 import {
   signals,
   actions,
   investors,
-  meetings,
-  topBuyers,
-  topSellers,
-  marketContextSummary,
   getInvestor,
   getContact,
   getTimelineForInvestor,
@@ -72,7 +62,6 @@ function daysSince(dateStr) {
 // ── Page ──────────────────────────────────────────────────
 export function TodayPage() {
   const navigate = useNavigate();
-  const [marketExpanded, setMarketExpanded] = useState(false);
 
   const todayMeetings = getMeetingsForDate(TODAY);
   const tomorrowMeetings = getMeetingsForDate(TOMORROW);
@@ -134,90 +123,40 @@ export function TodayPage() {
         </p>
       </div>
 
-      {/* ── SECTION 1: Market Context Summary ────────────── */}
-      <Card variant="section" accentColor="blue">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
-            Market Context
-          </h2>
-          <Link
-            to="/market"
-            className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-zinc-800 transition-colors"
-          >
-            See full market context
-            <ArrowRight size={12} />
-          </Link>
-        </div>
+      {/* ── SECTION 1: Ownership Narrative ────────────────── */}
+      {(() => {
+        const totalInvestors = investors.length;
+        const totalHolding = investors.reduce((s, i) => s + i.holdingPct, 0);
+        const largest = [...investors].sort((a, b) => b.holdingPct - a.holdingPct)[0];
+        const declining = investors.filter((i) => i.holdingTrend === "down");
+        const decliningHolding = declining.reduce((s, i) => s + i.holdingPct, 0);
 
-        <div className="text-sm text-zinc-600 leading-relaxed space-y-2">
-          <p>
-            Our stock closed at <span className="font-semibold text-zinc-900">$142.30</span> yesterday,{" "}
-            <span className="font-semibold text-emerald-600">up 1.8%</span> — outperforming the sector index by 0.6%.
-            The rally was driven by positive analyst commentary following the AI infrastructure spending report from McKinsey,
-            which projects <span className="font-medium text-zinc-800">40% YoY growth through 2028</span>.
-          </p>
-          <p>
-            Among peers, <span className="font-medium text-zinc-800">XYZ Corp announced a $4.2B acquisition</span> in AI infrastructure,
-            which may shift investor perception of competitive positioning.
-            Bond yields held steady at <span className="font-medium text-zinc-800">4.12%</span>, while active equity funds saw{" "}
-            <span className="font-semibold text-red-500">$8B in outflows</span> for March — something to watch for our active holders
-            like Wellington and Harris.
-          </p>
-          <p>
-            BlackRock has <span className="font-medium text-zinc-800">increased sector-wide positions by 0.3%</span> in Q1,
-            suggesting a macro allocation shift rather than company-specific conviction.
-          </p>
-        </div>
-
-        {/* Expandable data points */}
-        <button
-          onClick={() => setMarketExpanded(!marketExpanded)}
-          className="mt-3 flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-600 transition-colors"
-        >
-          {marketExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          {marketExpanded ? "Hide key data" : "Show key data"}
-        </button>
-
-        {marketExpanded && (
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-            {/* Top Buyers */}
-            <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-2">
-                TOP BUYERS (Q4)
-              </p>
-              <div className="space-y-1.5">
-                {topBuyers.slice(0, 3).map((b) => (
-                  <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-1.5 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <TrendingUp size={12} className="text-emerald-400 flex-shrink-0" />
-                      <span className="text-xs font-medium text-zinc-700 truncate">{b.name}</span>
-                    </div>
-                    <span className="font-mono text-xs font-bold text-zinc-900">{b.change}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Top Sellers */}
-            <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-2">
-                TOP SELLERS (Q4)
-              </p>
-              <div className="space-y-1.5">
-                {topSellers.slice(0, 3).map((s) => (
-                  <div key={s.name} className="flex items-center justify-between rounded-xl bg-red-50/50 px-3 py-1.5 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <TrendingDown size={12} className="text-red-400 flex-shrink-0" />
-                      <span className="text-xs font-medium text-zinc-700 truncate">{s.name}</span>
-                    </div>
-                    <span className="font-mono text-xs font-bold text-red-600">{s.change}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+        return (
+          <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm">
+            <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
+              Ownership Narrative
+            </h2>
+            <p className="text-sm text-zinc-300 leading-relaxed">
+              The tracked shareholder base comprises{" "}
+              <span className="font-bold text-white">{totalInvestors} investors</span>{" "}
+              holding a combined{" "}
+              <span className="font-bold text-white">{totalHolding.toFixed(1)}%</span>{" "}
+              of outstanding shares.{" "}
+              <span className="font-bold text-white">{largest.name}</span>{" "}
+              remains the largest holder at {largest.holdingPct}%.{" "}
+              {declining.length > 0 ? (
+                <>
+                  Notably,{" "}
+                  <span className="font-bold text-red-400">{declining.length} investor{declining.length !== 1 ? "s" : ""}</span>{" "}
+                  show declining positions, representing a combined {decliningHolding.toFixed(1)}% at risk of further reduction.
+                </>
+              ) : (
+                "No investors currently show declining positions."
+              )}
+            </p>
           </div>
-        )}
-      </Card>
+        );
+      })()}
 
       {/* ── SECTION 2: Meeting Prep Cards ────────────────── */}
       <div>
