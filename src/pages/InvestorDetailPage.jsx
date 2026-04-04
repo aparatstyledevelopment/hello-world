@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import {
   ArrowUpRight,
   ArrowDownRight,
@@ -23,6 +23,7 @@ import {
   TrendingUp,
   Shield,
   Hash,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
@@ -132,6 +133,7 @@ const timelineTypeBadge = {
 const tabConfig = [
   { key: "overview", label: "OVERVIEW", icon: BarChart3 },
   { key: "engagement", label: "ENGAGEMENT & TIMELINE", icon: Activity },
+  { key: "prepare", label: "PREPARE", icon: BookOpen },
 ];
 
 // ── Overview Tab ─────────────────────────────────────────
@@ -748,10 +750,213 @@ function EngagementTab({ investorId, investor }) {
   );
 }
 
+// ── Prepare Tab ─────────────────────────────────────────────
+function PrepareTab({ investor, investorId }) {
+  const timeline = useMemo(() => getTimelineForInvestor(investorId), [investorId]);
+  const signals = useMemo(() => getSignalsForInvestor(investorId), [investorId]);
+  const actions = useMemo(() => getActionsForInvestor(investorId), [investorId]);
+
+  const openSignals = signals.filter((s) => s.state !== "resolved" && s.state !== "dismissed");
+  const openActions = actions.filter((a) => a.state !== "completed");
+  const lastMeeting = timeline.find((e) => e.type === "meeting");
+  const sentiment = deriveSentiment(investor);
+  const conviction = deriveConviction(investor);
+
+  // Suggested talking points derived from signals + state params
+  const talkingPoints = [];
+  for (const sig of openSignals) {
+    if (sig.type === "retention_risk") talkingPoints.push("Address concerns driving position reduction");
+    if (sig.type === "governance_management") talkingPoints.push("Discuss governance / proxy alignment");
+    if (sig.type === "influence_opportunity") talkingPoints.push("Reinforce growth thesis and deepen relationship");
+    if (sig.type === "relationship_maintenance") talkingPoints.push("Acknowledge positive engagement signals");
+  }
+  const keyConcern = investor.stateParameters?.find((p) => p.label === "Key Concern");
+  if (keyConcern) talkingPoints.push(`Address key concern: ${keyConcern.value}`);
+  if (talkingPoints.length === 0) talkingPoints.push("General relationship check-in and update");
+
+  return (
+    <div className="space-y-5">
+      {/* Prep header */}
+      <div className="rounded-2xl bg-zinc-900 p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <BookOpen size={16} className="text-zinc-400" />
+          <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+            Meeting Preparation Brief
+          </h3>
+        </div>
+        <p className="text-sm text-zinc-300 leading-relaxed">
+          {investor.name} is a {investor.type} investor holding {investor.holdingPct}% (
+          {investor.holdingTrend === "up" ? "increasing" : investor.holdingTrend === "down" ? "declining" : "stable"}).
+          {" "}Sentiment is {sentiment.toLowerCase()} with {investor.engagementMomentum} engagement momentum.
+          {lastMeeting ? ` Last meeting: ${lastMeeting.date} — "${lastMeeting.description}"` : " No prior meetings on record."}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Contact Briefing */}
+        <div>
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
+            Contact Briefing
+          </h3>
+          <div className="space-y-2">
+            {investor.contacts.map((contact) => {
+              const days = daysSince(contact.lastInteraction);
+              const contactTimeline = timeline.filter((e) =>
+                e.description.toLowerCase().includes(contact.name.split(" ")[1]?.toLowerCase() || contact.name.toLowerCase())
+              );
+              const lastTopic = contactTimeline[0];
+
+              return (
+                <div key={contact.id} className="rounded-2xl border border-zinc-200 bg-white p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-200 text-[10px] font-bold text-zinc-600">
+                        {contact.name.split(" ").map((w) => w[0]).join("").toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-zinc-900">{contact.name}</p>
+                        <p className="text-xs text-zinc-500">{contact.role}</p>
+                      </div>
+                    </div>
+                    <span className={cn(
+                      "text-xs font-medium",
+                      days !== null && days > 30 ? "text-red-500" : "text-zinc-400"
+                    )}>
+                      {days !== null ? `${days}d since contact` : "No interaction"}
+                    </span>
+                  </div>
+                  {lastTopic && (
+                    <p className="text-xs text-zinc-500 italic">
+                      Last: {lastTopic.description}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Suggested Talking Points + Recent Changes */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
+              Suggested Talking Points
+            </h3>
+            <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+              <ul className="space-y-2">
+                {talkingPoints.map((tp, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-sm text-zinc-700">
+                    <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[9px] font-bold text-white">
+                      {idx + 1}
+                    </span>
+                    {tp}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
+              Recent Changes
+            </h3>
+            <div className="rounded-2xl border border-zinc-200 bg-white p-4 space-y-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">Holding</span>
+                <span className={cn(
+                  "font-mono font-bold",
+                  investor.holdingTrend === "up" ? "text-emerald-600" :
+                  investor.holdingTrend === "down" ? "text-red-500" : "text-zinc-700"
+                )}>
+                  {investor.holdingHistory[0]}% → {investor.holdingPct}%
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">Conviction</span>
+                <span className="font-medium text-zinc-700">{conviction}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">Sentiment</span>
+                <span className="font-medium text-zinc-700">{sentiment}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">Open Signals</span>
+                <span className="font-mono font-bold text-zinc-700">{openSignals.length}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">Open Actions</span>
+                <span className="font-mono font-bold text-zinc-700">{openActions.length}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Active Signals for this investor */}
+      {openSignals.length > 0 && (
+        <div>
+          <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
+            Active Signals to Discuss
+          </h3>
+          <div className="space-y-2">
+            {openSignals.map((sig) => (
+              <Link
+                key={sig.id}
+                to={`/signals/${sig.id}`}
+                className="flex items-start gap-3 rounded-2xl border border-zinc-200 bg-white p-3 transition-colors hover:bg-zinc-50"
+              >
+                <div className={cn(
+                  "mt-0.5 h-2 w-2 rounded-full flex-shrink-0",
+                  sig.urgency === "high" ? "bg-red-500" : sig.urgency === "medium" ? "bg-zinc-400" : "bg-zinc-300"
+                )} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-zinc-800">{sig.headline}</p>
+                  <p className="text-xs text-zinc-400 mt-0.5">{sig.source} &middot; {sig.detectedAt}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Key State Parameters */}
+      <div>
+        <h3 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
+          Key Intelligence
+        </h3>
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4">
+          <div className="space-y-2">
+            {investor.stateParameters.map((param, idx) => (
+              <div key={idx} className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">{param.label}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-zinc-700">{param.value}</span>
+                  <span className={cn(
+                    "h-1.5 w-1.5 rounded-full",
+                    param.freshness === "fresh" ? "bg-emerald-500" : "bg-zinc-300"
+                  )} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────
 export function InvestorDetailPage() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
+
+  // Auto-open prepare tab if ?prepare=true
+  useEffect(() => {
+    if (searchParams.get("prepare") === "true") {
+      setActiveTab("prepare");
+    }
+  }, [searchParams]);
 
   const investor = getInvestor(id);
 
@@ -822,6 +1027,18 @@ export function InvestorDetailPage() {
             </span>
           </div>
         </div>
+        <button
+          onClick={() => setActiveTab("prepare")}
+          className={cn(
+            "inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs font-medium shadow-sm transition-all",
+            activeTab === "prepare"
+              ? "bg-zinc-900 text-white"
+              : "bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-900 hover:text-white hover:border-zinc-900"
+          )}
+        >
+          <BookOpen size={14} />
+          Prepare for Meeting
+        </button>
       </div>
 
       {/* Recommendation banner */}
@@ -881,6 +1098,9 @@ export function InvestorDetailPage() {
         )}
         {activeTab === "engagement" && (
           <EngagementTab investorId={id} investor={investor} />
+        )}
+        {activeTab === "prepare" && (
+          <PrepareTab investor={investor} investorId={id} />
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Filter, FileDown, Users } from "lucide-react";
+import { Filter, FileDown, Users, BookOpen } from "lucide-react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
 import { Table } from "../components/ui/Table";
@@ -154,6 +154,7 @@ export function InvestorsPage() {
     { key: "health", label: "Relationship Health" },
     { key: "lastTouch", label: "Last Touch" },
     { key: "sensitivity", label: "Sensitivity" },
+    { key: "prepare", label: "", width: "60px" },
   ];
 
   const renderCell = (row, col) => {
@@ -205,6 +206,20 @@ export function InvestorsPage() {
               <Badge key={s} variant={s} kind="sensitivity" />
             ))}
           </div>
+        );
+      case "prepare":
+        return (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/investors/${row.id}?prepare=true`);
+            }}
+            className="inline-flex items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 shadow-sm transition-all hover:bg-zinc-900 hover:text-white hover:border-zinc-900"
+            title="Prepare for meeting"
+          >
+            <BookOpen size={12} />
+            Prep
+          </button>
         );
       default:
         return row[col.key];

@@ -48,7 +48,6 @@ const stateLabels = {
   planned: "Planned",
   preparing: "Preparing",
   in_progress: "In Progress",
-  awaiting_logging: "Awaiting Logging",
   completed: "Completed",
 };
 
@@ -56,7 +55,6 @@ const phaseDescriptions = {
   planned: "Define objectives and identify target contacts",
   preparing: "Prepare materials, talking points, and message angle",
   in_progress: "Execute outreach and engagement activities",
-  awaiting_logging: "Record outcomes and capture intelligence",
   completed: "Action closed. Outcomes logged and reviewed.",
 };
 
@@ -356,8 +354,7 @@ export function ActionDetailPage() {
     return false;
   };
 
-  const showOutcome =
-    form.state === "awaiting_logging" || form.state === "completed";
+  const showOutcome = form.state === "completed";
 
   const handleChange = (field) => (e) => {
     setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -698,7 +695,6 @@ function stateBadgeVariantFor(state) {
     planned: "new",
     preparing: "reviewing",
     in_progress: "confirmed",
-    awaiting_logging: "action_created",
     completed: "resolved",
   };
   return map[state] || "new";

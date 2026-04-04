@@ -327,7 +327,7 @@ export const actions = [
     contactId: "con-009",
     signalId: "sig-007",
     type: "relationship_maintenance",
-    state: "awaiting_logging",
+    state: "completed",
     objective: "Send thank-you note to Norges Bank referencing positive report mention and propose ESG deep-dive session",
     owner: "John Smith",
     dueDate: "2026-03-28",
@@ -401,9 +401,68 @@ export const actionStates = [
   { key: "planned", label: "Planned" },
   { key: "preparing", label: "Preparing" },
   { key: "in_progress", label: "In Progress" },
-  { key: "awaiting_logging", label: "Awaiting Logging" },
   { key: "completed", label: "Completed" },
 ];
+
+// ── Meetings (for Today page) ─────────────────────────────
+export const meetings = [
+  {
+    id: "mtg-001",
+    investorId: "inv-004",
+    contactId: "con-006",
+    date: "2026-04-04",
+    time: "10:00",
+    channel: "Video Call",
+    topic: "Retention discussion — address position reduction concerns",
+  },
+  {
+    id: "mtg-002",
+    investorId: "inv-003",
+    contactId: "con-004",
+    date: "2026-04-04",
+    time: "14:30",
+    channel: "In-Person",
+    topic: "Growth strategy deep-dive and investor pack review",
+  },
+  {
+    id: "mtg-003",
+    investorId: "inv-001",
+    contactId: "con-001",
+    date: "2026-04-05",
+    time: "09:00",
+    channel: "Video Call",
+    topic: "Q2 stewardship check-in and proxy guideline alignment",
+  },
+  {
+    id: "mtg-004",
+    investorId: "inv-007",
+    contactId: "con-009",
+    date: "2026-04-05",
+    time: "16:00",
+    channel: "Video Call",
+    topic: "ESG deep-dive session planning",
+  },
+];
+
+// ── Top movers (for Shareholder Intelligence) ─────────────
+export const topBuyers = [
+  { name: "BlackRock Fund Advisors", change: "+0.5%", id: "inv-001" },
+  { name: "Wellington Management", change: "+0.6%", id: "inv-003" },
+  { name: "Norges Bank IM", change: "+0.1%", id: "inv-007" },
+  { name: "CalPERS", change: "+0.1%", id: "inv-005" },
+  { name: "Vanguard Group", change: "+0.0%", id: "inv-002" },
+];
+
+export const topSellers = [
+  { name: "Harris Associates", change: "-0.6%", id: "inv-004" },
+  { name: "Artisan Partners", change: "-0.3%", id: "inv-006" },
+  { name: "Vanguard Group", change: "-0.3%", id: "inv-002" },
+  { name: "Hedge Fund Alpha", change: "-0.2%", id: null },
+  { name: "Quant Capital", change: "-0.1%", id: null },
+];
+
+// ── Market context (for Today page) ──────────────────────
+export const marketContextSummary = "Our stock closed at $142.30 yesterday, up 1.8% — outperforming the sector index by 0.6%. The rally was driven by positive analyst commentary following the AI infrastructure spending report from McKinsey, which projects 40% YoY growth through 2028. Among peers, XYZ Corp announced a $4.2B acquisition in AI infrastructure, which may shift investor perception of competitive positioning. Bond yields held steady at 4.12%, while active equity funds saw $8B in outflows for March — something to watch for our active holders like Wellington and Harris. BlackRock has increased sector-wide positions by 0.3% in Q1, suggesting a macro allocation shift rather than company-specific conviction.";
 
 // ── Helper lookups ─────────────────────────────────────────
 export function getInvestor(id) {
@@ -438,4 +497,8 @@ export function getTimelineForInvestor(investorId) {
   return timelineEvents
     .filter((e) => e.investorId === investorId)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+export function getMeetingsForDate(dateStr) {
+  return meetings.filter((m) => m.date === dateStr);
 }

@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import {
-  Zap,
-  CheckSquare,
+  Calendar,
   Users,
+  PieChart,
+  Zap,
   TrendingUp,
   UserCircle,
   BarChart3,
@@ -13,13 +14,14 @@ import {
 } from 'lucide-react'
 
 const mainEngineNav = [
-  { to: '/signals', label: 'Signals', icon: Zap },
-  { to: '/actions', label: 'Actions', icon: CheckSquare },
+  { to: '/today', label: 'Today', icon: Calendar },
   { to: '/investors', label: 'Investors', icon: Users },
-  { to: '/market', label: 'Market Intel', icon: TrendingUp },
+  { to: '/shareholders', label: 'Shareholders', icon: PieChart },
+  { to: '/signals-actions', label: 'Signals & Actions', icon: Zap },
 ]
 
 const resourcesNav = [
+  { to: '/market', label: 'Market Intel', icon: TrendingUp },
   { to: '/personas', label: 'Personas', icon: UserCircle },
   { to: '/reports', label: 'Reports', icon: BarChart3 },
   { to: '/benchmarking', label: 'Benchmarking', icon: GitCompare },

@@ -1,12 +1,13 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './components/layout/Layout'
-import { SignalsPage } from './pages/SignalsPage'
+import { TodayPage } from './pages/TodayPage'
+import { SignalsActionsPage } from './pages/SignalsActionsPage'
 import { SignalDetailPage } from './pages/SignalDetailPage'
-import { ActionsPage } from './pages/ActionsPage'
 import { ActionDetailPage } from './pages/ActionDetailPage'
 import { InvestorsPage } from './pages/InvestorsPage'
 import { InvestorDetailPage } from './pages/InvestorDetailPage'
 import { InvestorTimelinePage } from './pages/InvestorTimelinePage'
+import { ShareholderIntelPage } from './pages/ShareholderIntelPage'
 import { MarketPage } from './pages/MarketPage'
 import { PersonasPage } from './pages/PersonasPage'
 import { ReportsPage } from './pages/ReportsPage'
@@ -20,14 +21,15 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Navigate to="/investors" replace />} />
-          <Route path="/signals" element={<SignalsPage />} />
-          <Route path="/signals/:id" element={<SignalDetailPage />} />
-          <Route path="/actions" element={<ActionsPage />} />
-          <Route path="/actions/:id" element={<ActionDetailPage />} />
+          <Route path="/" element={<Navigate to="/today" replace />} />
+          <Route path="/today" element={<TodayPage />} />
           <Route path="/investors" element={<InvestorsPage />} />
           <Route path="/investors/:id" element={<InvestorDetailPage />} />
           <Route path="/investors/:id/timeline" element={<InvestorTimelinePage />} />
+          <Route path="/shareholders" element={<ShareholderIntelPage />} />
+          <Route path="/signals-actions" element={<SignalsActionsPage />} />
+          <Route path="/signals/:id" element={<SignalDetailPage />} />
+          <Route path="/actions/:id" element={<ActionDetailPage />} />
           <Route path="/market" element={<MarketPage />} />
           <Route path="/personas" element={<PersonasPage />} />
           <Route path="/reports" element={<ReportsPage />} />
