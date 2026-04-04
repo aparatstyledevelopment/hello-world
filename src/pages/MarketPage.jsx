@@ -411,22 +411,22 @@ export function MarketPage() {
       {/* ── Key Engagement Metrics ────────────────────────── */}
       <Card variant="section" accentColor="zinc" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">HIGH RELEVANCE ITEMS</p>
             <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-red-600">{stats.high}</p>
             <p className="mt-0.5 text-xs text-zinc-500">Require attention</p>
           </div>
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">INVESTORS AFFECTED</p>
             <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
             <p className="mt-0.5 text-xs text-zinc-500">Across all items</p>
           </div>
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">THIS WEEK</p>
             <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
             <p className="mt-0.5 text-xs text-zinc-500">New items</p>
           </div>
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">AFFECTING YOUR BASE</p>
             <p className="mt-1.5 font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
             <p className="mt-0.5 text-xs text-zinc-500">of {stats.total} total</p>
