@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Plus, FileText, Phone, Mail, Camera, StickyNote, File, Sparkles } from "lucide-react";
+import { X, Plus, Mic, FileText, Phone, Mail, Camera, StickyNote, File, Sparkles } from "lucide-react";
 import { investors } from "../data/mock-data";
 
 const sourceTypes = [
