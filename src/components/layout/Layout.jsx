@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
+import { Outlet, useNavigate, useLocation, useNavigationType } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Search, Bell, Plus, Menu, X, Users, Zap, User, TrendingDown, Shield, FileText, CheckSquare, Clock } from 'lucide-react'
 import { CaptureModal } from '../CaptureModal'
@@ -362,6 +362,35 @@ export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [logModalOpen, setLogModalOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const mainRef = useRef(null)
+  const scrollPositions = useRef({})
+  const prevPath = useRef(null)
+  const location = useLocation()
+  const navType = useNavigationType()
+
+  // Save scroll position before navigating away, restore or reset on arrival
+  useEffect(() => {
+    const main = mainRef.current
+    if (!main) return
+
+    // Save the previous path's scroll position
+    if (prevPath.current && prevPath.current !== location.pathname) {
+      scrollPositions.current[prevPath.current] = main.scrollTop
+    }
+
+    if (navType === 'POP') {
+      // Back/forward: restore saved position
+      const saved = scrollPositions.current[location.pathname]
+      if (saved != null) {
+        requestAnimationFrame(() => { main.scrollTop = saved })
+      }
+    } else {
+      // Push/Replace: scroll to top
+      main.scrollTop = 0
+    }
+
+    prevPath.current = location.pathname
+  }, [location.pathname, navType])
 
   // Keyboard shortcut: Cmd+K / Ctrl+K
   useEffect(() => {
@@ -394,7 +423,7 @@ export function Layout() {
 
       <div className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden">
         <HeaderBar onMenuToggle={() => setMenuOpen(!menuOpen)} menuOpen={menuOpen} onLogInteraction={() => setLogModalOpen(true)} onSearchOpen={() => setSearchOpen(true)} />
-        <main className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-zinc-50/50">
+        <main ref={mainRef} className="flex-1 min-w-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-zinc-50/50">
           <Outlet />
         </main>
       </div>
