@@ -638,10 +638,10 @@ export function ActionDetailPage() {
           )}
 
           {/* Action buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-stretch gap-3">
             <button
               onClick={handleSave}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-zinc-900 px-4 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-zinc-800"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-zinc-900 px-4 py-2.5 text-xs font-medium text-white shadow-sm transition-colors hover:bg-zinc-800"
             >
               <Save size={14} />
               Save
@@ -650,7 +650,7 @@ export function ActionDetailPage() {
             {nextState && (
               <button
                 onClick={handleStateTransition}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50"
               >
                 <ArrowRight size={14} />
                 Move to {nextState.label}
@@ -659,7 +659,7 @@ export function ActionDetailPage() {
 
             <button
               onClick={handleCancel}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-red-200 bg-white px-4 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-xl border border-red-200 bg-white px-4 py-2.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
             >
               <X size={14} />
               Cancel Action
