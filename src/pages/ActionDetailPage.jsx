@@ -400,7 +400,7 @@ export function ActionDetailPage() {
         {/* Form -- 2/3 */}
         <div className="col-span-1 md:col-span-2 space-y-5">
           <Card>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Investor */}
               <label className="block">
                 <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">

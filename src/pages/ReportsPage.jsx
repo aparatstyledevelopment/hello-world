@@ -233,7 +233,7 @@ export function ReportsPage() {
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">ENGAGEMENT TREND</p>
               <p className="text-xs text-zinc-400 mb-3">Monthly interaction volume — March saw a recovery from the December low, driven by year-end governance meetings and Q1 planning outreach.</p>
               <ResponsiveContainer width="100%" height={200}>
-                <AreaChart data={engagementTrendData}>
+                <AreaChart data={engagementTrendData} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
                   <defs>
                     <linearGradient id="areaBlue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#09090b" stopOpacity={0.15} />
@@ -241,7 +241,7 @@ export function ReportsPage() {
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} width={35} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="count" name="Interactions" stroke="#09090b" strokeWidth={2.5} fill="url(#areaBlue)" />
                 </AreaChart>
@@ -329,9 +329,9 @@ export function ReportsPage() {
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">CONVERSION FUNNEL</p>
               <p className="text-xs text-zinc-400 mb-3">Each stage represents progressive validation. The drop from Generated to Reviewed reflects automated filtering, while Confirmed to Actioned shows team prioritization.</p>
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={funnelData} layout="vertical" barCategoryGap={8}>
+                <BarChart data={funnelData} layout="vertical" barCategoryGap={8} margin={{ top: 5, right: 5, bottom: 0, left: -10 }}>
                   <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
-                  <YAxis type="category" dataKey="stage" axisLine={false} tickLine={false} tick={{ fill: "#3f3f46", fontSize: 12 }} width={80} />
+                  <YAxis type="category" dataKey="stage" axisLine={false} tickLine={false} tick={{ fill: "#3f3f46", fontSize: 12 }} width={75} />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar dataKey="value" name="Signals" radius={[0, 4, 4, 0]}>
                     {funnelData.map((_, i) => (<Cell key={i} fill={FUNNEL_SHADES[i]} />))}
@@ -405,9 +405,9 @@ export function ReportsPage() {
               Wellington's consistent buying signals growing conviction in the investment thesis.
             </p>
             <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={ownershipTrendData}>
+              <LineChart data={ownershipTrendData} margin={{ top: 5, right: 5, bottom: 0, left: -15 }}>
                 <XAxis dataKey="quarter" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} domain={["auto", "auto"]} tickFormatter={(v) => `${v}%`} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} domain={["auto", "auto"]} tickFormatter={(v) => `${v}%`} width={40} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11 }} />
                 {top3Investors.map((inv, i) => (
@@ -498,9 +498,9 @@ export function ReportsPage() {
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-400 mb-1">TEAM WORKLOAD</p>
               <p className="text-xs text-zinc-400 mb-3">Distribution of completed vs. open actions per team member. Balance is key to preventing burnout and ensuring coverage.</p>
               <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={teamWorkloadData} barCategoryGap="20%">
+                <BarChart data={teamWorkloadData} barCategoryGap="20%" margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} allowDecimals={false} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#a1a1aa", fontSize: 12 }} allowDecimals={false} width={30} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="Completed" fill="#09090b" radius={[4, 4, 0, 0]} />
