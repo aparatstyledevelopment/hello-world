@@ -187,10 +187,10 @@ export function TodayPage() {
               </p>
               <div className="space-y-1.5">
                 {topBuyers.slice(0, 3).map((b) => (
-                  <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-1.5">
-                    <div className="flex items-center gap-2">
-                      <TrendingUp size={12} className="text-emerald-400" />
-                      <span className="text-xs font-medium text-zinc-700">{b.name}</span>
+                  <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-1.5 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <TrendingUp size={12} className="text-emerald-400 flex-shrink-0" />
+                      <span className="text-xs font-medium text-zinc-700 truncate">{b.name}</span>
                     </div>
                     <span className="font-mono text-xs font-bold text-zinc-900">{b.change}</span>
                   </div>
@@ -205,10 +205,10 @@ export function TodayPage() {
               </p>
               <div className="space-y-1.5">
                 {topSellers.slice(0, 3).map((s) => (
-                  <div key={s.name} className="flex items-center justify-between rounded-xl bg-red-50/50 px-3 py-1.5">
-                    <div className="flex items-center gap-2">
-                      <TrendingDown size={12} className="text-red-400" />
-                      <span className="text-xs font-medium text-zinc-700">{s.name}</span>
+                  <div key={s.name} className="flex items-center justify-between rounded-xl bg-red-50/50 px-3 py-1.5 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <TrendingDown size={12} className="text-red-400 flex-shrink-0" />
+                      <span className="text-xs font-medium text-zinc-700 truncate">{s.name}</span>
                     </div>
                     <span className="font-mono text-xs font-bold text-red-600">{s.change}</span>
                   </div>

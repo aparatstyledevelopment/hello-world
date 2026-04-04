@@ -23,14 +23,14 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "rounded-2xl p-4",
+        "rounded-2xl p-4 min-w-0 overflow-hidden",
         isDark ? "bg-zinc-900 text-white shadow-sm" : "border border-zinc-200/60 bg-white shadow-sm",
         className
       )}
     >
       {label && (
         <p className={cn(
-          "text-[11px] font-medium uppercase tracking-[0.08em]",
+          "text-[11px] font-medium uppercase tracking-[0.08em] truncate",
           isDark ? "text-zinc-400" : "text-zinc-400"
         )}>
           {label}
@@ -40,7 +40,7 @@ export function StatCard({
       <div className="mt-1.5">
         <span
           className={cn(
-            "font-mono text-2xl md:text-3xl font-bold tracking-tight",
+            "font-mono text-xl md:text-3xl font-bold tracking-tight",
             isDark ? "text-white" : "text-zinc-900"
           )}
         >

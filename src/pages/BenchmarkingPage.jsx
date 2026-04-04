@@ -62,7 +62,7 @@ function HorizontalBar({ label, value, maxValue = 100, isOurs = false, status })
     <div className="flex items-center gap-3 py-1.5">
       <span
         className={cn(
-          "w-28 md:w-44 text-sm truncate",
+          "w-16 sm:w-28 md:w-44 text-xs sm:text-sm truncate",
           isOurs ? "font-semibold text-zinc-900" : "text-zinc-600"
         )}
       >
@@ -412,7 +412,7 @@ export function BenchmarkingPage({ embedded = false }) {
               <div key={entry.name} className="flex items-center gap-3 py-1.5">
                 <span
                   className={cn(
-                    "w-28 md:w-44 text-sm truncate",
+                    "w-16 sm:w-28 md:w-44 text-xs sm:text-sm truncate",
                     entry.isOurs ? "font-semibold text-zinc-900" : "text-zinc-600"
                   )}
                 >

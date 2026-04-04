@@ -277,7 +277,7 @@ export function MarketPage() {
             </p>
             <div className="space-y-2">
               {topBuyers.map((b) => (
-                <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-2">
+                <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-50 px-3 py-2 min-w-0">
                   <div className="flex items-center gap-2">
                     <TrendingUp size={14} className="text-emerald-400" />
                     {b.id ? (
@@ -301,7 +301,7 @@ export function MarketPage() {
             </p>
             <div className="space-y-2">
               {topSellers.map((s) => (
-                <div key={s.name} className="flex items-center justify-between rounded-xl bg-red-50/50 px-3 py-2">
+                <div key={s.name} className="flex items-center justify-between rounded-xl bg-red-50/50 px-3 py-2 min-w-0">
                   <div className="flex items-center gap-2">
                     <TrendingDown size={14} className="text-red-400" />
                     {s.id ? (
@@ -447,31 +447,31 @@ export function MarketPage() {
       {/* ── Key Engagement Metrics ────────────────────────── */}
       <Card variant="section" accentColor="zinc" title="Key Engagement Metrics" subtitle="Aggregate activity indicators">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="text-left md:text-center">
+          <div className="text-left md:text-center min-w-0">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">HIGH RELEVANCE ITEMS</p>
             <div className="flex items-baseline gap-1.5 md:justify-center">
-              <p className="font-mono text-2xl md:text-3xl font-bold text-red-600">{stats.high}</p>
+              <p className="font-mono text-lg md:text-3xl font-bold text-red-600">{stats.high}</p>
               <p className="text-xs text-zinc-500">Require attention</p>
             </div>
           </div>
-          <div className="text-left md:text-center">
+          <div className="text-left md:text-center min-w-0">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">INVESTORS AFFECTED</p>
             <div className="flex items-baseline gap-1.5 md:justify-center">
-              <p className="font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
+              <p className="font-mono text-lg md:text-3xl font-bold text-zinc-900">{stats.uniqueInvestors}</p>
               <p className="text-xs text-zinc-500">Across all items</p>
             </div>
           </div>
-          <div className="text-left md:text-center">
+          <div className="text-left md:text-center min-w-0">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">THIS WEEK</p>
             <div className="flex items-baseline gap-1.5 md:justify-center">
-              <p className="font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
+              <p className="font-mono text-lg md:text-3xl font-bold text-zinc-900">{stats.thisWeek}</p>
               <p className="text-xs text-zinc-500">New items</p>
             </div>
           </div>
-          <div className="text-left md:text-center">
+          <div className="text-left md:text-center min-w-0">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-zinc-400">AFFECTING YOUR BASE</p>
             <div className="flex items-baseline gap-1.5 md:justify-center">
-              <p className="font-mono text-2xl md:text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
+              <p className="font-mono text-lg md:text-3xl font-bold text-zinc-900">{stats.withInvestors}</p>
               <p className="text-xs text-zinc-500">of {stats.total} total</p>
             </div>
           </div>
