@@ -267,12 +267,12 @@ export function TodayPage() {
               <button
                 key={`${item.kind}-${item.id}`}
                 onClick={() => navigate(item.route)}
-                className="flex w-full items-center gap-3 rounded-2xl border border-zinc-200/60 bg-white shadow-sm px-4 py-3 text-left transition-all hover:shadow-md hover:border-zinc-300"
+                className="flex w-full items-center gap-3 rounded-2xl border border-zinc-200/60 bg-white shadow-sm px-4 py-2.5 text-left transition-all hover:shadow-md hover:border-zinc-300"
               >
                 {/* Type indicator */}
                 <div className={cn(
                   "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg",
-                  isSignal ? "bg-zinc-100" : "bg-zinc-50"
+                  item.urgency === "high" ? "bg-red-50" : isSignal ? "bg-zinc-100" : "bg-zinc-50"
                 )}>
                   {isSignal ? (
                     <TypeIcon size={14} className={cn(
@@ -285,19 +285,26 @@ export function TodayPage() {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
+                  <p className="text-sm text-zinc-800 truncate">{item.summary}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
                     <span className={cn(
-                      "inline-flex items-center rounded-md px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider",
-                      isSignal ? "bg-zinc-100 text-zinc-600" : "bg-zinc-50 text-zinc-500"
+                      "text-[10px] font-semibold uppercase tracking-wider",
+                      isSignal ? "text-zinc-400" : "text-zinc-400"
                     )}>
                       {isSignal ? "Signal" : "Action"}
                     </span>
-                    <Badge variant={item.urgency} kind="urgency" />
-                    <span className="text-xs font-medium text-zinc-500 truncate">
+                    <span className="text-zinc-200">&middot;</span>
+                    <span className={cn(
+                      "text-[10px] font-semibold uppercase tracking-wider",
+                      item.urgency === "high" ? "text-red-500" : item.urgency === "medium" ? "text-zinc-500" : "text-zinc-400"
+                    )}>
+                      {item.urgency}
+                    </span>
+                    <span className="text-zinc-200">&middot;</span>
+                    <span className="text-[11px] text-zinc-400 truncate">
                       {inv?.name ?? "Unknown"}
                     </span>
                   </div>
-                  <p className="text-sm text-zinc-800 truncate">{item.summary}</p>
                 </div>
 
                 {/* Right side */}
