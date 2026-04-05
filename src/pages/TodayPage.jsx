@@ -10,11 +10,14 @@ import {
   Shield,
   FileText,
   Users,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
 import { useData } from "../data/store";
+import { marketContextSummary, topBuyers, topSellers } from "../data/mock-data";
 
 const TODAY = "2026-04-04";
 const TOMORROW = "2026-04-05";
@@ -55,6 +58,7 @@ function daysSince(dateStr) {
 // ── Page ──────────────────────────────────────────────────
 export function TodayPage() {
   const navigate = useNavigate();
+  const [marketExpanded, setMarketExpanded] = useState(false);
   const { signals, actions, investors, getInvestor, getContact, getTimelineForInvestor, getMeetingsForDate } = useData();
 
   const todayMeetings = getMeetingsForDate(TODAY);
@@ -117,40 +121,74 @@ export function TodayPage() {
         </p>
       </div>
 
-      {/* ── SECTION 1: Ownership Narrative ────────────────── */}
-      {(() => {
-        const totalInvestors = investors.length;
-        const totalHolding = investors.reduce((s, i) => s + i.holdingPct, 0);
-        const largest = [...investors].sort((a, b) => b.holdingPct - a.holdingPct)[0];
-        const declining = investors.filter((i) => i.holdingTrend === "down");
-        const decliningHolding = declining.reduce((s, i) => s + i.holdingPct, 0);
+      {/* ── SECTION 1: Market Context ────────────────────── */}
+      <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
+            Market Context
+          </h2>
+          <Link
+            to="/market"
+            className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            See full market context
+            <ArrowRight size={12} />
+          </Link>
+        </div>
 
-        return (
-          <div className="rounded-2xl bg-zinc-900 p-5 shadow-sm">
-            <h2 className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400 mb-3">
-              Ownership Narrative
-            </h2>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              The tracked shareholder base comprises{" "}
-              <span className="font-bold text-white">{totalInvestors} investors</span>{" "}
-              holding a combined{" "}
-              <span className="font-bold text-white">{totalHolding.toFixed(1)}%</span>{" "}
-              of outstanding shares.{" "}
-              <span className="font-bold text-white">{largest.name}</span>{" "}
-              remains the largest holder at {largest.holdingPct}%.{" "}
-              {declining.length > 0 ? (
-                <>
-                  Notably,{" "}
-                  <span className="font-bold text-red-400">{declining.length} investor{declining.length !== 1 ? "s" : ""}</span>{" "}
-                  show declining positions, representing a combined {decliningHolding.toFixed(1)}% at risk of further reduction.
-                </>
-              ) : (
-                "No investors currently show declining positions."
-              )}
-            </p>
+        <p className="text-sm text-zinc-300 leading-relaxed">
+          {marketContextSummary}
+        </p>
+
+        {/* Expandable data points */}
+        <button
+          onClick={() => setMarketExpanded(!marketExpanded)}
+          className="mt-3 flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
+        >
+          {marketExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          {marketExpanded ? "Hide key data" : "Show key data"}
+        </button>
+
+        {marketExpanded && (
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Top Buyers */}
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500 mb-2">
+                TOP BUYERS (Q4)
+              </p>
+              <div className="space-y-1.5">
+                {topBuyers.slice(0, 3).map((b) => (
+                  <div key={b.name} className="flex items-center justify-between rounded-xl bg-zinc-800 px-3 py-1.5">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp size={12} className="text-emerald-400" />
+                      <span className="text-xs font-medium text-zinc-300">{b.name}</span>
+                    </div>
+                    <span className="font-mono text-xs font-bold text-white">{b.change}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Sellers */}
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500 mb-2">
+                TOP SELLERS (Q4)
+              </p>
+              <div className="space-y-1.5">
+                {topSellers.slice(0, 3).map((s) => (
+                  <div key={s.name} className="flex items-center justify-between rounded-xl bg-zinc-800 px-3 py-1.5">
+                    <div className="flex items-center gap-2">
+                      <TrendingDown size={12} className="text-red-400" />
+                      <span className="text-xs font-medium text-zinc-300">{s.name}</span>
+                    </div>
+                    <span className="font-mono text-xs font-bold text-red-400">{s.change}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        );
-      })()}
+        )}
+      </div>
 
       {/* ── SECTION 2: Meeting Prep Cards ────────────────── */}
       <div>
