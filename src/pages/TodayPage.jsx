@@ -137,7 +137,18 @@ export function TodayPage() {
         </div>
 
         <p className="text-sm text-zinc-300 leading-relaxed">
-          {marketContextSummary}
+          Our stock closed at <span className="font-bold text-emerald-400">$142.30</span> yesterday,{" "}
+          <span className="font-semibold text-emerald-400">up 1.8%</span> — outperforming the sector index by{" "}
+          <span className="font-semibold text-emerald-400">+0.6%</span>.{" "}
+          The rally was driven by positive analyst commentary following the AI infrastructure spending report from McKinsey, which projects{" "}
+          <span className="font-bold text-white">40% YoY growth</span> through 2028.{" "}
+          Among peers, <span className="font-semibold text-white">XYZ Corp</span> announced a{" "}
+          <span className="font-bold text-white">$4.2B acquisition</span> in AI infrastructure, which may shift investor perception of competitive positioning.{" "}
+          Bond yields held steady at <span className="font-medium text-zinc-200">4.12%</span>, while active equity funds saw{" "}
+          <span className="font-semibold text-red-400">$8B in outflows</span> for March — something to watch for our active holders like{" "}
+          <span className="font-medium text-zinc-200">Wellington</span> and <span className="font-medium text-zinc-200">Harris</span>.{" "}
+          <span className="font-medium text-zinc-200">BlackRock</span> has increased sector-wide positions by{" "}
+          <span className="font-semibold text-emerald-400">+0.3%</span> in Q1, suggesting a macro allocation shift rather than company-specific conviction.
         </p>
 
         {/* Expandable data points */}
